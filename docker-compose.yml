@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./server
+    container_name: server2.0
+    depends_on:
+      - db
+    env_file:
+      - ./server/.env
+    environment:
+      WAIT_HOSTS: db:5432
+    ports:
+      - 3001:3001
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    command: npm run dev
+    restart: on-failure
+
+  client:
+    build: ./client
+    container_name: client2.0
+    environment:
+      - NODE_PATH=src
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/src:/app/src
+    links:
+      - server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: npm start
+
+  db:
+    container_name: matcha_db2.0
+    image: postgres
+    restart: always
+    env_file:
+      - ./server/.env
+    #   environment:
+    #     POSTGRES_USER: myUsername
+    #     POSTGRES_PASSWORD: myPassword
+    #     POSTGRES_DB: myProject
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    container_name: pgAdmin2.0
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - ./server/.env
+    environment:
+      #     PGADMIN_DEFAULT_EMAIL: email@email.com
+      #     PGADMIN_DEFAULT_PASSWORD: myPassword
+      GUNICORN_ACCESS_LOGFILE: "/dev/null"
+    ports:
+      - 8080:80
+    volumes:
+      - ./db/servers.json:/pgadmin4/servers.json
+    logging:
+      driver: none
+
+networks:
+  default:
+    name: matcha_network2.0
