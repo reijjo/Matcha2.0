@@ -4,8 +4,21 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import userService from "./services/userService";
+import { User } from "./types";
+import { useEffect, useState } from "react";
 
 const App = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    userService.getAllUsers().then((data: User[]) => {
+      setUsers(data);
+    });
+  }, []);
+
+  console.log("USERS", users);
+
   return (
     <Router>
       <main>

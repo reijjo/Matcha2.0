@@ -156,6 +156,11 @@ footer div {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  position: relative;
+  background-image: url(naamat.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .registerForm {
@@ -171,6 +176,7 @@ footer div {
   background-color: var(--white1);
   border-radius: 15px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .grid-container {

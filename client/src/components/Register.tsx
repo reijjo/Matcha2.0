@@ -155,10 +155,9 @@ const Register = () => {
     }
   };
 
-  console.log("DATE", date);
-
   return (
     <div id="register">
+      <div className="overlay" />
       <form className="registerForm">
         <div style={{ textAlign: "left", width: "100%", marginBottom: "1vh" }}>
           <strong style={{ fontSize: "3vh" }}>Register</strong>

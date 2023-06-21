@@ -6,3 +6,8 @@ export interface ConfigType {
   PGHOST?: string;
   PGPORT?: number;
 }
+
+export interface User {
+  id: number;
+  username: string;
+}
