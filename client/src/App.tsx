@@ -13,11 +13,11 @@ const App = () => {
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
-      setUsers(data);
+      if (data) setUsers(data);
     });
   }, []);
 
-  console.log("USERS", users);
+  if (users) console.log("USERS", users);
 
   return (
     <Router>

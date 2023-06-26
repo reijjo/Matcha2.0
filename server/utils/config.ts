@@ -11,6 +11,8 @@ const POSTGRES_DB = process.env.POSTGRES_DB;
 const PGADMIN_DEFAULT_PASSWORD = process.env.PGADMIN_DEFAULT_PASSWORD;
 const PGHOST = process.env.PGHOST;
 const PGPORT: number = parseInt(process.env.PGPORT || "", 10);
+const EMAIL_USER = process.env.EMAIL_USERNAME;
+const EMAIL_PASSWD = process.env.EMAIL_PASSWORD;
 
 // module.exports = {
 //   PORT,
@@ -28,4 +30,6 @@ export const config: ConfigType = {
   PGADMIN_DEFAULT_PASSWORD,
   PGHOST,
   PGPORT,
+  EMAIL_USER,
+  EMAIL_PASSWD,
 };

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
+import Notify from "./Notify";
+import { Notification } from "../types";
+import userService from "../services/userService";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -42,6 +45,19 @@ const Register = () => {
   const [confirmPwFocus, setConfirmPwFocus] = useState(false);
   const [confirmPwMsg, setConfirmPwMsg] = useState<null | string>(null);
 
+  const [notification, setNotification] = useState<Notification>({
+    message: "",
+    style: {},
+    success: false,
+  });
+
+  // useEffect(() => {
+  //   setNotification({
+  //     message: "hihuu",
+  //     style: { color: "red" },
+  //   } as Notification);
+  // }, []);
+
   const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const nameRegex = /^[a-zA-Z0-9!._\-@#*$]+$/;
@@ -58,7 +74,7 @@ const Register = () => {
     } else {
       setUsernameValidMsg(null);
     }
-    console.log("username", value);
+    // console.log("username", value);
   };
 
   const handleFirstname = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +89,7 @@ const Register = () => {
     }
 
     if (!nameRegex.test(value)) {
-      setFirstnameValidMsg("Only characters and '-' allowed.");
+      setFirstnameValidMsg("Only letters and '-' allowed.");
     } else {
       setFirstnameValidMsg(null);
     }
@@ -84,8 +100,8 @@ const Register = () => {
     const nameRegex = /^[a-zA-Z-]+$/;
     setLastname(value);
 
-    if (value.length < 2 || value.length > 15) {
-      setLastnameLenMsg("2 - 15 characters.");
+    if (value.length < 2 || value.length > 30) {
+      setLastnameLenMsg("2 - 30 characters.");
     } else {
       setLastnameLenMsg(null);
     }
@@ -155,14 +171,38 @@ const Register = () => {
     }
   };
 
+  const registerUser = async (event: SyntheticEvent) => {
+    event.preventDefault();
+    try {
+      const user = {
+        username: username,
+        email: email,
+        firstname: firstname,
+        lastname: lastname,
+        birthday: date,
+        password: password,
+        confPassword: confPassword,
+      };
+      const res = await userService.regUser(user);
+      console.log("Reg User", res);
+      setNotification(res.notification);
+      setTimeout(() => {
+        setNotification({ message: "", style: {}, success: false });
+      }, 10000);
+    } catch (error: unknown) {
+      console.log("Error", error);
+    }
+  };
+
   return (
     <div id="register">
       <div className="overlay" />
-      <form className="registerForm">
+      <form className="registerForm" onSubmit={registerUser}>
         <div style={{ textAlign: "left", width: "100%", marginBottom: "1vh" }}>
           <strong style={{ fontSize: "3vh" }}>Register</strong>
         </div>
         <div className="grid-container">
+          <Notify {...notification} />
           {/* USERNAME */}
           <div>Username</div>
           <input
@@ -171,6 +211,7 @@ const Register = () => {
             autoComplete="off"
             required={true}
             value={username}
+            name="username"
             onChange={handleUsername}
             onFocus={() => {
               setUsernameLenFocus(true);
@@ -199,6 +240,7 @@ const Register = () => {
             autoComplete="off"
             required={true}
             value={email}
+            name="email"
             onChange={(event) => setEmail(event.target.value)}
           />
           {/* FIRST NAME */}
@@ -210,6 +252,7 @@ const Register = () => {
             required={true}
             value={firstname}
             onChange={handleFirstname}
+            name="firstname"
             onFocus={() => {
               setFirstnameLenFocus(true);
               setFirstnameValidFocus(true);
@@ -237,6 +280,7 @@ const Register = () => {
             autoComplete="off"
             required={true}
             value={lastname}
+            name="lastname"
             onChange={handleLastname}
             onFocus={() => {
               setLastnameLenFocus(true);
@@ -263,6 +307,7 @@ const Register = () => {
             type="date"
             required={true}
             value={date}
+            name="date"
             onChange={handleDate}
             onFocus={() => {
               setDateFocus(true);
@@ -284,6 +329,7 @@ const Register = () => {
             autoComplete="off"
             required={true}
             value={password}
+            name="password"
             onChange={handlePasswordChange}
             onFocus={() => {
               setPwLenFocus(true);
@@ -325,6 +371,7 @@ const Register = () => {
             autoComplete="off"
             required={true}
             value={confPassword}
+            name="confPassword"
             onChange={handleConfPasswordChange}
             onFocus={() => {
               setConfirmPwFocus(true);

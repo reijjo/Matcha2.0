@@ -9,6 +9,12 @@ const getAllUsers = () => {
     .then((response: { data: User[] }) => response.data);
 };
 
-const userService = { getAllUsers };
+const regUser = (user: User) => {
+  console.log("Axios user", user);
+  const req = axios.post(`${baseUrl}`, user);
+  return req.then((response) => response.data);
+};
+
+const userService = { getAllUsers, regUser };
 
 export default userService;

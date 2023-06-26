@@ -147,6 +147,16 @@ footer div {
   /* color: white; */
 }
 
+/* NOTIFY */
+.notification {
+  grid-column: 1 / span 2;
+  text-align: center;
+  border: 2px solid;
+  border-radius: 10px;
+  background-color: white;
+  padding: 0.5vh 1vw;
+}
+
 /* REGISTER */
 
 #register {
