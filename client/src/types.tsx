@@ -19,3 +19,12 @@ export interface Notification {
   style: React.CSSProperties;
   success: boolean;
 }
+
+export interface Login {
+  username: string;
+  password: string;
+}
+
+export interface Token {
+  token?: string;
+}

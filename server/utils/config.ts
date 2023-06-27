@@ -13,6 +13,10 @@ const PGHOST = process.env.PGHOST;
 const PGPORT: number = parseInt(process.env.PGPORT || "", 10);
 const EMAIL_USER = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWD = process.env.EMAIL_PASSWORD;
+// const JWTSECRET = process.env.JWTSECRET;
+// if (!JWTSECRET) {
+//   throw new Error("JWTSECRET must be defined.");
+// }
 
 // module.exports = {
 //   PORT,
@@ -32,4 +36,5 @@ export const config: ConfigType = {
   PGPORT,
   EMAIL_USER,
   EMAIL_PASSWD,
+  // JWTSECRET,
 };

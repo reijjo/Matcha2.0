@@ -15,6 +15,12 @@ const regUser = (user: User) => {
   return req.then((response) => response.data);
 };
 
-const userService = { getAllUsers, regUser };
+const verifyUser = (code: string) => {
+  const req = axios.get(`${baseUrl}/${code}/verify`);
+  console.log("Axios VerifyUser", code);
+  return req.then((response) => response.data);
+};
+
+const userService = { getAllUsers, regUser, verifyUser };
 
 export default userService;

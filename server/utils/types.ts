@@ -7,6 +7,7 @@ export interface ConfigType {
   PGPORT?: number;
   EMAIL_USER?: string;
   EMAIL_PASSWD?: string;
+  JWT_SECRET?: string;
 }
 
 export interface User {
@@ -27,4 +28,9 @@ export interface Notification {
   message: string;
   style: object;
   success: boolean;
+}
+
+export interface Login {
+  username: string;
+  password: string;
 }
