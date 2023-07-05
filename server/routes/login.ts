@@ -3,8 +3,9 @@ import { Login, User } from "../utils/types";
 import { pool } from "../utils/dbConnection";
 import bcrypt from "bcryptjs";
 
-import { sign, verify } from "jsonwebtoken";
-import parseDecodedToken from "../utils/utils";
+import { sign } from "jsonwebtoken";
+// import { sign, verify } from "jsonwebtoken";
+// import parseDecodedToken from "../utils/utils";
 
 const loginRouter = express.Router();
 
@@ -65,24 +66,24 @@ loginRouter.post("/", async (req: Request, res: Response) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises,
-loginRouter.get("/", async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-    try {
-      const decodedToken = verify(token, "huhuu");
-      const userPayload = parseDecodedToken(decodedToken);
-      const userSQL = `SELECT * FROM users WHERE username = $1`;
-      const findUser = await pool.query(userSQL, [userPayload.username]);
-      const user = findUser.rows[0] as User;
-      // console.log("hai", userPayload.username);
-      if (user) {
-        res.send(user);
-      }
-    } catch (error: unknown) {
-      console.log("ERROR decoding token:", error);
-    }
-  }
-});
+// loginRouter.get("/", async (req: Request, res: Response) => {
+//   const authHeader = req.headers.authorization;
+//   if (authHeader) {
+//     const token = authHeader.split(" ")[1];
+//     try {
+//       const decodedToken = verify(token, "huhuu");
+//       const userPayload = parseDecodedToken(decodedToken);
+//       const userSQL = `SELECT * FROM users WHERE username = $1`;
+//       const findUser = await pool.query(userSQL, [userPayload.username]);
+//       const user = findUser.rows[0] as User;
+//       // console.log("hai", userPayload.username);
+//       if (user) {
+//         res.send(user);
+//       }
+//     } catch (error: unknown) {
+//       console.log("ERROR decoding token:", error);
+//     }
+//   }
+// });
 
 export { loginRouter };

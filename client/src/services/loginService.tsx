@@ -10,7 +10,7 @@ const logIn = (user: Login) => {
 };
 
 const getUserInfo = (token: string) => {
-  const req = axios.get(`${baseUrl}`, {
+  const req = axios.get(`http://localhost:3001/api/logged`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

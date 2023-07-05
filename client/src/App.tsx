@@ -13,8 +13,8 @@ import { useEffect, useState } from "react";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [token, setToken] = useState("");
-  const [loggedUser, setLoggedUser] = useState<User[]>([]);
+  // const [token, setToken] = useState("");
+  const [loggedUser, setLoggedUser] = useState<User | null>(null);
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
@@ -24,10 +24,17 @@ const App = () => {
 
   if (users) console.log("USERS", users);
 
+  // useEffect(() => {
+  //   const getToken: string = localStorage.getItem("matchaToken") || "";
+  //   if (getToken) {
+  //     setToken(getToken);
+  //   }
+  // }, []);
+
   useEffect(() => {
     const getToken: string = localStorage.getItem("matchaToken") || "";
     if (getToken) {
-      setToken(getToken);
+      // setToken(getToken);
       loginService.getUserInfo(getToken).then((logged) => {
         if (logged) {
           setLoggedUser(logged);
@@ -36,7 +43,7 @@ const App = () => {
     }
   }, []);
 
-  console.log("logged user", loggedUser);
+  // console.log("logged user", loggedUser);
 
   return (
     <Router>
@@ -47,7 +54,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/:code/verify" element={<Verify />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/feed" element={<Feed token={token} />} />
+          <Route path="/feed" element={<Feed user={loggedUser} />} />
+          {/* <Route path="/feed" element={<Feed token={token} />} /> */}
         </Routes>
         <Footer />
       </main>
