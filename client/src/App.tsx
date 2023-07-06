@@ -94,7 +94,7 @@ const App = () => {
   return (
     <Router>
       <main>
-        <Navbar />
+        <Navbar user={loggedUser} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />

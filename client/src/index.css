@@ -62,6 +62,22 @@ nav {
   background-color: var(--peach);
 }
 
+.registerlog {
+  border: 1px solid var(--black1);
+  border-radius: 15px;
+  padding: 1vh 1.5vw;
+  text-decoration: none;
+  background-color: lightcoral;
+  color: black;
+  font-weight: bold;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.registerlog:hover {
+  background-color: darkred;
+  color: white;
+}
+
 .login {
   margin-left: 1vw;
   border: 1px solid var(--black1);
@@ -75,6 +91,54 @@ nav {
 }
 
 .login:hover {
+  background-color: var(--peach);
+}
+
+.loginlog {
+  margin-left: 1vw;
+  border: 1px solid var(--black1);
+  border-radius: 15px;
+  padding: 1vh 1.5vw;
+  text-decoration: none;
+  background-color: var(--lipurple);
+  font-weight: bold;
+  color: black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loginlog:hover {
+  background-color: var(--peach);
+}
+
+.loginlog img {
+  /* background-color: azure; */
+  display: inline-block;
+  vertical-align: -4px;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  /* min-width: 160px; */
+  margin-right: 16px;
+  width: max-content;
+  z-index: 1;
+  background-color: var(--white1);
+  border: 1px solid var(--dapurple);
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-content a:hover {
   background-color: var(--peach);
 }
 
