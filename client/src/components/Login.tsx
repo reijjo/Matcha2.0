@@ -2,7 +2,7 @@ import { SyntheticEvent, useState } from "react";
 import { Notification } from "../types";
 import Notify from "./Notify";
 import loginService from "../services/loginService";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [notification, setNotification] = useState<Notification>({
@@ -13,7 +13,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [passwd, setPasswd] = useState("");
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -38,7 +38,8 @@ const Login = () => {
       if (res.notification.success) {
         localStorage.setItem("matchaToken", res.token);
         setTimeout(() => {
-          navigate("/feed");
+          // navigate("/feed");
+          window.location.replace("/feed");
         }, 3000);
       }
       setTimeout(() => {

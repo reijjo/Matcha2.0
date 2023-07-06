@@ -1,11 +1,11 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { Login, User } from "../utils/types";
 import { pool } from "../utils/dbConnection";
 import bcrypt from "bcryptjs";
 
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 // import { sign, verify } from "jsonwebtoken";
-// import parseDecodedToken from "../utils/utils";
+import parseDecodedToken from "../utils/utils";
 
 const loginRouter = express.Router();
 
@@ -65,25 +65,50 @@ loginRouter.post("/", async (req: Request, res: Response) => {
   });
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises,
-// loginRouter.get("/", async (req: Request, res: Response) => {
-//   const authHeader = req.headers.authorization;
-//   if (authHeader) {
-//     const token = authHeader.split(" ")[1];
-//     try {
-//       const decodedToken = verify(token, "huhuu");
-//       const userPayload = parseDecodedToken(decodedToken);
-//       const userSQL = `SELECT * FROM users WHERE username = $1`;
-//       const findUser = await pool.query(userSQL, [userPayload.username]);
-//       const user = findUser.rows[0] as User;
-//       // console.log("hai", userPayload.username);
-//       if (user) {
-//         res.send(user);
-//       }
-//     } catch (error: unknown) {
-//       console.log("ERROR decoding token:", error);
-//     }
-//   }
-// });
+interface CustomReq extends Request {
+  user?: User;
+}
+
+const verifyToken = async (
+  req: CustomReq,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    try {
+      const decodedToken = verify(token, "huhuu");
+      const userPayload = parseDecodedToken(decodedToken);
+      const userSQL = `SELECT * FROM users WHERE username = $1`;
+      const findUser = await pool.query(userSQL, [userPayload.username]);
+      const user = findUser.rows[0] as User;
+      // console.log("hai", userPayload.username);
+      if (user) {
+        req.user = user;
+        next();
+        // res.send({ user: req.user });
+      } else {
+        res.status(401).json({ message: "Invalid token!" });
+      }
+    } catch (error: unknown) {
+      console.log("ERROR decoding token:", error);
+      res.status(401).json({ error: "Invalid / Expired Token." });
+    }
+  } else {
+    res.status(401).json({ message: "No token at all!" });
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+loginRouter.get("/", verifyToken, (req: CustomReq, res: Response) => {
+  const user = req.user;
+  if (user) {
+    console.log("user", user);
+    res.send(user);
+  } else {
+    res.send({ message: "Invalid token!" });
+  }
+});
 
 export { loginRouter };

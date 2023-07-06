@@ -11,7 +11,7 @@ interface CustomReq extends Request {
   user?: User;
 }
 
-const verifyToken = async (
+export const verifyToken = async (
   req: CustomReq,
   res: Response,
   next: NextFunction
@@ -35,6 +35,7 @@ const verifyToken = async (
       }
     } catch (error: unknown) {
       console.log("ERROR decoding token:", error);
+      res.send({ error: "Invalid / Expired Token." });
     }
   } else {
     res.send({ message: "No token at all!" });
@@ -48,7 +49,7 @@ loggedRouter.get("/", verifyToken, (req: CustomReq, res: Response) => {
     console.log("user", user);
     res.send(user);
   } else {
-    res.send({ message: "Invalid token!" });
+    res.send({ error: "Invalid / Expired Token!" });
   }
 });
 
