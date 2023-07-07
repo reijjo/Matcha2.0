@@ -156,4 +156,12 @@ usersRouter.get("/:code/verify", async (req: Request, res: Response) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.get("/ipapi", async (_req: Request, res: Response) => {
+  const myIp = await fetch("https://ipapi.co/json");
+  const ipData: unknown = await myIp.json();
+  // console.log("MUN", ipData);
+  res.send(ipData);
+});
+
 export { usersRouter };

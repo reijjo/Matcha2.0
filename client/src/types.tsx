@@ -1,5 +1,27 @@
 import React from "react";
 
+export enum Gender {
+  Male = "Male",
+  Female = "Female",
+  Other = "Other",
+}
+
+export enum Looking {
+  Male = "Male",
+  Female = "Female",
+  Both = "Both",
+}
+
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
+export interface Location {
+  city?: string;
+  country?: string;
+}
+
 export interface User {
   id?: number;
   username: string;
@@ -11,11 +33,29 @@ export interface User {
   confPassword: string;
   verifycode?: string;
   status?: number;
-  online?: boolean;
+  online?: string;
+}
+
+export interface Profile {
+  user_id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  birthday: string;
+  password: string;
+  location: Location;
+  coordinates: Coordinates;
+  gender: Gender;
+  seeking: Looking;
+  tags: Array<string>;
+  fame: number;
+  isOnline: boolean;
+  online: string;
 }
 
 export interface Notification {
-  message: string;
+  message?: string;
   style: React.CSSProperties;
   success: boolean;
 }

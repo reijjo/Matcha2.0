@@ -30,6 +30,7 @@ nav {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .leftnav {
@@ -124,7 +125,7 @@ nav {
   /* min-width: 160px; */
   margin-right: 16px;
   width: max-content;
-  z-index: 1;
+  z-index: 5;
   background-color: var(--white1);
   border: 1px solid var(--dapurple);
   border-radius: 4px;
@@ -274,6 +275,17 @@ footer div {
   background-color: var(--peach);
 }
 
+.regformbutton2 {
+  grid-column: 1 / span 2;
+  padding: 0.5vw;
+  background-color: var(--lipurple);
+  border-radius: 10px;
+}
+
+.regformbutton2:hover {
+  background-color: var(--peach);
+}
+
 .regmsg {
   grid-column: 1 / span 2;
   color: red;
@@ -284,4 +296,33 @@ footer div {
   font-size: smaller;
   font-weight: lighter;
   padding-left: 1vw;
+}
+
+.custom-file-input {
+  display: inline-block;
+  padding: 0.5vw;
+  background-color: var(--lipurple);
+  border: 1px solid var(--black1);
+  border-radius: 10px;
+  color: black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.custom-file-input:hover {
+  background-color: var(--peach);
+}
+
+.file-input {
+  display: none;
+}
+
+.locationButton {
+  padding: 0.5vw;
+  background-color: var(--lipurple);
+  border-radius: 10px;
+}
+
+.locationButton:hover {
+  background-color: var(--peach);
 }

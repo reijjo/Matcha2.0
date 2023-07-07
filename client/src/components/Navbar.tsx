@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { Link } from "react-router-dom";
 import { User } from "../types";
 import { useState } from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const expandArrow = require("../icons8-expand-arrow-16.png");
+const expandIcon = require("../icons8-expand-arrow-16.png");
+const closeIcon = require("../icons8-close-16.png");
 
 const Navbar = ({ user }: { user: User | null }) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
@@ -20,7 +21,7 @@ const Navbar = ({ user }: { user: User | null }) => {
   return (
     <nav>
       <div className="leftnav">
-        <Link to="/">home</Link>
+        <Link to="/feed">home</Link>
       </div>
       {user ? (
         <div className="rightnav">
@@ -29,11 +30,16 @@ const Navbar = ({ user }: { user: User | null }) => {
           </Link>
           <Link to="#" className="loginlog" onClick={handleDropdown}>
             {user.username}{" "}
-            <img src={expandArrow} alt="expand" title="show more" />
+            <img
+              src={isDropOpen ? closeIcon : expandIcon}
+              alt="expand"
+              title="show more"
+            />
           </Link>
           {isDropOpen && (
             <div className="dropdown-content">
               <Link to="#">Matches</Link>
+              {/* <Link to="/feed">Feed</Link> */}
               <hr />
               <Link to="#">My Profile</Link>
               <Link to="#">Settings</Link>

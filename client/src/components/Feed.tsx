@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { User } from "../types";
 // import { Token } from "../types";
 
@@ -7,6 +8,11 @@ import { User } from "../types";
 // };
 
 const Feed = ({ user }: { user: User | null }) => {
+  useEffect(() => {
+    if (user && user.status && user.status < 3) {
+      window.location.replace("/registerTwo");
+    }
+  }, []);
   console.log("FEED token", user);
 
   return <div>{user ? <p>tokenit kunnossa!</p> : <p>oisko tokenii</p>}</div>;

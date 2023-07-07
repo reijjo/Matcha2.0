@@ -17,10 +17,14 @@ const regUser = (user: User) => {
 
 const verifyUser = (code: string) => {
   const req = axios.get(`${baseUrl}/${code}/verify`);
-  console.log("Axios VerifyUser", code);
   return req.then((response) => response.data);
 };
 
-const userService = { getAllUsers, regUser, verifyUser };
+const getIpApi = () => {
+  const req = axios.get(`${baseUrl}/ipapi`);
+  return req.then((response) => response.data);
+};
+
+const userService = { getAllUsers, regUser, verifyUser, getIpApi };
 
 export default userService;

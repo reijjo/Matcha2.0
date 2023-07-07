@@ -16,6 +16,7 @@ import Feed from "./components/Feed";
 import loginService from "./services/loginService";
 import { User } from "./types";
 import { useEffect, useState } from "react";
+import RegisterTwo from "./components/RegisterTwo";
 
 const App = () => {
   // const [users, setUsers] = useState<User[]>([]);
@@ -109,6 +110,12 @@ const App = () => {
           <Route
             path="/feed"
             element={<PrivateRoute element={<Feed user={loggedUser} />} />}
+          />
+          <Route
+            path="/registerTwo"
+            element={
+              <PrivateRoute element={<RegisterTwo user={loggedUser} />} />
+            }
           />
         </Routes>
         <Footer />
