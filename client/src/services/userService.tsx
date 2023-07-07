@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User } from "../types";
+import { Coordinates, User } from "../types";
 
 const baseUrl = "http://localhost:3001/api/users";
 
@@ -25,6 +25,14 @@ const getIpApi = () => {
   return req.then((response) => response.data);
 };
 
-const userService = { getAllUsers, regUser, verifyUser, getIpApi };
+const openCage = (coors: Coordinates) => {
+  const req = axios.get(`${baseUrl}/opencage`, {
+    params: coors,
+  });
+  return req.then((response) => response.data.results[0].components);
+  console.log("Axios coors", coors);
+};
+
+const userService = { getAllUsers, regUser, verifyUser, getIpApi, openCage };
 
 export default userService;

@@ -6,7 +6,6 @@ import Notify from "./Notify";
 const RegisterTwo = ({ user }: { user: User | null }) => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [location, setLocation] = useState<Location | null>(null);
   const [coordinates, setCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [gender, setGender] = useState<Gender>(Gender.Male);
   const [seeking, setSeeking] = useState<Looking>(Looking.Male);
@@ -16,6 +15,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     success: false,
   });
   const [locationMsg, setLocationMsg] = useState(false);
+  const [firstCoor, setFirstCoor] = useState(false);
 
   useEffect(() => {
     if (user && user.status && user.status !== 2) {
@@ -26,9 +26,29 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         setCity(response.city);
         setCountry(response.country_name);
         setCoordinates({ x: response.longitude, y: response.latitude });
+        setTimeout(() => {
+          setFirstCoor(true);
+        }, 1000);
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (firstCoor) {
+      if (coordinates.x !== 0 && coordinates.y !== 0) {
+        userService.openCage(coordinates).then((response) => {
+          console.log("NEWWW COOORO", response);
+          if (response.suburb && response.city && response.country) {
+            setCity(`${response.suburb} / ${response.city}`);
+            setCountry(response.country);
+          } else if (response.city && response.country) {
+            setCity(`${response.suburb} / ${response.city}`);
+            setCountry(response.country);
+          }
+        });
+      }
+    }
+  }, [coordinates]);
 
   // console.log("taaal", navigator.geolocation.getCurrentPosition());
 
@@ -43,7 +63,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         email: user?.email,
         birthday: user?.birthday,
         password: user?.password,
-        location: location,
+        location: `${city}, ${country}`,
         coordinates: coordinates,
         gender: gender,
         seeking: seeking,
@@ -67,7 +87,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         if (pos.coords) {
           const { latitude, longitude } = pos.coords;
           setCoordinates({ x: longitude, y: latitude });
-          console.log("Coordinates found!");
+          console.log("Coordinates found!", coordinates);
           setNotification({
             message: "Location updated!",
             style: { color: "green" },

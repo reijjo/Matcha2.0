@@ -164,4 +164,14 @@ usersRouter.get("/ipapi", async (_req: Request, res: Response) => {
   res.send(ipData);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.get("/opencage", async (req: Request, res: Response) => {
+  const { x, y } = req.query;
+  const newCity = await fetch(
+    `https://api.opencagedata.com/geocode/v1/json?q=${y}+${x}&key=9417497716084e0dbb126edbc6037872`
+  );
+  const cityData: unknown = await newCity.json();
+  res.send(cityData);
+});
+
 export { usersRouter };

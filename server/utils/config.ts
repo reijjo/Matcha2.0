@@ -13,6 +13,7 @@ const PGHOST = process.env.PGHOST;
 const PGPORT: number = parseInt(process.env.PGPORT || "", 10);
 const EMAIL_USER = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWD = process.env.EMAIL_PASSWORD;
+// const OPENCAGE = process.env.OPENCAGE;
 // const JWTSECRET = process.env.JWTSECRET;
 // if (!JWTSECRET) {
 //   throw new Error("JWTSECRET must be defined.");
@@ -37,4 +38,5 @@ export const config: ConfigType = {
   EMAIL_USER,
   EMAIL_PASSWD,
   // JWTSECRET,
+  // OPENCAGE
 };
