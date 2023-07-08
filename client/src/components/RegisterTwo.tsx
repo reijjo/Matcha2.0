@@ -9,6 +9,12 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   const [coordinates, setCoordinates] = useState<Coordinates>({ x: 0, y: 0 });
   const [gender, setGender] = useState<Gender>(Gender.Male);
   const [seeking, setSeeking] = useState<Looking>(Looking.Male);
+  const [bio, setBio] = useState("");
+  const [bioLenMsg, setBioLenMsg] = useState<null | string>(null);
+  const [bioLenFocus, setBioLenFocus] = useState(false);
+  const [bioValidFocus, setBioValidFocus] = useState(false);
+  const [bioValidMsg, setBioValidMsg] = useState<null | string>(null);
+
   const [notification, setNotification] = useState<Notification>({
     message: "",
     style: {},
@@ -22,7 +28,6 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       window.location.replace("/feed");
     } else if (user && user.status && user.status === 2) {
       userService.getIpApi().then((response) => {
-        console.log("ipapi", response);
         setCity(response.city);
         setCountry(response.country_name);
         setCoordinates({ x: response.longitude, y: response.latitude });
@@ -37,20 +42,18 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     if (firstCoor) {
       if (coordinates.x !== 0 && coordinates.y !== 0) {
         userService.openCage(coordinates).then((response) => {
-          console.log("NEWWW COOORO", response);
+          // console.log("NEWWW COOORO", response);
           if (response.suburb && response.city && response.country) {
             setCity(`${response.suburb} / ${response.city}`);
             setCountry(response.country);
           } else if (response.city && response.country) {
-            setCity(`${response.suburb} / ${response.city}`);
+            setCity(`${response.city}`);
             setCountry(response.country);
           }
         });
       }
     }
   }, [coordinates]);
-
-  // console.log("taaal", navigator.geolocation.getCurrentPosition());
 
   const finishProfile = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -67,6 +70,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         coordinates: coordinates,
         gender: gender,
         seeking: seeking,
+        bio: bio,
       };
       console.log("ok", userProfile);
     } catch (error: unknown) {
@@ -119,11 +123,6 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     );
   };
 
-  // const handleLocation = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   setLocation(value);
-  // };
-
   const handleGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setGender(value as Gender);
@@ -132,6 +131,23 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   const handleLooking = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSeeking(value as Looking);
+  };
+
+  const handleBio = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.target.value;
+    setBio(value);
+
+    if (value.length < 1 || value.length > 160) {
+      setBioLenMsg("1-160 characters, thanks.");
+    } else {
+      setBioLenMsg(null);
+    }
+
+    if (/[']/.test(value)) {
+      setBioValidMsg("' isn't allowed.");
+    } else {
+      setBioValidMsg(null);
+    }
   };
 
   return (
@@ -147,8 +163,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             type="text"
             required={true}
             name="location"
-            value={`${city}, ${country}`}
-            // onChange={handleLocation}
+            value={!city && !country ? "..." : `${city}, ${country}`}
             readOnly
           />
 
@@ -165,12 +180,14 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
           <button className="locationButton" onClick={getLocation}>
             Get Location!
           </button>
+
           {/* GENDER */}
           <div>Your Gender</div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>
               <input
                 type="radio"
+                name="gendermale"
                 value={Gender.Male}
                 checked={gender === Gender.Male}
                 onChange={handleGender}
@@ -180,6 +197,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             <label>
               <input
                 type="radio"
+                name="genderfemale"
                 value={Gender.Female}
                 checked={gender === Gender.Female}
                 onChange={handleGender}
@@ -189,6 +207,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             <label>
               <input
                 type="radio"
+                name="genderother"
                 value={Gender.Other}
                 checked={gender === Gender.Other}
                 onChange={handleGender}
@@ -196,12 +215,14 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
               Other
             </label>
           </div>
+
           {/* LOOKING */}
           <div>What are you looking for?</div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <label>
               <input
                 type="radio"
+                name="lookingmale"
                 value={Looking.Male}
                 checked={seeking === Looking.Male}
                 onChange={handleLooking}
@@ -211,6 +232,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             <label>
               <input
                 type="radio"
+                name="lookingfemale"
                 value={Looking.Female}
                 checked={seeking === Looking.Female}
                 onChange={handleLooking}
@@ -220,6 +242,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             <label>
               <input
                 type="radio"
+                name="lookingboth"
                 value={Looking.Both}
                 checked={seeking === Looking.Both}
                 onChange={handleLooking}
@@ -228,17 +251,40 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             </label>
           </div>
 
+          {/* BIO */}
           <div>Tell a bit of yourself:</div>
           <textarea
             style={{ resize: "none" }}
             rows={4}
             cols={30}
-            placeholder="max 160 characters."
+            placeholder="1-160 characters."
+            name="bioarea"
+            onChange={handleBio}
+            onFocus={() => {
+              setBioLenFocus(true);
+              setBioValidFocus(true);
+            }}
+            onBlur={() => {
+              setBioLenFocus(false);
+              setBioValidFocus(false);
+            }}
           ></textarea>
+          {bioLenFocus && bioLenMsg && (
+            <div className="regmsg">
+              <li>{bioLenMsg}</li>
+            </div>
+          )}
+          {bioValidFocus && bioValidMsg && (
+            <div className="regmsg">
+              <li>{bioValidMsg}</li>
+            </div>
+          )}
 
+          {/* TAGS */}
           <div>Add tags that describes you</div>
           <input
             type="text"
+            name="tagsfield"
             placeholder="#vegan #ig_model etc..."
             autoComplete="off"
           />

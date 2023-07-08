@@ -12,31 +12,24 @@ import Register from "./components/Register";
 import Verify from "./components/Verify";
 import Login from "./components/Login";
 import Feed from "./components/Feed";
-// import userService from "./services/userService";
+import userService from "./services/userService";
 import loginService from "./services/loginService";
 import { User } from "./types";
 import { useEffect, useState } from "react";
 import RegisterTwo from "./components/RegisterTwo";
 
 const App = () => {
-  // const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
   const [loggedUser, setLoggedUser] = useState<User | null>(null);
 
-  // useEffect(() => {
-  //   userService.getAllUsers().then((data: User[]) => {
-  //     if (data) setUsers(data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    userService.getAllUsers().then((data: User[]) => {
+      if (data) setUsers(data);
+    });
+  }, []);
 
-  // if (users) console.log("USERS", users);
-
-  // useEffect(() => {
-  //   const getToken: string = localStorage.getItem("matchaToken") || "";
-  //   if (getToken) {
-  //     setToken(getToken);
-  //   }
-  // }, []);
+  if (users) console.log("USERS", users);
 
   useEffect(() => {
     const getToken: string = localStorage.getItem("matchaToken") || "";
