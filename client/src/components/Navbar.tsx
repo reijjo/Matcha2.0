@@ -21,7 +21,7 @@ const Navbar = ({ user }: { user: User | null }) => {
   return (
     <nav>
       <div className="leftnav">
-        <Link to="/feed">home</Link>
+        <Link to={user ? "/feed" : "/"}>home</Link>
       </div>
       {user ? (
         <div className="rightnav">

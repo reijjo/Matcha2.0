@@ -68,3 +68,7 @@ export interface Login {
 export interface Token {
   token?: string;
 }
+
+// export interface Tags {
+//   tags: Array<string>;
+// }

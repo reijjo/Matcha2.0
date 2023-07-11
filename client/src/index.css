@@ -244,7 +244,8 @@ footer div {
   margin: 10px;
   padding: 5vw;
   max-width: 500px;
-  max-height: 500px;
+  /* max-height: 500px; */
+  max-height: max-content;
   border: 1px solid var(--dapurple);
   display: flex;
   flex-direction: column;

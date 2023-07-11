@@ -1,7 +1,15 @@
 import { SyntheticEvent, useEffect, useState } from "react";
-import { Gender, Looking, User, Coordinates, Notification } from "../types";
+import {
+  Gender,
+  Looking,
+  User,
+  Coordinates,
+  Notification,
+  // Tags,
+} from "../types";
 import userService from "../services/userService";
 import Notify from "./Notify";
+import imageService from "../services/imageService";
 
 const RegisterTwo = ({ user }: { user: User | null }) => {
   const [city, setCity] = useState("");
@@ -14,6 +22,12 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   const [bioLenFocus, setBioLenFocus] = useState(false);
   const [bioValidFocus, setBioValidFocus] = useState(false);
   const [bioValidMsg, setBioValidMsg] = useState<null | string>(null);
+  const [tag, setTag] = useState("");
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [tagLenMsg, setTagLenMsg] = useState<null | string>(null);
+  const [tagLenFocus, setTagLenFocus] = useState(false);
+  const [tagValidMsg, setTagValidMsg] = useState<null | string>(null);
+  const [tagValidFocus, setTagValidFocus] = useState(false);
 
   const [notification, setNotification] = useState<Notification>({
     message: "",
@@ -22,6 +36,9 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   });
   const [locationMsg, setLocationMsg] = useState(false);
   const [firstCoor, setFirstCoor] = useState(false);
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   useEffect(() => {
     if (user && user.status && user.status !== 2) {
@@ -71,12 +88,31 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         gender: gender,
         seeking: seeking,
         bio: bio,
+        tags: allTags,
       };
       console.log("ok", userProfile);
     } catch (error: unknown) {
       console.log("New Profile Error:", error);
     }
   };
+
+  const addTag = (tag: string) => {
+    if (allTags.length < 5) {
+      setAllTags((prevTags) => [...prevTags, `#${tag}`]);
+      setTag("");
+      console.log("tag", tag);
+    } else {
+      console.log("max 5 tags");
+    }
+  };
+
+  const removeTag = (indexToRemove: number) => {
+    setAllTags((prevTags) =>
+      prevTags.filter((tag, index) => index !== indexToRemove)
+    );
+  };
+
+  console.log("All TAGS", allTags);
 
   const getLocation = () => {
     console.log("button clicked!");
@@ -137,8 +173,8 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     const value = event.target.value;
     setBio(value);
 
-    if (value.length < 1 || value.length > 160) {
-      setBioLenMsg("1-160 characters, thanks.");
+    if (value.length < 2 || value.length > 160) {
+      setBioLenMsg("2-160 characters, thanks.");
     } else {
       setBioLenMsg(null);
     }
@@ -148,6 +184,40 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     } else {
       setBioValidMsg(null);
     }
+  };
+
+  const handleTag = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const tagRegex = /^[a-zA-Z0-9-_]+$/;
+
+    setTag(value.toLowerCase());
+
+    if (value.length < 1 || value.length > 20) {
+      setTagLenMsg("1-20 characters.");
+    } else {
+      setTagLenMsg(null);
+    }
+
+    if (!tagRegex.test(value)) {
+      setTagValidMsg("Only letters and numbers and (-_) allowed.");
+    } else {
+      setTagValidMsg(null);
+    }
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // try {
+    const imageFile = event.target.files?.[0];
+    if (imageFile) {
+      const imageData = await imageService.uploadImage(imageFile, user?.id);
+      // setImageUrl(imageData.url);
+      console.log("imagggdata", imageData);
+    }
+    // } catch (error: unknown) {
+    //   console.log("image upload frontend error", error);
+    // }
   };
 
   return (
@@ -166,7 +236,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             value={!city && !country ? "..." : `${city}, ${country}`}
             readOnly
           />
-
+          {/* COORDINATES */}
           <div>Coordinates</div>
           <input
             type="text"
@@ -282,18 +352,81 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
 
           {/* TAGS */}
           <div>Add tags that describes you</div>
-          <input
-            type="text"
-            name="tagsfield"
-            placeholder="#vegan #ig_model etc..."
-            autoComplete="off"
-          />
-
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <input
+              type="text"
+              name="tagsfield"
+              placeholder="vegan, ig_model etc..."
+              autoComplete="off"
+              style={{ padding: "0.5vw", flexGrow: "1", marginRight: "1vw" }}
+              value={tag}
+              onChange={handleTag}
+              onFocus={() => {
+                setTagLenFocus(true);
+                setTagValidFocus(true);
+              }}
+              onBlur={() => {
+                setTagLenFocus(false);
+                setTagValidFocus(false);
+              }}
+            />
+            <button className="locationButton" onClick={() => addTag(tag)}>
+              Add
+            </button>
+          </div>
+          {tagLenFocus && tagLenMsg && (
+            <div className="regmsg">
+              <li>{tagLenMsg}</li>
+            </div>
+          )}
+          {tagValidFocus && tagValidMsg && (
+            <div className="regmsg">
+              <li>{tagValidMsg}</li>
+            </div>
+          )}
+          {allTags.length > 0 ? (
+            <div style={{ gridColumn: "1 / span 2" }}>
+              {allTags.map((tag, index) => {
+                return (
+                  <div
+                    key={tag}
+                    style={{
+                      display: "inline-block",
+                      margin: "5px",
+                      padding: "5px",
+                      border: "1px solid #ccc",
+                      backgroundColor: "var(--peach)",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <span>{tag}</span>
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                        cursor: "pointer",
+                        color: "red",
+                      }}
+                      onClick={() => removeTag(index)}
+                    >
+                      x
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+          {/* IMAGE */}
           <div>Add a photo</div>
-          <button className="custom-file-input" onClick={getLocation}>
+          <button className="custom-file-input">
             <label htmlFor="fileInput">Add</label>
           </button>
-          <input type="file" id="fileInput" className="file-input" />
+          <input
+            type="file"
+            id="fileInput"
+            className="file-input"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
           <div style={{ gridColumn: "1 / span 2" }}>
             (without a photo you cant see other profiles)
           </div>
