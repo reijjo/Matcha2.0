@@ -16,7 +16,7 @@ const uploadImage = async (file: File, userId: number | undefined) => {
 
   const config = {
     headers: {
-      // "Content-Type": "multipart/form-data",
+      "Content-Type": "multipart/form-data",
     },
   };
 
