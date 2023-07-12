@@ -1,4 +1,4 @@
-import { Notification } from "./types";
+import { Notification, Gender, Looking } from "./types";
 
 const usernameCheck = (username: string) => {
   if (username.length < 3 || username.length > 30) {
@@ -125,6 +125,61 @@ const passwdCheck = (passwd: string) => {
   return undefined;
 };
 
+const genderCheck = (gender: Gender) => {
+  if (gender === undefined) {
+    return {
+      message: "Gender is required.",
+      style: { color: "red" },
+      success: false,
+    } as Notification;
+  }
+  return undefined;
+};
+
+const lookingCheck = (gender: Looking) => {
+  if (gender === undefined) {
+    return {
+      message: "Looking is required.",
+      style: { color: "red" },
+      success: false,
+    } as Notification;
+  }
+  return undefined;
+};
+
+const bioCheck = (bio: string) => {
+  if (bio.length < 2 || bio.length > 160) {
+    return {
+      message: "2-160 characters on bio, thanks.",
+      style: { color: "red" },
+      success: false,
+    } as Notification;
+  }
+
+  if (/[']/.test(bio)) {
+    return {
+      message: "' isn't allowed on bio.",
+      style: { color: "red" },
+      success: false,
+    } as Notification;
+  }
+  return undefined;
+};
+
+const tagCheck = (tags: Array<string>) => {
+  if (tags.length === 0) {
+    return {
+      message: "At least one tag is required.",
+      style: { color: "red" },
+      success: false,
+    };
+  }
+
+  // Perform additional validation if needed
+
+  return undefined;
+};
+
 const checks = {
   usernameCheck,
   emailCheck,
@@ -132,6 +187,10 @@ const checks = {
   lastCheck,
   ageCheck,
   passwdCheck,
+  genderCheck,
+  lookingCheck,
+  bioCheck,
+  tagCheck,
 };
 
 export default checks;

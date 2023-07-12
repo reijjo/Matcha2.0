@@ -111,7 +111,11 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       };
       console.log("ok", userProfile);
       userService.finishRegister(userProfile).then((response) => {
+        setNotification(response.notification);
         console.log("RESSPP", response);
+        setTimeout(() => {
+          setNotification({ message: "", style: {}, success: false });
+        }, 6000);
       });
     } catch (error: unknown) {
       console.log("New Profile Error:", error);
@@ -119,6 +123,12 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   };
 
   const addTag = (tag: string) => {
+    const tagRegex = /^[a-zA-Z0-9-_]+$/;
+
+    if (!tagRegex.test(tag)) {
+      return;
+    }
+
     if (allTags.length < 5) {
       setAllTags((prevTags) => [...prevTags, `#${tag}`]);
       setTag("");
@@ -133,8 +143,6 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       prevTags.filter((tag, index) => index !== indexToRemove)
     );
   };
-
-  console.log("All TAGS", allTags);
 
   const getLocation = () => {
     console.log("button clicked!");
@@ -464,6 +472,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             </div>
           ) : null}
           {/* IMAGE */}
+          <Notify {...notification} />
           <div>Add a photo</div>
           <button className="custom-file-input">
             <label htmlFor="fileInput">Add</label>

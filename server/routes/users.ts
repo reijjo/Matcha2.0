@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { pool } from "../utils/dbConnection";
-import { User } from "../utils/types";
+import { Profile, User } from "../utils/types";
 import { config } from "../utils/config";
 import bcrypt from "bcryptjs";
 import { scryptSync, randomBytes } from "crypto";
@@ -174,11 +174,27 @@ usersRouter.get("/opencage", async (req: Request, res: Response) => {
   res.send(cityData);
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-usersRouter.post("/regTwo", async (req: Request, _res: Response) => {
-  const userProfile = req.body as object;
+// eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
+usersRouter.post("/regTwo", async (req: Request, res: Response) => {
+  const userProfile = req.body as Profile;
 
-  console.log("userProfile", userProfile);
+  const genderNotif = checks.genderCheck(userProfile.gender);
+  const lookingNotif = checks.lookingCheck(userProfile.seeking);
+  const bioNotif = checks.bioCheck(userProfile.bio);
+  const tagsNotif = checks.tagCheck(userProfile.tags);
+
+  if (genderNotif) {
+    return res.send({ notification: genderNotif });
+  } else if (lookingNotif) {
+    return res.send({ notification: lookingNotif });
+  } else if (bioNotif) {
+    return res.send({ notification: bioNotif });
+  } else if (tagsNotif) {
+    return res.send({ notification: tagsNotif });
+  } else {
+    console.log("userProfile", userProfile);
+    return res.send({ message: "huhuh" });
+  }
 });
 
 export { usersRouter };

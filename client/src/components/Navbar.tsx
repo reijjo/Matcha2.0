@@ -38,18 +38,24 @@ const Navbar = ({ user }: { user: User | null }) => {
           </Link>
           {isDropOpen && (
             <div className="dropdown-content">
-              <Link to="#">Matches</Link>
-              {/* <Link to="/feed">Feed</Link> */}
-              <hr />
-              <Link to="#">My Profile</Link>
-              <Link to="#">Settings</Link>
-              <hr />
-              <Link to="#">Your Stalkers</Link>
-              <Link to="#">Who Liked You</Link>
-              <Link to="#">Visited Profiles</Link>
-              <Link to="#">Liked Profiles</Link>
-              <hr />
-              <Link to="#">Logout</Link>
+              {user.status && user.status < 3 ? (
+                <span style={{ display: "none" }}></span>
+              ) : (
+                <>
+                  <Link to="#">Matches</Link>
+
+                  <hr />
+                  <Link to="#">My Profile</Link>
+                  <Link to="#">Settings</Link>
+                  <hr />
+                  <Link to="#">Your Stalkers</Link>
+                  <Link to="#">Who Liked You</Link>
+                  <Link to="#">Visited Profiles</Link>
+                  <Link to="#">Liked Profiles</Link>
+                  <hr />
+                  <Link to="#">Logout</Link>
+                </>
+              )}
             </div>
           )}
         </div>
