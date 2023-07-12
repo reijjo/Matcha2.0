@@ -15,6 +15,7 @@ services:
     volumes:
       - /app/node_modules
       - ./server:/app
+      - ./server/uploads:/app/uploads
     command: npm run dev
     restart: on-failure
 

@@ -26,29 +26,19 @@ const uploadImage = async (file: File, userId: number | undefined) => {
   } catch (error: unknown) {
     console.log("img upload error", error);
   }
-
-  // const response = await fetch(baseUrl, {
-  //   method: "POST",
-  //   body: formData,
-  // });
-
-  // console.log("RESP", response);
-
-  // if (!response.ok) {
-  //   throw new Error("Img upload failesd");
-  // }
-
-  // const data = await response.json();
-  // return data;
-
-  // const req = fetch(baseUrl, {
-  //   headers: {
-  //     "Content-Type": "multipart/form-data",
-  //   },
-  // });
-  // return req.then((response) => response.data);
 };
 
-const imageService = { uploadImage };
+const userPhotos = (userId: number | undefined) => {
+  console.log("getPhotos", userId);
+  const config = {
+    params: {
+      userId: String(userId),
+    },
+  };
+  const req = axios.get(baseUrl, config);
+  return req.then((response) => response.data);
+};
+
+const imageService = { uploadImage, userPhotos };
 
 export default imageService;

@@ -37,8 +37,10 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   const [locationMsg, setLocationMsg] = useState(false);
   const [firstCoor, setFirstCoor] = useState(false);
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  // const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<Array<{ path: string }>>([]);
+
+  const [imgNotify, setImgNotify] = useState(false);
 
   useEffect(() => {
     if (user && user.status && user.status !== 2) {
@@ -71,6 +73,15 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       }
     }
   }, [coordinates]);
+
+  useEffect(() => {
+    imageService.userPhotos(user?.id).then((response) => {
+      setImageUrl(response);
+      console.log("imaget", response);
+    });
+  }, []);
+
+  console.log("imageurl", imageUrl[0]?.path);
 
   const finishProfile = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -212,13 +223,24 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     const imageFile = event.target.files?.[0];
     if (imageFile) {
       const imageData = await imageService.uploadImage(imageFile, user?.id);
-      // setImageUrl(imageData.url);
-      console.log("imagggdata", imageData);
+      setImgNotify(true);
+      setNotification({
+        message: imageData?.notification?.message,
+        style: imageData?.notification?.style,
+        success: imageData?.notification?.success,
+      });
+      setTimeout(() => {
+        setImgNotify(false);
+        setNotification({ message: "", style: {}, success: false });
+      }, 5000);
+      console.log("imageData", imageData);
     }
     // } catch (error: unknown) {
     //   console.log("image upload frontend error", error);
     // }
   };
+
+  // console.log("NOTIIFIFI", notification);
 
   return (
     <div id="register">
@@ -427,8 +449,13 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             accept="image/*"
             onChange={handleImageUpload}
           />
+          {imgNotify && <Notify {...notification} />}
           <div style={{ gridColumn: "1 / span 2" }}>
-            (without a photo you cant see other profiles)
+            {imageUrl ? (
+              <div>{/* <img src={imageUrl[0].path}/> */}</div>
+            ) : (
+              <div>(without a photo you cant see other profiles)</div>
+            )}
           </div>
 
           <button className="regformbutton2" type="submit">

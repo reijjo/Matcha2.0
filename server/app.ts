@@ -6,12 +6,15 @@ import { usersRouter } from "./routes/users";
 import { loginRouter } from "./routes/login";
 import { loggedRouter } from "./routes/loggedIn";
 import { imageRouter } from "./routes/images";
+import path from "path";
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static("uploads"));
+
+const uploadsDir = path.join(__dirname, "uploads");
+app.use("/uploads", express.static(uploadsDir));
 
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
