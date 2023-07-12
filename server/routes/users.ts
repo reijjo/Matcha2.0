@@ -174,4 +174,11 @@ usersRouter.get("/opencage", async (req: Request, res: Response) => {
   res.send(cityData);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.post("/regTwo", async (req: Request, _res: Response) => {
+  const userProfile = req.body as object;
+
+  console.log("userProfile", userProfile);
+});
+
 export { usersRouter };

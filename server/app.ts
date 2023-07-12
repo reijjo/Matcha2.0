@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 const uploadsDir = path.join(__dirname, "uploads");
-app.use("/uploads", express.static(uploadsDir));
+app.use("/app/uploads", express.static(uploadsDir));
 
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);

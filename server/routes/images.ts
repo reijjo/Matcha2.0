@@ -129,11 +129,27 @@ imageRouter.post("/", upload.single("image"), (req: Request, res: Response) => {
 imageRouter.get("/", async (req: Request, res: Response) => {
   const userId = req.query.userId as string;
 
-  const findPhotos = `SELECT path FROM images WHERE user_id = $1`;
+  const findPhotos = `SELECT * FROM images WHERE user_id = $1`;
   const findEm = await pool.query(findPhotos, [userId]);
 
   res.json(findEm.rows);
   console.log("jee taal ollaan");
+});
+
+imageRouter.delete("/", async (req: Request, res: Response) => {
+  const imgId = req.query.id;
+
+  const deleteThis = `DELETE FROM images WHERE id = $1`;
+  await pool.query(deleteThis, [imgId]);
+
+  res.send({
+    imgNotify: true,
+    notification: {
+      message: "deleted",
+      style: { color: "red" },
+      success: false,
+    },
+  });
 });
 
 export { imageRouter };

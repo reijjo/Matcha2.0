@@ -38,7 +38,15 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
   const [firstCoor, setFirstCoor] = useState(false);
 
   // const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<Array<{ path: string }>>([]);
+  const [imageUrl, setImageUrl] = useState<
+    Array<{
+      id: number;
+      user_id: number;
+      path: string;
+      avatar: boolean;
+      created_at: string;
+    }>
+  >([]);
 
   const [imgNotify, setImgNotify] = useState(false);
 
@@ -79,14 +87,14 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       setImageUrl(response);
       console.log("imaget", response);
     });
-  }, []);
+  }, [imgNotify]);
 
-  console.log("imageurl", imageUrl[0]?.path);
+  console.log("imageurl", imageUrl);
 
   const finishProfile = async (event: SyntheticEvent) => {
     event.preventDefault();
     try {
-      const userProfile = {
+      const userProfile: object = {
         user_id: user?.id,
         username: user?.username,
         firstname: user?.firstname,
@@ -102,6 +110,9 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
         tags: allTags,
       };
       console.log("ok", userProfile);
+      userService.finishRegister(userProfile).then((response) => {
+        console.log("RESSPP", response);
+      });
     } catch (error: unknown) {
       console.log("New Profile Error:", error);
     }
@@ -240,7 +251,22 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
     // }
   };
 
-  // console.log("NOTIIFIFI", notification);
+  const handleImageDelete = (id: number) => {
+    console.log("taa lahtee", id);
+    imageService.deleteImage(id).then((response) => {
+      setImgNotify(true);
+      setNotification({
+        message: response?.notification?.message,
+        style: response?.notification?.style,
+        success: response?.notification?.success,
+      });
+      setTimeout(() => {
+        setImgNotify(false);
+        setNotification({ message: "", style: {}, success: false });
+      }, 1500);
+      console.log(response);
+    });
+  };
 
   return (
     <div id="register">
@@ -450,10 +476,45 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             onChange={handleImageUpload}
           />
           {imgNotify && <Notify {...notification} />}
-          <div style={{ gridColumn: "1 / span 2" }}>
-            {imageUrl ? (
-              <div>{/* <img src={imageUrl[0].path}/> */}</div>
-            ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              gridColumn: "1 / span 2",
+            }}
+          >
+            {imageUrl.map((images) => (
+              <div
+                style={{
+                  border: "1px solid black",
+                  display: "flex",
+                  position: "relative",
+                }}
+                key={images.id}
+              >
+                <img
+                  src={images.path}
+                  alt="userimage"
+                  style={{ width: "10vw", height: "10vh" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "1px",
+                    right: "5px",
+                    cursor: "pointer",
+                    color: "red",
+                    fontSize: "1.5rem",
+                    // backgroundColor: "var(--peach)",
+                    // fontWeight: "bold",
+                  }}
+                  onClick={() => handleImageDelete(images.id)} // Add an onClick event to delete the image
+                >
+                  x
+                </div>
+              </div>
+            ))}
+            {imageUrl.length === 0 && (
               <div>(without a photo you cant see other profiles)</div>
             )}
           </div>

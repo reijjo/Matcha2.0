@@ -30,9 +30,20 @@ const openCage = (coors: Coordinates) => {
     params: coors,
   });
   return req.then((response) => response.data.results[0].components);
-  console.log("Axios coors", coors);
 };
 
-const userService = { getAllUsers, regUser, verifyUser, getIpApi, openCage };
+const finishRegister = (stuff: object) => {
+  const req = axios.post(`${baseUrl}/regTwo`, stuff);
+  return req.then((response) => response.data);
+};
+
+const userService = {
+  getAllUsers,
+  regUser,
+  verifyUser,
+  getIpApi,
+  openCage,
+  finishRegister,
+};
 
 export default userService;
