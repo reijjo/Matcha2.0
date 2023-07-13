@@ -193,7 +193,51 @@ usersRouter.post("/regTwo", async (req: Request, res: Response) => {
     return res.send({ notification: tagsNotif });
   } else {
     console.log("userProfile", userProfile);
-    return res.send({ message: "huhuh" });
+    const profileSql = `INSERT INTO profile
+			(user_id, username, firstname, lastname, email, birthday, password, location, coordinates, gender, seeking, tags, bio, fame, online)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, point($9, $10), $11, $12, $13, $14, $15, NOW() )`;
+
+    try {
+      const makeProfile = await pool.query(profileSql, [
+        userProfile.user_id,
+        userProfile.username,
+        userProfile.firstname,
+        userProfile.lastname,
+        userProfile.email,
+        userProfile.birthday,
+        userProfile.password,
+        userProfile.location,
+        userProfile.coordinates.x,
+        userProfile.coordinates.y,
+        userProfile.gender,
+        userProfile.seeking,
+        userProfile.tags,
+        userProfile.bio,
+        10,
+      ]);
+
+      if (makeProfile.rowCount === 1) {
+        const checkStatus = `SELECT * FROM images WHERE user_id = $1`;
+        const newStatus = await pool.query(checkStatus, [userProfile.user_id]);
+
+        if (newStatus.rowCount > 0) {
+          const updateSt = `UPDATE users SET status = $1 WHERE id = $2`;
+          await pool.query(updateSt, [4, userProfile.user_id]);
+        } else {
+          const updateSt = `UPDATE users SET status = $1 WHERE id = $2`;
+          await pool.query(updateSt, [3, userProfile.user_id]);
+        }
+        return res.sendStatus(200);
+      } else {
+        return res.status(500).send({ error: "Update status problems." });
+      }
+    } catch (error: unknown) {
+      return (
+        res
+          // .status(500)
+          .send({ error: "Something wrong with the profile." })
+      );
+    }
   }
 });
 

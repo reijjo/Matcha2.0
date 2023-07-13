@@ -113,6 +113,9 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
       userService.finishRegister(userProfile).then((response) => {
         setNotification(response.notification);
         console.log("RESSPP", response);
+        if (response === "OK") {
+          window.location.replace("/feed");
+        }
         setTimeout(() => {
           setNotification({ message: "", style: {}, success: false });
         }, 6000);
@@ -303,7 +306,11 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
           />
           {locationMsg ? <Notify {...notification} /> : null}
           <div>Update Coordinates</div>
-          <button className="locationButton" onClick={getLocation}>
+          <button
+            className="locationButton"
+            type="button"
+            onClick={getLocation}
+          >
             Get Location!
           </button>
 
@@ -426,7 +433,11 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
                 setTagValidFocus(false);
               }}
             />
-            <button className="locationButton" onClick={() => addTag(tag)}>
+            <button
+              className="locationButton"
+              type="button"
+              onClick={() => addTag(tag)}
+            >
               Add
             </button>
           </div>
@@ -474,7 +485,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
           {/* IMAGE */}
           <Notify {...notification} />
           <div>Add a photo</div>
-          <button className="custom-file-input">
+          <button className="custom-file-input" type="button">
             <label htmlFor="fileInput">Add</label>
           </button>
           <input
@@ -484,7 +495,7 @@ const RegisterTwo = ({ user }: { user: User | null }) => {
             accept="image/*"
             onChange={handleImageUpload}
           />
-          {imgNotify && <Notify {...notification} />}
+          {/* {imgNotify && <Notify {...notification} />} */}
           <div
             style={{
               display: "flex",
