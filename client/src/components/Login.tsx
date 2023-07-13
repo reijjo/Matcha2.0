@@ -2,7 +2,7 @@ import { SyntheticEvent, useState } from "react";
 import { Notification } from "../types";
 import Notify from "./Notify";
 import loginService from "../services/loginService";
-// import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [notification, setNotification] = useState<Notification>({
@@ -80,6 +80,19 @@ const Login = () => {
           <button className="regformbutton" type="submit">
             Login
           </button>
+        </div>
+        <div style={{ marginTop: "1vh" }}>
+          Forgot your password?{" "}
+          <Link
+            style={{
+              textDecoration: "none",
+              color: "var(--dapurple)",
+              fontWeight: "bold",
+            }}
+            to="/forgot"
+          >
+            Click here!
+          </Link>
         </div>
       </form>
     </div>

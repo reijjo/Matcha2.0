@@ -37,6 +37,12 @@ const finishRegister = (stuff: object) => {
   return req.then((response) => response.data);
 };
 
+const forgotPw = (email: object) => {
+  console.log("AXIOS EMAIL", email);
+  const req = axios.post(`${baseUrl}/forgot`, email);
+  return req.then((response) => response.data);
+};
+
 const userService = {
   getAllUsers,
   regUser,
@@ -44,6 +50,7 @@ const userService = {
   getIpApi,
   openCage,
   finishRegister,
+  forgotPw,
 };
 
 export default userService;

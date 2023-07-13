@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { scryptSync, randomBytes } from "crypto";
 import nodemailer from "nodemailer";
 import checks from "../utils/differentChecks";
+// import { Options } from "nodemailer/lib/mailer";
 
 const usersRouter = express.Router();
 
@@ -41,7 +42,7 @@ usersRouter.post("/", async (req: Request, res: Response) => {
   if (usernameNotif) {
     return res.send({ notification: usernameNotif });
   } else if (emailNotif) {
-    res.send({ notification: emailNotif });
+    return res.send({ notification: emailNotif });
   } else if (firstNotif) {
     return res.send({ notification: firstNotif });
   } else if (lastNotif) {
@@ -239,6 +240,45 @@ usersRouter.post("/regTwo", async (req: Request, res: Response) => {
       );
     }
   }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.post("/forgot", async (req: Request, _res: Response) => {
+  const lookfor = req.body.email as string;
+
+  console.log("lookfor", lookfor);
+
+  // const emailNotif = checks.emailCheck(lookfor);
+
+  // if (emailNotif) {
+  //   return res.send({ notification: emailNotif });
+  // } else {
+  //   console.log("email bak", lookfor);
+  //   const whatEmail = `SELECT * FROM users WHERE email = $1`;
+  //   const resEmail = await pool.query(whatEmail, [lookfor]);
+
+  //   console.log("WHAT EMAILLL", whatEmail);
+
+  //   if (resEmail.rowCount === 0) {
+  //     return res.send({
+  //       notification: {
+  //         message: `No such email.`,
+  //         style: { color: "red" },
+  //         success: true,
+  //       },
+  //     });
+  //   } else {
+  //     console.log("RES EMAIL", resEmail.rowCount);
+
+  //     return res.send({
+  //       notification: {
+  //         message: `Link sent to EMAILLL`,
+  //         style: { color: "green" },
+  //         success: true,
+  //       },
+  //     });
+  //   }
+  // }
 });
 
 export { usersRouter };

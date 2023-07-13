@@ -12,11 +12,13 @@ import Register from "./components/Register";
 import Verify from "./components/Verify";
 import Login from "./components/Login";
 import Feed from "./components/Feed";
+import Forgot from "./components/Forgot";
 import userService from "./services/userService";
 import loginService from "./services/loginService";
 import { User } from "./types";
 import { useEffect, useState } from "react";
 import RegisterTwo from "./components/RegisterTwo";
+import NewPw from "./components/NewPw";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -93,6 +95,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/:code/verify" element={<Verify />} />
+          <Route path="/:code/forgot" element={<NewPw />} />
+          <Route path="/forgot" element={<Forgot />} />
           <Route path="/login" element={<Login />} />
           {/* <PrivateRoute path="/feed" element={<Feed user={loggedUser} />} /> */}
           {/* <Route path="/feed" element={<Feed token={token} />} /> */}
