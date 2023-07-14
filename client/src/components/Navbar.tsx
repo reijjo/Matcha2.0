@@ -53,7 +53,9 @@ const Navbar = ({ user }: { user: User | null }) => {
                   <Link to="#">Visited Profiles</Link>
                   <Link to="#">Liked Profiles</Link>
                   <hr />
-                  <Link to="#">Logout</Link>
+                  <Link to="#" onClick={logoutUser}>
+                    Logout
+                  </Link>
                 </>
               )}
             </div>

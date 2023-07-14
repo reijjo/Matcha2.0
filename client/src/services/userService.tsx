@@ -43,6 +43,11 @@ const forgotPw = (email: object) => {
   return req.then((response) => response.data);
 };
 
+const changePw = (code: string, newPw: object) => {
+  const req = axios.post(`${baseUrl}/${code}/forgot`, newPw);
+  return req.then((response) => response.data);
+};
+
 const userService = {
   getAllUsers,
   regUser,
@@ -51,6 +56,7 @@ const userService = {
   openCage,
   finishRegister,
   forgotPw,
+  changePw,
 };
 
 export default userService;

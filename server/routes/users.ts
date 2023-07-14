@@ -243,42 +243,129 @@ usersRouter.post("/regTwo", async (req: Request, res: Response) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-usersRouter.post("/forgot", async (req: Request, _res: Response) => {
+usersRouter.post("/forgot", async (req: Request, res: Response) => {
   const lookfor = req.body.email as string;
 
-  console.log("lookfor", lookfor);
+  const emailNotif = checks.emailCheck(lookfor);
 
-  // const emailNotif = checks.emailCheck(lookfor);
+  if (emailNotif) {
+    return res.send({ notification: emailNotif });
+  } else {
+    const whatEmail = `SELECT * FROM users WHERE email = $1`;
+    const resEmail = await pool.query(whatEmail, [lookfor]);
 
-  // if (emailNotif) {
-  //   return res.send({ notification: emailNotif });
-  // } else {
-  //   console.log("email bak", lookfor);
-  //   const whatEmail = `SELECT * FROM users WHERE email = $1`;
-  //   const resEmail = await pool.query(whatEmail, [lookfor]);
+    // console.log("WHAT EMAILLL", whatEmail);
+    console.log("WHAT EMAILLL", resEmail.rows[0]);
 
-  //   console.log("WHAT EMAILLL", whatEmail);
+    if (resEmail.rowCount === 0) {
+      return res.send({
+        notification: {
+          message: `No such email.`,
+          style: { color: "red" },
+          success: true,
+        },
+      });
+    } else {
+      console.log("RES EMAIL", resEmail.rowCount);
+      const codeHash = (await resEmail.rows[0].verifycode) as string;
 
-  //   if (resEmail.rowCount === 0) {
-  //     return res.send({
-  //       notification: {
-  //         message: `No such email.`,
-  //         style: { color: "red" },
-  //         success: true,
-  //       },
-  //     });
-  //   } else {
-  //     console.log("RES EMAIL", resEmail.rowCount);
+      const sendVerifyCode = () => {
+        const transporter = nodemailer.createTransport({
+          service: "outlook",
+          auth: {
+            user: config.EMAIL_USER,
+            pass: config.EMAIL_PASSWD,
+          },
+        });
 
-  //     return res.send({
-  //       notification: {
-  //         message: `Link sent to EMAILLL`,
-  //         style: { color: "green" },
-  //         success: true,
-  //       },
-  //     });
-  //   }
-  // }
+        const options = {
+          from: config.EMAIL_USER,
+          to: lookfor,
+          subject: "MATCHA!! Change password link.",
+          html: `
+						<h3>click the link</h3><br />
+						<a href="http://localhost:3000/${codeHash}/forgot"> the link </a><br />
+						<p>Thanks.</p>`,
+        };
+
+        transporter.sendMail(options, (err, info) => {
+          if (err) {
+            console.log("ERROR sending mail: ", err);
+          } else {
+            console.log("Email sent: ", info);
+          }
+        });
+      };
+
+      sendVerifyCode();
+
+      console.log("codehash", codeHash);
+
+      return res.send({
+        notification: {
+          message: `Link sent to EMAILLL`,
+          style: { color: "green" },
+          success: true,
+        },
+      });
+    }
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.post("/:code/forgot", async (req: Request, res: Response) => {
+  const passwd = req.body.password as string;
+  const passwd2 = req.body.confPassword as string;
+  const username = req.body.username as string;
+
+  console.log(passwd, passwd2, username);
+  const passwdNotif = checks.passwdCheck(passwd);
+
+  if (passwdNotif) {
+    return res.send({ notification: passwdNotif });
+  } else if (passwd !== passwd2) {
+    return res.send({
+      notification: {
+        message: "Passwords doesn't match.",
+        style: { color: "red" },
+        success: false,
+      },
+    });
+  } else {
+    const passwdHash: string = await bcrypt.hash(passwd, 10);
+    const userPw = `UPDATE users SET password = $1 WHERE username = $2`;
+    const profilePw = `UPDATE profile SET password = $1 WHERE username = $2`;
+
+    const doUser = await pool.query(userPw, [passwdHash, username]);
+    if (doUser.rowCount === 1) {
+      const doProfile = await pool.query(profilePw, [passwdHash, username]);
+      if (doProfile.rowCount === 1) {
+        return res.send({
+          notification: {
+            message: "Woopwoop, you got a new password!",
+            style: { color: "green" },
+            success: true,
+          },
+        });
+      } else {
+        return res.send({
+          notification: {
+            message: "Something went wrong.",
+            style: { color: "red" },
+            success: true,
+          },
+        });
+      }
+    } else {
+      return res.send({
+        notification: {
+          message: "Something went wrong.",
+          style: { color: "red" },
+          success: true,
+        },
+      });
+    }
+  }
 });
 
 export { usersRouter };

@@ -15,7 +15,18 @@ const Feed = ({ user }: { user: User | null }) => {
   }, []);
   console.log("FEED token", user);
 
-  return <div>{user ? <p>tokenit kunnossa!</p> : <p>oisko tokenii</p>}</div>;
+  return (
+    <div>
+      {user ? (
+        <div id="register">
+          <div className="overlay" />
+          <div className="registerForm">hei</div>
+        </div>
+      ) : (
+        <p>oisko tokenii</p>
+      )}
+    </div>
+  );
 };
 
 export default Feed;
