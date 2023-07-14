@@ -48,6 +48,7 @@ export interface Profile {
   coordinates: Coordinates;
   gender: Gender;
   seeking: Looking;
+  bio: string;
   tags: Array<string>;
   fame: number;
   isOnline: boolean;
@@ -69,6 +70,10 @@ export interface Token {
   token?: string;
 }
 
-// export interface Tags {
-//   tags: Array<string>;
-// }
+export interface Images {
+  avatar: boolean;
+  created_at: string;
+  id: number;
+  path: string;
+  user_id: number;
+}

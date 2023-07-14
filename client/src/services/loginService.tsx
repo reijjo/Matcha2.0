@@ -9,16 +9,6 @@ const logIn = (user: Login) => {
   return req.then((response) => response.data);
 };
 
-// const getUserInfo = (token: string) => {
-//   const req = axios.get(`${baseUrl}`, {
-//     // const req = axios.get(`http://localhost:3001/api/logged`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   return req.then((response) => response.data);
-// };
-
 const getUserInfo = async (token: string) => {
   try {
     const response = await axios.get(`${baseUrl}`, {

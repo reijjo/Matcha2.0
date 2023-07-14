@@ -1,5 +1,6 @@
 :root {
   --peach: #ffcda2;
+  --lipeach: #fffbf8;
   --black1: #17171f;
   --white1: #f0f0f5;
   --green: #5b7b7a;
@@ -178,6 +179,15 @@ footer div {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+.overlaydark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
 .hometext {
   color: white;
   z-index: 1;
@@ -329,4 +339,116 @@ footer div {
 
 .locationButton:hover {
   background-color: var(--peach);
+}
+
+#feed {
+  background-color: var(--lipurple);
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url(naamat.png);
+  /* background-size: cover; */
+  background-repeat: repeat-y;
+  background-position: center bottom;
+  flex-wrap: wrap;
+}
+
+/* .feedstuff {
+  margin: 10px;
+  padding: 5vw;
+  max-width: 500px;
+  height: 75vh;
+  /* max-height: 500px; */
+/* max-height: max-content; */
+/* border: 1px solid var(--dapurple);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--white1);
+  border-radius: 15px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+} */
+
+.feedCard {
+  z-index: 1;
+  background-color: var(--white1);
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 90vw;
+  max-width: 500px;
+  height: 80vh;
+  border-radius: 10px;
+  font-size: larger;
+  background-color: var(--lipeach);
+}
+
+.feedCard > div {
+  /* border: 1px solid red; */
+  padding: 1vh;
+}
+
+.cardHeader {
+  margin-left: 2vw;
+}
+
+.cardImage {
+  flex-grow: 3;
+}
+
+.cardImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* .cardImage img { */
+/* height: max-content;
+  width: auto; */
+/* } */
+
+.cardInfo {
+  margin: 1vh;
+  font-size: medium;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.cardInfo > div {
+  padding: 0.2vh;
+}
+
+.cardButtons {
+  margin: 2vh;
+}
+
+.cardButtons > button {
+  padding: 1vh;
+  margin: 1vh;
+  border-radius: 10px;
+}
+
+.matchButton {
+  background-color: rgb(127, 202, 127);
+}
+
+.matchButton:hover {
+  background-color: rgb(83, 188, 83);
+}
+
+.passButton {
+  background-color: rgb(253, 136, 136);
+}
+
+.passButton:hover {
+  background-color: rgb(248, 103, 103);
 }

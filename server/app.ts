@@ -7,6 +7,7 @@ import { loginRouter } from "./routes/login";
 import { loggedRouter } from "./routes/loggedIn";
 import { imageRouter } from "./routes/images";
 import path from "path";
+import { profileRouter } from "./routes/profiles";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use("/api/login", loginRouter);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.use("/api/logged", verifyToken, loggedRouter);
 app.use("/api/images", imageRouter);
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.use("/api/profiles", profileRouter);
 
 connectDB();
 

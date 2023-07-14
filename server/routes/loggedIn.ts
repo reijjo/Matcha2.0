@@ -7,7 +7,7 @@ import { verify } from "jsonwebtoken";
 
 const loggedRouter = express.Router();
 
-interface CustomReq extends Request {
+export interface CustomReq extends Request {
   user?: User;
 }
 
