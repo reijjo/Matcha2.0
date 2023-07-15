@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { Profile, User, Images } from "../types";
 import profileService from "../services/profileService";
 import BigCard from "./BigCard";
+// import InfiniteScroll from "react-infinite-scroll-component";
 
 const Feed = ({ user }: { user: User | null }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [images, setImages] = useState<Images[]>([]);
+  // const [offset, setOffset] = useState(0);
+  // const [hasMore, setHasMore] = useState(true);
+  // const [initialLoad, setInitialLoad] = useState(true);
+
+  // const limit = 10;
 
   useEffect(() => {
     if (user && user.status && user.status < 3) {
@@ -38,19 +44,14 @@ const Feed = ({ user }: { user: User | null }) => {
       {user ? (
         <div id="feed">
           <div className="overlaydark" />
+          {/* <InfiniteScroll
+            dataLength={profilesWithImages.length}
+            next={fetchData}
+            hasMore={true}
+            loader={<h4>Loading...</h4>}
+            endMessage={<p>No more profiles to load.</p>}
+          > */}
           {profilesWithImages?.map((profile) => (
-            // <div key={profile.user_id} className="feedstuff">
-            // <div key={profile.user_id} className="feedCard">
-            //   {/* <div className="feedCard"> */}
-            //   <div>{profile.username}</div>
-            //   <div>
-            //     <img
-            //       src={profile.image?.path}
-            //       alt="image"
-            //       style={{ height: "50px", width: "50px" }}
-            //     />
-            //   </div>
-            // </div>
             <BigCard
               key={profile.user_id}
               profile={profile}
@@ -58,6 +59,7 @@ const Feed = ({ user }: { user: User | null }) => {
             />
             // </div>
           ))}
+          {/* </InfiniteScroll> */}
         </div>
       ) : (
         <p>oisko tokenii</p>
