@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from "react";
-import Notify from "./Notify";
-import { Notification } from "../types";
-import userService from "../services/userService";
+import Notify from "../common/Notify";
+import { Notification } from "../../types";
+import userService from "../../services/userService";
 
 const Forgot = () => {
   const [email, setEmail] = useState("");

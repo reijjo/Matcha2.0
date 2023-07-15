@@ -1,8 +1,8 @@
 import { SyntheticEvent, useEffect, useState } from "react";
-import { User, Notification } from "../types";
-import userService from "../services/userService";
+import { User, Notification } from "../../types";
+import userService from "../../services/userService";
 import { useParams } from "react-router-dom";
-import Notify from "./Notify";
+import Notify from "../common/Notify";
 
 const NewPw = () => {
   const [user, setUser] = useState<User>();

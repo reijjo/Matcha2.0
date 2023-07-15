@@ -16,13 +16,7 @@ const Feed = ({ user }: { user: User | null }) => {
 
   useEffect(() => {
     if (user && user.status && user.status > 2) {
-      // profileService.getAllProfiles().then((data: Profile[]) => {
-      //   if (data) {
-      //     setProfiles(data);
-      //     console.log("PROFILEEESSS", data);
-      //   }
-      // });
-      profileService.getAllProfiles().then((response) => {
+      profileService.getAllProfiles(user).then((response) => {
         setProfiles(response.profile);
         setImages(response.images);
         console.log("resp", response);

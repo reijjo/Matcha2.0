@@ -1,16 +1,20 @@
 import express, { Response, Request } from "express";
-// import { Profile, User } from "../utils/types";
+// import { User } from "../utils/types";
 import { pool } from "../utils/dbConnection";
 
 const profileRouter = express.Router();
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-profileRouter.get("/", async (_req: Request, res: Response) => {
+profileRouter.get("/", async (req: Request, res: Response) => {
+  const user = req.query;
+
+  console.log("user", user);
+
   try {
     const profileSql = `
-      SELECT * FROM profile ORDER BY RANDOM()
+      SELECT * FROM profile WHERE user_id != $1 ORDER BY RANDOM()
     `;
-    const profileRes = await pool.query(profileSql);
+    const profileRes = await pool.query(profileSql, [user.id]);
 
     const imageSql = `SELECT * FROM images WHERE avatar = $1`;
     const imageRes = await pool.query(imageSql, [true]);

@@ -6,19 +6,20 @@ import {
   RouteProps,
 } from "react-router-dom";
 import Home from "./components/Home";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Register from "./components/Register";
-import Verify from "./components/Verify";
-import Login from "./components/Login";
+import Navbar from "./components/common/Navbar";
+import Footer from "./components/common/Footer";
+import Register from "./components/user/Register";
+import Verify from "./components/user/Verify";
+import Login from "./components/user/Login";
 import Feed from "./components/Feed";
-import Forgot from "./components/Forgot";
+import Forgot from "./components/user/Forgot";
 import userService from "./services/userService";
 import loginService from "./services/loginService";
 import { User } from "./types";
 import { useEffect, useState } from "react";
-import RegisterTwo from "./components/RegisterTwo";
-import NewPw from "./components/NewPw";
+import RegisterTwo from "./components/user/RegisterTwo";
+import NewPw from "./components/user/NewPw";
+import Settings from "./components/Settings";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -113,6 +114,10 @@ const App = () => {
             element={
               <PrivateRoute element={<RegisterTwo user={loggedUser} />} />
             }
+          />
+          <Route
+            path="/settings"
+            element={<PrivateRoute element={<Settings user={loggedUser} />} />}
           />
         </Routes>
         <Footer />

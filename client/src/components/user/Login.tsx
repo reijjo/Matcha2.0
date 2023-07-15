@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from "react";
-import { Notification } from "../types";
-import Notify from "./Notify";
-import loginService from "../services/loginService";
+import { Notification } from "../../types";
+import Notify from "../common/Notify";
+import loginService from "../../services/loginService";
 import { Link } from "react-router-dom";
 
 const Login = () => {

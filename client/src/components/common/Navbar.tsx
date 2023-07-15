@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Link } from "react-router-dom";
-import { User } from "../types";
+import { User } from "../../types";
 import { useState } from "react";
 
-const expandIcon = require("../icons8-expand-arrow-16.png");
-const closeIcon = require("../icons8-close-16.png");
+const expandIcon = require("../../images/icons8-expand-arrow-16.png");
+const closeIcon = require("../../images/icons8-close-16.png");
 
 const Navbar = ({ user }: { user: User | null }) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
@@ -46,7 +46,7 @@ const Navbar = ({ user }: { user: User | null }) => {
 
                   <hr />
                   <Link to="#">My Profile</Link>
-                  <Link to="#">Settings</Link>
+                  <Link to="/settings">Settings</Link>
                   <hr />
                   <Link to="#">Your Stalkers</Link>
                   <Link to="#">Who Liked You</Link>

@@ -48,6 +48,12 @@ const deleteImage = (id: number) => {
   return req.then((response) => response.data);
 };
 
-const imageService = { uploadImage, userPhotos, deleteImage };
+const updateProfilePic = (id: number) => {
+  console.log("AXIOS", id);
+  const req = axios.put(baseUrl, { imgId: id });
+  return req.then((response) => response.data);
+};
+
+const imageService = { uploadImage, userPhotos, deleteImage, updateProfilePic };
 
 export default imageService;

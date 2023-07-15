@@ -48,6 +48,18 @@ const changePw = (code: string, newPw: object) => {
   return req.then((response) => response.data);
 };
 
+const getSettings = (id: number) => {
+  const params = { id };
+  const req = axios.get(`${baseUrl}/settings`, { params });
+  return req.then((response) => response.data);
+};
+
+const newSettings = (profile: object) => {
+  console.log("axios profile", profile);
+  const req = axios.put(`${baseUrl}/settings`, profile);
+  return req.then((response) => response.data);
+};
+
 const userService = {
   getAllUsers,
   regUser,
@@ -57,6 +69,8 @@ const userService = {
   finishRegister,
   forgotPw,
   changePw,
+  getSettings,
+  newSettings,
 };
 
 export default userService;

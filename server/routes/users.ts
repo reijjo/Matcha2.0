@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { scryptSync, randomBytes } from "crypto";
 import nodemailer from "nodemailer";
 import checks from "../utils/differentChecks";
+// import { QueryResult } from "pg";
 // import { Options } from "nodemailer/lib/mailer";
 
 const usersRouter = express.Router();
@@ -362,6 +363,116 @@ usersRouter.post("/:code/forgot", async (req: Request, res: Response) => {
           message: "Something went wrong.",
           style: { color: "red" },
           success: true,
+        },
+      });
+    }
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.get("/settings", async (req: Request, res: Response) => {
+  const userId = req.query.id;
+
+  const profileSql = `SELECT * FROM profile WHERE user_id = $1`;
+  const imageSql = `SELECT * FROM images WHERE user_id = $1 ORDER BY id ASC`;
+
+  const profileRes = await pool.query(profileSql, [userId]);
+  const imageRes = await pool.query(imageSql, [userId]);
+
+  // console.log(profileRes.rows[0]);
+
+  res.send({ profile: profileRes.rows, image: imageRes.rows });
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+usersRouter.put("/settings", async (req: Request, res: Response) => {
+  const user = req.body as Profile;
+  console.log('USER", ', user);
+
+  const usernameNotif = checks.usernameCheck(user.username);
+  const emailNotif = checks.emailCheck(user.email);
+  const firstNotif = checks.firstCheck(user.firstname);
+  const lastNotif = checks.lastCheck(user.lastname);
+  const ageNotif = checks.ageCheck(user.birthday);
+  const genderNotif = checks.genderCheck(user.gender);
+  const lookingNotif = checks.lookingCheck(user.seeking);
+  const bioNotif = checks.bioCheck(user.bio);
+  const tagsNotif = checks.tagCheck(user.tags);
+
+  if (usernameNotif) {
+    return res.send({ notification: usernameNotif });
+  } else if (emailNotif) {
+    return res.send({ notification: emailNotif });
+  } else if (firstNotif) {
+    return res.send({ notification: firstNotif });
+  } else if (lastNotif) {
+    return res.send({ notification: lastNotif });
+  } else if (ageNotif) {
+    return res.send({ notification: ageNotif });
+  } else if (genderNotif) {
+    return res.send({ notification: genderNotif });
+  } else if (lookingNotif) {
+    return res.send({ notification: lookingNotif });
+  } else if (bioNotif) {
+    return res.send({ notification: bioNotif });
+  } else if (tagsNotif) {
+    return res.send({ notification: tagsNotif });
+  } else {
+    const updateProfile = `UPDATE profile SET username = $1, firstname = $2, lastname = $3, email = $4, birthday = $5,
+    	location = $6, coordinates = POINT($7, $8), gender = $9, seeking = $10, bio = $11, tags = $12 WHERE user_id = $13`;
+
+    try {
+      const update = await pool.query(updateProfile, [
+        user.username,
+        user.firstname,
+        user.lastname,
+        user.email,
+        user.birthday,
+        user.location,
+        user.coordinates.x,
+        user.coordinates.y,
+        user.gender,
+        user.seeking,
+        user.bio,
+        user.tags,
+        user.user_id,
+      ]);
+
+      if (update.rowCount === 1) {
+        const updateUserSql = `UPDATE users SET username = $1, firstname = $2, lastname = $3, email = $4, birthday = $5 WHERE id = $6`;
+
+        await pool.query(updateUserSql, [
+          user.username,
+          user.firstname,
+          user.lastname,
+          user.email,
+          user.birthday,
+          user.user_id,
+        ]);
+
+        return res.send({
+          notification: {
+            message: `Profile updated!`,
+            style: { color: "green" },
+            success: true,
+          },
+        });
+      } else {
+        return res.send({
+          notification: {
+            message: `Something shitty happened`,
+            style: { color: "red" },
+            success: false,
+          },
+        });
+      }
+    } catch (error: unknown) {
+      console.log("Error updating profile", error);
+      return res.send({
+        notification: {
+          message: `Something shitty happened`,
+          style: { color: "red" },
+          success: false,
         },
       });
     }

@@ -4,6 +4,7 @@ import multer, { Multer } from "multer";
 import fs from "fs";
 import path from "path";
 import { pool } from "../utils/dbConnection";
+import { QueryResult } from "pg";
 
 const imageRouter = express.Router();
 
@@ -148,6 +149,30 @@ imageRouter.delete("/", async (req: Request, res: Response) => {
       message: "deleted",
       style: { color: "red" },
       success: false,
+    },
+  });
+});
+
+imageRouter.put("/", async (req: Request, res: Response) => {
+  const id = req.body.imgId as number;
+
+  const findUserSql = `SELECT user_id FROM images WHERE id = $1`;
+  const findUserRes = await pool.query(findUserSql, [id]);
+
+  const userId = findUserRes.rows[0].user_id as QueryResult;
+
+  const findAvatarsSql = "UPDATE images SET avatar = $1 WHERE user_id = $2";
+  await pool.query(findAvatarsSql, [false, userId]);
+
+  const updateAvatar = "UPDATE images SET avatar = $1 WHERE id = $2";
+  await pool.query(updateAvatar, [true, id]);
+
+  res.send({
+    imgNotify: true,
+    notification: {
+      message: "Profile pic updated.",
+      style: { color: "green" },
+      success: true,
     },
   });
 });

@@ -164,7 +164,7 @@ footer div {
 #home {
   min-height: 86vh;
   position: relative;
-  background-image: url(naamat.png);
+  background-image: url(images/naamat.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -185,7 +185,7 @@ footer div {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .hometext {
@@ -243,7 +243,7 @@ footer div {
   align-items: center;
   justify-content: center;
   position: relative;
-  background-image: url(naamat.png);
+  background-image: url(images/naamat.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -349,31 +349,12 @@ footer div {
   align-items: center;
   justify-content: center;
   position: relative;
-  background-image: url(naamat.png);
+  background-image: url(images/naamat.png);
   /* background-size: cover; */
   background-repeat: repeat-y;
   background-position: center bottom;
   flex-wrap: wrap;
 }
-
-/* .feedstuff {
-  margin: 10px;
-  padding: 5vw;
-  max-width: 500px;
-  height: 75vh;
-  /* max-height: 500px; */
-/* max-height: max-content; */
-/* border: 1px solid var(--dapurple);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  background-color: var(--white1);
-  border-radius: 15px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  z-index: 1;
-} */
 
 .feedCard {
   z-index: 1;
@@ -411,11 +392,6 @@ footer div {
   height: 100%;
 }
 
-/* .cardImage img { */
-/* height: max-content;
-  width: auto; */
-/* } */
-
 .cardInfo {
   margin: 1vh;
   font-size: medium;
@@ -425,6 +401,7 @@ footer div {
 
 .cardInfo > div {
   padding: 0.2vh;
+  margin-left: 1.8vw;
 }
 
 .cardButtons {
@@ -451,4 +428,49 @@ footer div {
 
 .passButton:hover {
   background-color: rgb(248, 103, 103);
+}
+
+.settingsGrid {
+  width: 80vw;
+  display: grid;
+  grid-template-columns: auto auto;
+  max-width: 500px;
+  gap: 15px;
+}
+
+@media (max-width: 500px) {
+  .settingsGrid {
+    grid-template-columns: repeat(1, 1fr);
+    /* grid-column: 1 / span 2; */
+  }
+}
+
+@media (min-width: 501px) {
+  .spangrid,
+  .settingsbutton {
+    grid-column: 1 / span 2;
+  }
+}
+
+fieldset {
+  border-radius: 5px;
+  color: var(--dapurple);
+}
+
+fieldset > input {
+  width: 90%;
+}
+
+fieldset > textarea {
+  width: 90%;
+}
+
+legend {
+  padding: 0 3vw;
+}
+
+.settingsbutton {
+  padding: 0.5vw;
+  background-color: var(--lipurple);
+  border-radius: 10px;
 }

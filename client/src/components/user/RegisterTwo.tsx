@@ -6,10 +6,10 @@ import {
   Coordinates,
   Notification,
   // Tags,
-} from "../types";
-import userService from "../services/userService";
-import Notify from "./Notify";
-import imageService from "../services/imageService";
+} from "../../types";
+import userService from "../../services/userService";
+import Notify from "../common/Notify";
+import imageService from "../../services/imageService";
 
 const RegisterTwo = ({ user }: { user: User | null }) => {
   const [city, setCity] = useState("");

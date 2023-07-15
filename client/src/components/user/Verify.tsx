@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import userService from "../services/userService";
-import { User } from "../types";
+import userService from "../../services/userService";
+import { User } from "../../types";
 import { useParams } from "react-router-dom";
 
 const Verify = () => {
