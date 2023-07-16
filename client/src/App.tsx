@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import RegisterTwo from "./components/user/RegisterTwo";
 import NewPw from "./components/user/NewPw";
 import Settings from "./components/Settings";
+import UserCard from "./components/UserCard";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -118,6 +119,10 @@ const App = () => {
           <Route
             path="/settings"
             element={<PrivateRoute element={<Settings user={loggedUser} />} />}
+          />
+          <Route
+            path="/profile/:id"
+            element={<PrivateRoute element={<UserCard user={loggedUser} />} />}
           />
         </Routes>
         <Footer />

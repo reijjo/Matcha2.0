@@ -16,6 +16,11 @@ const getAllProfiles = (user: User, limit: number, offset: number) => {
   return req.then((response) => response.data);
 };
 
-const profileService = { getAllProfiles };
+const getProfile = (id: string) => {
+  const req = axios.get(`${baseUrl}/profile/${id}`);
+  return req.then((response) => response.data);
+};
+
+const profileService = { getAllProfiles, getProfile };
 
 export default profileService;

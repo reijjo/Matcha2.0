@@ -12,13 +12,13 @@ const Feed = ({ user }: { user: User | null }) => {
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const limit = 10;
+  const limit = 1;
 
   const fetchData = async (user: User) => {
     try {
       const fetchWithDelay = async () => {
         const data = await profileService.getAllProfiles(user, limit, offset);
-        if (data.length < limit) {
+        if (data.profile.length < limit) {
           setHasMore(false);
         }
 
@@ -78,8 +78,10 @@ const Feed = ({ user }: { user: User | null }) => {
           dataLength={profilesWithImages.length}
           next={() => fetchData(user)}
           hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={<p>No more profiles to load.</p>}
+          loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+          endMessage={
+            <h4 style={{ textAlign: "center" }}>No more profiles to load.</h4>
+          }
         >
           <div id="feed">
             <div className="overlaydark" />
@@ -89,7 +91,6 @@ const Feed = ({ user }: { user: User | null }) => {
                 profile={profile}
                 image={profile.image}
               />
-              // </div>
             ))}
           </div>
         </InfiniteScroll>

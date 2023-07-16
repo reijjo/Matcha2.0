@@ -59,12 +59,24 @@ const getAll = () => {
   return req.then((response) => response.data);
 };
 
+const getImage = (id: string) => {
+  const req = axios.get(`${baseUrl}/photos/${id}`);
+  return req.then((response) => response.data);
+};
+
+const getAvatar = (id: string) => {
+  const req = axios.get(`${baseUrl}/avatar/${id}`);
+  return req.then((response) => response.data);
+};
+
 const imageService = {
   uploadImage,
   userPhotos,
   deleteImage,
   updateProfilePic,
   getAll,
+  getImage,
+  getAvatar,
 };
 
 export default imageService;

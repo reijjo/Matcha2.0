@@ -2,6 +2,7 @@ import express, { Response, Request } from "express";
 import { pool } from "../utils/dbConnection";
 // import { User } from "../utils/types";
 import { Looking } from "../utils/types";
+import { QueryResult } from "pg";
 
 const profileRouter = express.Router();
 
@@ -38,7 +39,7 @@ profileRouter.get("/", async (req: Request, res: Response) => {
       ]);
     } else {
       profileSql = `
-      SELECT * FROM profile WHERE user_id != $1  ORDER BY RANDOM() OFFSET $2 LIMIT $3
+      SELECT * FROM profile WHERE user_id != $1  OFFSET $2 LIMIT $3
     `;
       profileRes = await pool.query(profileSql, [user.id, offset, limit]);
     }
@@ -56,6 +57,17 @@ profileRouter.get("/", async (req: Request, res: Response) => {
     console.error(err);
     res.status(500).json({ message: "Error fetching profiles" });
   }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+profileRouter.get("/profile/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const get = `SELECT * FROM profile WHERE user_id = $1`;
+  const send = await pool.query(get, [id]);
+
+  console.log("SENDD", send.rows[0] as QueryResult);
+  res.send(send.rows[0]);
 });
 
 export { profileRouter };

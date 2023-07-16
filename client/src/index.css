@@ -377,6 +377,27 @@ footer .left {
   background-color: var(--lipeach);
 }
 
+.userCard {
+  z-index: 1;
+  /* background-color: var(--peach); */
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  width: 90vw;
+  max-width: 500px;
+  height: 80vh;
+  border-radius: 10px;
+  font-size: larger;
+  background-color: var(--lipeach);
+}
+
+.userCard > div {
+  /* border: 1px solid red; */
+  padding: 1vh;
+}
+
 .feedCard > div {
   /* border: 1px solid red; */
   padding: 1vh;
@@ -388,6 +409,12 @@ footer .left {
 
 .cardImage {
   flex-grow: 3;
+  /* min-height: 50vh; */
+}
+
+.usercardImage {
+  /* flex-grow: 3; */
+  min-height: 50vh;
 }
 
 .cardImg {

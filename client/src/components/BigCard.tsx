@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Images, Profile } from "../types";
 
 interface Props {
@@ -24,12 +25,14 @@ const BigCard = ({ profile, image }: Props) => {
             position: "relative",
           }}
         >
-          <img
-            src={image?.path}
-            alt="image"
-            className="cardImg"
-            // style={{ objectFit: "contain" }}
-          />
+          <Link to={`/profile/${profile.user_id}`}>
+            <img
+              src={image?.path}
+              alt="image"
+              className="cardImg"
+              // style={{ objectFit: "contain" }}
+            />
+          </Link>
         </div>
       </div>
       <div className="cardInfo">
