@@ -54,6 +54,17 @@ const updateProfilePic = (id: number) => {
   return req.then((response) => response.data);
 };
 
-const imageService = { uploadImage, userPhotos, deleteImage, updateProfilePic };
+const getAll = () => {
+  const req = axios.get(`${baseUrl}/all`);
+  return req.then((response) => response.data);
+};
+
+const imageService = {
+  uploadImage,
+  userPhotos,
+  deleteImage,
+  updateProfilePic,
+  getAll,
+};
 
 export default imageService;

@@ -3,11 +3,14 @@ import { User } from "../types";
 
 const baseUrl = "http://localhost:3001/api/profiles";
 
-const getAllProfiles = (user: User) => {
+const getAllProfiles = (user: User, limit: number, offset: number) => {
   // return axios
   //   .get<Profile[]>(baseUrl)
   //   .then((response: { data: Profile[] }) => response.data);
-  const req = axios.get(baseUrl, {
+  // const req = axios.get(baseUrl, {
+  //   params: { user, limit, offset },
+  // });
+  const req = axios.get(`${baseUrl}?limit=${limit}&offset=${offset}`, {
     params: user,
   });
   return req.then((response) => response.data);

@@ -68,6 +68,7 @@ const Login = () => {
             value={username}
             autoComplete="off"
             onChange={handleUsername}
+            placeholder="username..."
           />
           <div>Password</div>
           <input
@@ -76,6 +77,7 @@ const Login = () => {
             value={passwd}
             autoComplete="off"
             onChange={handlePasswd}
+            placeholder="password..."
           />
           <button className="regformbutton" type="submit">
             Login

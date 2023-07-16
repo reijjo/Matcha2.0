@@ -1,5 +1,6 @@
 :root {
   --peach: #ffcda2;
+  --midpeach: #ffe1c6;
   --lipeach: #fffbf8;
   --black1: #17171f;
   --white1: #f0f0f5;
@@ -153,12 +154,16 @@ footer {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   z-index: 1;
 }
 
-footer div {
+footer .right {
   margin-right: 2vw;
+}
+
+footer .left {
+  margin-left: 2vw;
 }
 
 #home {
@@ -342,7 +347,8 @@ footer div {
 }
 
 #feed {
-  background-color: var(--lipurple);
+  background-color: var(--midpeach);
+  /* background-color: rgba(0, 0, 0, 0.8); */
   min-height: 86vh;
   display: flex;
   flex-direction: column;
@@ -358,7 +364,7 @@ footer div {
 
 .feedCard {
   z-index: 1;
-  background-color: var(--white1);
+  /* background-color: var(--peach); */
   margin: 15px;
   display: flex;
   flex-direction: column;

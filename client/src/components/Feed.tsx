@@ -2,16 +2,42 @@ import { useEffect, useState } from "react";
 import { Profile, User, Images } from "../types";
 import profileService from "../services/profileService";
 import BigCard from "./BigCard";
-// import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component";
+import imageService from "../services/imageService";
 
 const Feed = ({ user }: { user: User | null }) => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [images, setImages] = useState<Images[]>([]);
-  // const [offset, setOffset] = useState(0);
-  // const [hasMore, setHasMore] = useState(true);
-  // const [initialLoad, setInitialLoad] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
 
-  // const limit = 10;
+  const limit = 10;
+
+  const fetchData = async (user: User) => {
+    try {
+      const fetchWithDelay = async () => {
+        const data = await profileService.getAllProfiles(user, limit, offset);
+        if (data.length < limit) {
+          setHasMore(false);
+        }
+
+        setProfiles((prevProfiles) => [...prevProfiles, ...data.profile]);
+        setOffset((prevOffset) => prevOffset + limit);
+        if (initialLoad) {
+          setInitialLoad(false);
+        }
+      };
+
+      if (initialLoad) {
+        fetchWithDelay();
+      } else {
+        setTimeout(fetchWithDelay, 2000);
+      }
+    } catch (error: unknown) {
+      console.log("Error fetching profiles", error);
+    }
+  };
 
   useEffect(() => {
     if (user && user.status && user.status < 3) {
@@ -21,11 +47,17 @@ const Feed = ({ user }: { user: User | null }) => {
   console.log("FEED token", user);
 
   useEffect(() => {
+    // if (user && user.status && user.status > 2) {
+    //   profileService.getAllProfiles(user).then((response) => {
+    //     setProfiles(response.profile);
+    //     setImages(response.images);
+    //     console.log("resp", response);
+    //   });
+    // }
     if (user && user.status && user.status > 2) {
-      profileService.getAllProfiles(user).then((response) => {
-        setProfiles(response.profile);
-        setImages(response.images);
-        console.log("resp", response);
+      fetchData(user);
+      imageService.getAll().then((response) => {
+        setImages(response);
       });
     }
   }, []);
@@ -42,25 +74,25 @@ const Feed = ({ user }: { user: User | null }) => {
   return (
     <div>
       {user ? (
-        <div id="feed">
-          <div className="overlaydark" />
-          {/* <InfiniteScroll
-            dataLength={profilesWithImages.length}
-            next={fetchData}
-            hasMore={true}
-            loader={<h4>Loading...</h4>}
-            endMessage={<p>No more profiles to load.</p>}
-          > */}
-          {profilesWithImages?.map((profile) => (
-            <BigCard
-              key={profile.user_id}
-              profile={profile}
-              image={profile.image}
-            />
-            // </div>
-          ))}
-          {/* </InfiniteScroll> */}
-        </div>
+        <InfiniteScroll
+          dataLength={profilesWithImages.length}
+          next={() => fetchData(user)}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={<p>No more profiles to load.</p>}
+        >
+          <div id="feed">
+            <div className="overlaydark" />
+            {profilesWithImages?.map((profile) => (
+              <BigCard
+                key={profile.user_id}
+                profile={profile}
+                image={profile.image}
+              />
+              // </div>
+            ))}
+          </div>
+        </InfiniteScroll>
       ) : (
         <p>oisko tokenii</p>
       )}

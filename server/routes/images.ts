@@ -177,4 +177,11 @@ imageRouter.put("/", async (req: Request, res: Response) => {
   });
 });
 
+imageRouter.get("/all", async (_req: Request, res: Response) => {
+  const sql = `SELECT * FROM images`;
+  const resp = await pool.query(sql);
+
+  res.send(resp.rows);
+});
+
 export { imageRouter };
