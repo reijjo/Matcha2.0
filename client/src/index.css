@@ -121,7 +121,7 @@ nav {
 
 @media (max-width: 500px) {
   .registerlog span {
-    content: url("images/icons-logout.png");
+    content: url("images/icons/icons-logout.png");
     /* width: 60px; */
     vertical-align: -4px;
   }
@@ -434,7 +434,7 @@ footer .left {
   justify-content: space-between;
   width: 90vw;
   max-width: 500px;
-  height: 80vh;
+  height: 85vh;
   border-radius: 10px;
   font-size: larger;
   background-color: var(--lipeach);
@@ -569,4 +569,10 @@ legend {
   padding: 0.5vw;
   background-color: var(--lipurple);
   border-radius: 10px;
+}
+
+.registerFormContainer {
+  max-width: 800px; /* Adjust the maximum width as needed */
+  margin: 0 auto; /* Centers the container horizontally */
+  position: relative;
 }

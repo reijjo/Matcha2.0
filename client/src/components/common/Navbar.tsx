@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { User } from "../../utils/types";
 import { useState } from "react";
 
-const expandIcon = require("../../images/icons8-expand-arrow-16.png");
-const closeIcon = require("../../images/icons8-close-16.png");
-const noNotification = require("../../images/icons8-notification-16.png");
-// const yesNotification = require("../../images/notification-16.png");
+const expandIcon = require("../../images/icons/icons8-expand-arrow-16.png");
+const closeIcon = require("../../images/icons/icons8-close-16.png");
+const noNotification = require("../../images/icons/icons8-notification-16.png");
+// const yesNotification = require("../../images/icons/notification-16.png");
 const logotext = require("../../images/logotext.png");
 
 const Navbar = ({ user }: { user: User | null }) => {

@@ -13,7 +13,7 @@ const Feed = ({ user }: { user: User | null }) => {
   const [initialLoad, setInitialLoad] = useState(true);
   const [myProfile, setMyProfile] = useState<Profile>();
 
-  const limit = 1;
+  const limit = 10;
 
   const fetchData = async (user: User) => {
     try {
@@ -46,6 +46,7 @@ const Feed = ({ user }: { user: User | null }) => {
     }
   }, []);
   console.log("FEED token", user);
+  // console.log("FEED", profiles);
 
   useEffect(() => {
     if (user && user.status && user.status > 2) {
@@ -61,8 +62,11 @@ const Feed = ({ user }: { user: User | null }) => {
   }, []);
 
   const profilesWithImages = profiles?.map((profile) => {
-    const image = images.find((img) => img.user_id === profile.user_id);
+    const image = images.find(
+      (img) => img.user_id === profile.user_id && img.avatar
+    );
 
+    console.log("image", image);
     return {
       ...profile,
       image,

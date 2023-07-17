@@ -77,20 +77,16 @@ const UserCard = ({ user }: { user: User | null }) => {
               position: "relative",
             }}
           >
-            <img
-              src={bigImg || avatar.path}
-              // src={avatar.path}
-              alt="image"
-              className="cardImg"
-              // style={{ objectFit: "contain" }}
-            />
+            <img src={bigImg || avatar.path} alt="image" className="cardImg" />
           </div>
         </div>
         <div className="cardInfo">
           <div
             style={{
               display: "flex",
+
               justifyContent: "space-around",
+              // display: "grid",
               gridColumn: "1 / span 2",
             }}
           >
@@ -103,20 +99,27 @@ const UserCard = ({ user }: { user: User | null }) => {
               <img
                 src={avatar.path}
                 alt="userimage"
-                style={{ width: "10vw", height: "10vh" }}
+                style={{ width: "10vw", height: "10vh", maxWidth: "70px" }}
               />
             </div>
             {images.map((img) => (
               <div
                 key={img.id}
-                style={{ border: "1px solid black", display: "flex" }}
+                style={{
+                  border: "1px solid black",
+                  display: "grid",
+                  maxWidth: "maxContent",
+                  // display: "flex",
+                  // flexDirection: "column",
+                  // flexWrap: "wrap",
+                }}
                 onClick={() => handleClick(img.path)}
               >
                 {" "}
                 <img
                   src={img.path}
                   alt="userimage"
-                  style={{ width: "10vw", height: "10vh" }}
+                  style={{ width: "10vw", height: "10vh", maxWidth: "70px" }}
                 />
               </div>
             ))}

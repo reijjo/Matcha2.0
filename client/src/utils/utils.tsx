@@ -22,5 +22,5 @@ export const calcCoordsDistance = (
         Math.cos(myLat) * Math.cos(otherLat) * Math.cos(myLng - otherLng)
     ) * radius;
 
-  return Math.floor(distanceInKm * 100) / 100;
+  return Math.floor(distanceInKm);
 };

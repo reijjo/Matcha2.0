@@ -11,7 +11,7 @@ import {
 import userService from "../services/userService";
 import imageService from "../services/imageService";
 import Notify from "./common/Notify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Settings = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile[]>([]);
@@ -78,7 +78,7 @@ const Settings = ({ user }: { user: User | null }) => {
   const [avatar, setAvatar] = useState("");
   const [userId, setUserId] = useState<number>(0);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (user && user.id) {
@@ -395,7 +395,7 @@ const Settings = ({ user }: { user: User | null }) => {
         setNotification(response.notification);
         setTimeout(() => {
           setNotification({ message: "", style: {}, success: false });
-          navigate("/feed");
+          window.location.replace("/feed");
         }, 2000);
         console.log(response);
       });
@@ -409,494 +409,506 @@ const Settings = ({ user }: { user: User | null }) => {
   return (
     <div id="register">
       <div className="overlay" />
-      <form className="registerForm" onSubmit={updateProfile}>
-        <div style={{ textAlign: "left", width: "100%", marginBottom: "1vh" }}>
-          <strong style={{ fontSize: "3vh" }}>Settings</strong>
-        </div>
-        <div className="settingsGrid">
-          {/* USERNAME */}
-          <div>
-            <fieldset>
-              <legend>Username</legend>
-              <input
-                type="text"
-                placeholder="Username..."
-                autoComplete="off"
-                required={true}
-                value={username}
-                name="username"
-                onChange={handleUsername}
-                onFocus={() => {
-                  setUsernameLenFocus(true);
-                  setUsernameValidFocus(true);
-                }}
-                onBlur={() => {
-                  setUsernameLenFocus(false);
-                  setUsernameValidFocus(false);
-                }}
-              />
-              {usernameLenFocus && usernameLenMsg && (
-                <div className="regmsg">
-                  <li>{usernameLenMsg}</li>
-                </div>
-              )}
-              {usernameValidFocus && usernameValidMsg && (
-                <div className="regmsg">
-                  <li>{usernameValidMsg}</li>
-                </div>
-              )}
-            </fieldset>
+      <div className="registerFormContainer">
+        {" "}
+        {/* Added container */}
+        <form className="registerForm" onSubmit={updateProfile}>
+          <div
+            style={{ textAlign: "left", width: "100%", marginBottom: "1vh" }}
+          >
+            <strong style={{ fontSize: "3vh" }}>Settings</strong>
           </div>
-          {/* EMAIL */}
-          <div>
-            {" "}
-            <fieldset>
-              <legend>Email</legend>
-              <input
-                type="email"
-                placeholder="Email..."
-                autoComplete="off"
-                required={true}
-                value={email}
-                name="email"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </fieldset>
-          </div>
-          {/* FIRSTNAME */}
-          <div>
-            <fieldset>
-              <legend>First Name</legend>
-              <input
-                type="text"
-                placeholder="First Name..."
-                autoComplete="off"
-                required={true}
-                value={firstname}
-                onChange={handleFirstname}
-                name="firstname"
-                onFocus={() => {
-                  setFirstnameLenFocus(true);
-                  setFirstnameValidFocus(true);
-                }}
-                onBlur={() => {
-                  setFirstnameLenFocus(false);
-                  setFirstnameValidFocus(false);
-                }}
-              />
-              {firstnameLenFocus && firstnameLenMsg && (
-                <div className="regmsg">
-                  <li>{firstnameLenMsg}</li>
-                </div>
-              )}
-              {firstnameValidFocus && firstnameValidMsg && (
-                <div className="regmsg">
-                  <li>{firstnameValidMsg}</li>
-                </div>
-              )}
-            </fieldset>
-          </div>
-          {/* LASTNAME */}
-          <div>
-            <fieldset>
-              <legend>Last Name</legend>
-              <input
-                type="text"
-                placeholder="Last Name..."
-                autoComplete="off"
-                required={true}
-                value={lastname}
-                name="lastname"
-                onChange={handleLastname}
-                onFocus={() => {
-                  setLastnameLenFocus(true);
-                  setLastnameValidFocus(true);
-                }}
-                onBlur={() => {
-                  setLastnameLenFocus(false);
-                  setLastnameValidFocus(false);
-                }}
-              />
-              {lastnameLenFocus && lastnameLenMsg && (
-                <div className="regmsg">
-                  <li>{lastnameLenMsg}</li>
-                </div>
-              )}
-              {lastnameValidFocus && lastnameValidMsg && (
-                <div className="regmsg">
-                  <li>{lastnameValidMsg}</li>
-                </div>
-              )}
-            </fieldset>
-          </div>
-          {/* BIRTHDAY */}
-          <div>
-            <fieldset>
-              <legend>Date Of Birth</legend>
-              <input
-                type="date"
-                required={true}
-                value={date}
-                name="date"
-                onChange={handleDate}
-                onFocus={() => {
-                  setDateFocus(true);
-                }}
-                onBlur={() => {
-                  setDateFocus(false);
-                }}
-              />
-              {dateFocus && dateMsg && (
-                <div className="regmsg">
-                  <li>{dateMsg}</li>
-                </div>
-              )}
-            </fieldset>
-          </div>
-          {/* CITY, COUNTRY */}
-          <div>
-            <fieldset>
-              <legend>City, Country</legend>
-              <input
-                type="text"
-                required={true}
-                name="location"
-                value={!city && !country ? "..." : `${city}, ${country}`}
-                readOnly
-              />
-            </fieldset>
-          </div>
-          {/* COORDINATES */}
-          <div>
-            <fieldset>
-              <legend>Coordinates</legend>
-              <input
-                type="text"
-                name="coordinates"
-                readOnly
-                required={true}
-                value={`${coordinates.x}, ${coordinates.y}`}
-              />
-              {locationMsg ? <Notify {...notification} /> : null}
-            </fieldset>
-          </div>
-          {/* UPDATE COORDINATES */}
-          <div>
-            <fieldset>
-              <legend>Update Coordinates</legend>
-              <button
-                className="locationButton"
-                type="button"
-                onClick={getLocation}
-                style={{ width: "90%" }}
-              >
-                Get Location!
-              </button>
-            </fieldset>
-          </div>
-          {/* GENDER */}
-          <div>
-            <fieldset>
-              <legend>Gender</legend>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <label>
-                  <input
-                    type="radio"
-                    name="gendermale"
-                    value={Gender.Male}
-                    checked={gender === Gender.Male}
-                    onChange={handleGender}
-                  />
-                  Male
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="genderfemale"
-                    value={Gender.Female}
-                    checked={gender === Gender.Female}
-                    onChange={handleGender}
-                  />
-                  Female
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="genderother"
-                    value={Gender.Other}
-                    checked={gender === Gender.Other}
-                    onChange={handleGender}
-                  />
-                  Other
-                </label>
-              </div>
-            </fieldset>
-          </div>
-          {/* LOOKING */}
-          <div>
-            <fieldset>
-              <legend>Looking</legend>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <label>
-                  <input
-                    type="radio"
-                    name="lookingmale"
-                    value={Looking.Male}
-                    checked={seeking === Looking.Male}
-                    onChange={handleLooking}
-                  />
-                  Male
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="lookingfemale"
-                    value={Looking.Female}
-                    checked={seeking === Looking.Female}
-                    onChange={handleLooking}
-                  />
-                  Female
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="lookingboth"
-                    value={Looking.Both}
-                    checked={seeking === Looking.Both}
-                    onChange={handleLooking}
-                  />
-                  Both
-                </label>
-              </div>
-            </fieldset>
-          </div>
-          {/* BIO */}
-          <div className="spangrid">
-            <fieldset>
-              <legend>Bio</legend>
-              <textarea
-                style={{ resize: "none" }}
-                rows={4}
-                cols={30}
-                placeholder="1-160 characters."
-                name="bioarea"
-                value={bio}
-                onChange={handleBio}
-                onFocus={() => {
-                  setBioLenFocus(true);
-                  setBioValidFocus(true);
-                }}
-                onBlur={() => {
-                  setBioLenFocus(false);
-                  setBioValidFocus(false);
-                }}
-              ></textarea>
-              {bioLenFocus && bioLenMsg && (
-                <div className="regmsg">
-                  <li>{bioLenMsg}</li>
-                </div>
-              )}
-              {bioValidFocus && bioValidMsg && (
-                <div className="regmsg">
-                  <li>{bioValidMsg}</li>
-                </div>
-              )}
-            </fieldset>
-          </div>
-          {/* TAGS */}
-          <div className="spangrid">
-            <fieldset>
-              <legend>Tags</legend>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="settingsGrid">
+            {/* USERNAME */}
+            <div>
+              <fieldset>
+                <legend>Username</legend>
                 <input
                   type="text"
-                  name="tagsfield"
-                  placeholder="vegan, ig_model etc..."
+                  placeholder="Username..."
                   autoComplete="off"
-                  style={{
-                    padding: "0.5vw",
-                    flexGrow: "1",
-                    marginRight: "1vw",
-                  }}
-                  value={tag}
-                  onChange={handleTag}
+                  required={true}
+                  value={username}
+                  name="username"
+                  onChange={handleUsername}
                   onFocus={() => {
-                    setTagLenFocus(true);
-                    setTagValidFocus(true);
+                    setUsernameLenFocus(true);
+                    setUsernameValidFocus(true);
                   }}
                   onBlur={() => {
-                    setTagLenFocus(false);
-                    setTagValidFocus(false);
+                    setUsernameLenFocus(false);
+                    setUsernameValidFocus(false);
                   }}
                 />
+                {usernameLenFocus && usernameLenMsg && (
+                  <div className="regmsg">
+                    <li>{usernameLenMsg}</li>
+                  </div>
+                )}
+                {usernameValidFocus && usernameValidMsg && (
+                  <div className="regmsg">
+                    <li>{usernameValidMsg}</li>
+                  </div>
+                )}
+              </fieldset>
+            </div>
+            {/* EMAIL */}
+            <div>
+              {" "}
+              <fieldset>
+                <legend>Email</legend>
+                <input
+                  type="email"
+                  placeholder="Email..."
+                  autoComplete="off"
+                  required={true}
+                  value={email}
+                  name="email"
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </fieldset>
+            </div>
+            {/* FIRSTNAME */}
+            <div>
+              <fieldset>
+                <legend>First Name</legend>
+                <input
+                  type="text"
+                  placeholder="First Name..."
+                  autoComplete="off"
+                  required={true}
+                  value={firstname}
+                  onChange={handleFirstname}
+                  name="firstname"
+                  onFocus={() => {
+                    setFirstnameLenFocus(true);
+                    setFirstnameValidFocus(true);
+                  }}
+                  onBlur={() => {
+                    setFirstnameLenFocus(false);
+                    setFirstnameValidFocus(false);
+                  }}
+                />
+                {firstnameLenFocus && firstnameLenMsg && (
+                  <div className="regmsg">
+                    <li>{firstnameLenMsg}</li>
+                  </div>
+                )}
+                {firstnameValidFocus && firstnameValidMsg && (
+                  <div className="regmsg">
+                    <li>{firstnameValidMsg}</li>
+                  </div>
+                )}
+              </fieldset>
+            </div>
+            {/* LASTNAME */}
+            <div>
+              <fieldset>
+                <legend>Last Name</legend>
+                <input
+                  type="text"
+                  placeholder="Last Name..."
+                  autoComplete="off"
+                  required={true}
+                  value={lastname}
+                  name="lastname"
+                  onChange={handleLastname}
+                  onFocus={() => {
+                    setLastnameLenFocus(true);
+                    setLastnameValidFocus(true);
+                  }}
+                  onBlur={() => {
+                    setLastnameLenFocus(false);
+                    setLastnameValidFocus(false);
+                  }}
+                />
+                {lastnameLenFocus && lastnameLenMsg && (
+                  <div className="regmsg">
+                    <li>{lastnameLenMsg}</li>
+                  </div>
+                )}
+                {lastnameValidFocus && lastnameValidMsg && (
+                  <div className="regmsg">
+                    <li>{lastnameValidMsg}</li>
+                  </div>
+                )}
+              </fieldset>
+            </div>
+            {/* BIRTHDAY */}
+            <div>
+              <fieldset>
+                <legend>Date Of Birth</legend>
+                <input
+                  type="date"
+                  required={true}
+                  value={date}
+                  name="date"
+                  onChange={handleDate}
+                  onFocus={() => {
+                    setDateFocus(true);
+                  }}
+                  onBlur={() => {
+                    setDateFocus(false);
+                  }}
+                />
+                {dateFocus && dateMsg && (
+                  <div className="regmsg">
+                    <li>{dateMsg}</li>
+                  </div>
+                )}
+              </fieldset>
+            </div>
+            {/* CITY, COUNTRY */}
+            <div>
+              <fieldset>
+                <legend>City, Country</legend>
+                <input
+                  type="text"
+                  required={true}
+                  name="location"
+                  value={!city && !country ? "..." : `${city}, ${country}`}
+                  readOnly
+                />
+              </fieldset>
+            </div>
+            {/* COORDINATES */}
+            <div>
+              <fieldset>
+                <legend>Coordinates</legend>
+                <input
+                  type="text"
+                  name="coordinates"
+                  readOnly
+                  required={true}
+                  value={`${coordinates.x}, ${coordinates.y}`}
+                />
+                {locationMsg ? <Notify {...notification} /> : null}
+              </fieldset>
+            </div>
+            {/* UPDATE COORDINATES */}
+            <div>
+              <fieldset>
+                <legend>Update Coordinates</legend>
                 <button
                   className="locationButton"
                   type="button"
-                  onClick={() => addTag(tag)}
+                  onClick={getLocation}
+                  style={{ width: "90%" }}
                 >
-                  Add
+                  Get Location!
                 </button>
-              </div>
-              {tagLenFocus && tagLenMsg && (
-                <div className="regmsg">
-                  <li>{tagLenMsg}</li>
+              </fieldset>
+            </div>
+            {/* GENDER */}
+            <div>
+              <fieldset>
+                <legend>Gender</legend>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <label>
+                    <input
+                      type="radio"
+                      name="gendermale"
+                      value={Gender.Male}
+                      checked={gender === Gender.Male}
+                      onChange={handleGender}
+                    />
+                    Male
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="genderfemale"
+                      value={Gender.Female}
+                      checked={gender === Gender.Female}
+                      onChange={handleGender}
+                    />
+                    Female
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="genderother"
+                      value={Gender.Other}
+                      checked={gender === Gender.Other}
+                      onChange={handleGender}
+                    />
+                    Other
+                  </label>
                 </div>
-              )}
-              {tagValidFocus && tagValidMsg && (
-                <div className="regmsg">
-                  <li>{tagValidMsg}</li>
+              </fieldset>
+            </div>
+            {/* LOOKING */}
+            <div>
+              <fieldset>
+                <legend>Looking</legend>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <label>
+                    <input
+                      type="radio"
+                      name="lookingmale"
+                      value={Looking.Male}
+                      checked={seeking === Looking.Male}
+                      onChange={handleLooking}
+                    />
+                    Male
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="lookingfemale"
+                      value={Looking.Female}
+                      checked={seeking === Looking.Female}
+                      onChange={handleLooking}
+                    />
+                    Female
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="lookingboth"
+                      value={Looking.Both}
+                      checked={seeking === Looking.Both}
+                      onChange={handleLooking}
+                    />
+                    Both
+                  </label>
                 </div>
-              )}
-              {allTags.length > 0 ? (
-                <div style={{ gridColumn: "1 / span 2" }}>
-                  {allTags.map((tag, index) => {
-                    return (
+              </fieldset>
+            </div>
+            {/* BIO */}
+            <div className="spangrid">
+              <fieldset>
+                <legend>Bio</legend>
+                <textarea
+                  style={{ resize: "none" }}
+                  rows={4}
+                  cols={30}
+                  placeholder="1-160 characters."
+                  name="bioarea"
+                  value={bio}
+                  onChange={handleBio}
+                  onFocus={() => {
+                    setBioLenFocus(true);
+                    setBioValidFocus(true);
+                  }}
+                  onBlur={() => {
+                    setBioLenFocus(false);
+                    setBioValidFocus(false);
+                  }}
+                ></textarea>
+                {bioLenFocus && bioLenMsg && (
+                  <div className="regmsg">
+                    <li>{bioLenMsg}</li>
+                  </div>
+                )}
+                {bioValidFocus && bioValidMsg && (
+                  <div className="regmsg">
+                    <li>{bioValidMsg}</li>
+                  </div>
+                )}
+              </fieldset>
+            </div>
+            {/* TAGS */}
+            <div className="spangrid">
+              <fieldset>
+                <legend>Tags</legend>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <input
+                    type="text"
+                    name="tagsfield"
+                    placeholder="vegan, ig_model etc..."
+                    autoComplete="off"
+                    style={{
+                      padding: "0.5vw",
+                      flexGrow: "1",
+                      marginRight: "1vw",
+                    }}
+                    value={tag}
+                    onChange={handleTag}
+                    onFocus={() => {
+                      setTagLenFocus(true);
+                      setTagValidFocus(true);
+                    }}
+                    onBlur={() => {
+                      setTagLenFocus(false);
+                      setTagValidFocus(false);
+                    }}
+                  />
+                  <button
+                    className="locationButton"
+                    type="button"
+                    onClick={() => addTag(tag)}
+                  >
+                    Add
+                  </button>
+                </div>
+                {tagLenFocus && tagLenMsg && (
+                  <div className="regmsg">
+                    <li>{tagLenMsg}</li>
+                  </div>
+                )}
+                {tagValidFocus && tagValidMsg && (
+                  <div className="regmsg">
+                    <li>{tagValidMsg}</li>
+                  </div>
+                )}
+                {allTags.length > 0 ? (
+                  <div style={{ gridColumn: "1 / span 2" }}>
+                    {allTags.map((tag, index) => {
+                      return (
+                        <div
+                          key={tag}
+                          style={{
+                            display: "inline-block",
+                            margin: "5px",
+                            padding: "5px",
+                            border: "1px solid #ccc",
+                            backgroundColor: "var(--peach)",
+                            borderRadius: "5px",
+                          }}
+                        >
+                          <span>{tag}</span>
+                          <span
+                            style={{
+                              marginLeft: "10px",
+                              cursor: "pointer",
+                              color: "red",
+                            }}
+                            onClick={() => removeTag(index)}
+                          >
+                            x
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </fieldset>
+            </div>
+            {/* PASSWORD */}
+            <div className="spangrid">
+              <fieldset>
+                <legend>Change password?</legend>
+                Click{" "}
+                <Link
+                  to={`/${user?.verifycode}/forgot`}
+                  style={{
+                    textDecoration: "none",
+                    fontSize: "larger",
+                    color: "var(--green)",
+                  }}
+                >
+                  here
+                </Link>{" "}
+                to change password.
+              </fieldset>
+            </div>
+            {/* PHOTOOOS */}
+            <div className="spangrid">
+              <fieldset>
+                <legend>Photos</legend>
+                <button className="custom-file-input" type="button">
+                  <label htmlFor="fileInput">Add</label>
+                </button>
+                <input
+                  type="file"
+                  id="fileInput"
+                  className="file-input"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+                {/* {imgNotify && <Notify {...notification} />} */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    gridColumn: "1 / span 2",
+                  }}
+                >
+                  {images.map((images) => (
+                    <div key={images.id}>
                       <div
-                        key={tag}
                         style={{
-                          display: "inline-block",
-                          margin: "5px",
-                          padding: "5px",
-                          border: "1px solid #ccc",
-                          backgroundColor: "var(--peach)",
-                          borderRadius: "5px",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
                         }}
                       >
-                        <span>{tag}</span>
-                        <span
+                        <label>
+                          <div>Profile pic</div>
+                          <input
+                            type="radio"
+                            name="profilePic"
+                            value={images.id}
+                            checked={images.avatar}
+                            onChange={handleAvatar}
+                          />{" "}
+                        </label>
+                      </div>
+                      <div
+                        style={
+                          images.avatar === true
+                            ? {
+                                border: "2px solid var(--dapurple)",
+                                display: "flex",
+                                position: "relative",
+                              }
+                            : {
+                                border: "1px solid black",
+                                display: "flex",
+                                position: "relative",
+                              }
+                        }
+                        key={images.id}
+                      >
+                        <img
+                          src={images.path}
+                          alt="userimage"
+                          style={{ width: "10vw", height: "10vh" }}
+                        />
+
+                        <div
                           style={{
-                            marginLeft: "10px",
+                            position: "absolute",
+                            top: "1px",
+                            right: "5px",
                             cursor: "pointer",
                             color: "red",
+                            fontSize: "1.5rem",
+                            // backgroundColor: "var(--peach)",
+                            // fontWeight: "bold",
                           }}
-                          onClick={() => removeTag(index)}
+                          onClick={() => handleImageDelete(images.id)}
                         >
                           x
-                        </span>
+                        </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
+                  {images.length === 0 && (
+                    <div>(without a photo you cant see other profiles)</div>
+                  )}
                 </div>
-              ) : null}
-            </fieldset>
-          </div>
-          {/* PASSWORD */}
-          <div className="spangrid">
-            <fieldset>
-              <legend>Change password?</legend>
-              Click{" "}
-              <Link
-                to={`/${user?.verifycode}/forgot`}
-                style={{
-                  textDecoration: "none",
-                  fontSize: "larger",
-                  color: "var(--green)",
-                }}
-              >
-                here
-              </Link>{" "}
-              to change password.
-            </fieldset>
-          </div>
-          {/* PHOTOOOS */}
-          <div className="spangrid">
-            <fieldset>
-              <legend>Photos</legend>
-              <button className="custom-file-input" type="button">
-                <label htmlFor="fileInput">Add</label>
-              </button>
-              <input
-                type="file"
-                id="fileInput"
-                className="file-input"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-              {/* {imgNotify && <Notify {...notification} />} */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  gridColumn: "1 / span 2",
-                }}
-              >
-                {images.map((images) => (
-                  <div key={images.id}>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <label>
-                        <div>Profile pic</div>
-                        <input
-                          type="radio"
-                          name="profilePic"
-                          value={images.id}
-                          checked={images.avatar}
-                          onChange={handleAvatar}
-                        />{" "}
-                      </label>
-                    </div>
-                    <div
-                      style={
-                        images.avatar === true
-                          ? {
-                              border: "2px solid var(--dapurple)",
-                              display: "flex",
-                              position: "relative",
-                            }
-                          : {
-                              border: "1px solid black",
-                              display: "flex",
-                              position: "relative",
-                            }
-                      }
-                      key={images.id}
-                    >
-                      <img
-                        src={images.path}
-                        alt="userimage"
-                        style={{ width: "10vw", height: "10vh" }}
-                      />
+              </fieldset>
+            </div>
 
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "1px",
-                          right: "5px",
-                          cursor: "pointer",
-                          color: "red",
-                          fontSize: "1.5rem",
-                          // backgroundColor: "var(--peach)",
-                          // fontWeight: "bold",
-                        }}
-                        onClick={() => handleImageDelete(images.id)}
-                      >
-                        x
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {images.length === 0 && (
-                  <div>(without a photo you cant see other profiles)</div>
-                )}
-              </div>
-            </fieldset>
+            <Notify {...notification} />
+            <button
+              className="settingsbutton"
+              type="submit"
+              style={{ padding: "2vh" }}
+            >
+              Update Profile
+            </button>
           </div>
-
-          <Notify {...notification} />
-          <button
-            className="settingsbutton"
-            type="submit"
-            style={{ padding: "2vh" }}
-          >
-            Update Profile
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
