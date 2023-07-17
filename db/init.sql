@@ -11,6 +11,16 @@ CREATE TABLE IF NOT EXISTS users (
 	online TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE temp_users AS SELECT * FROM users WITH NO DATA;
+
+COPY temp_users(id, username, firstname, lastname, email, birthday, password, verifycode, status, online)
+FROM '/db/users2.csv' DELIMITER ',' HEADER;
+
+INSERT INTO users (id, username, firstname, lastname, email, birthday, password, verifycode, status, online)
+SELECT id, username, firstname, lastname, email, birthday, password, verifycode, status, online FROM temp_users;
+
+DROP TABLE temp_users;
+
 CREATE TABLE IF NOT EXISTS profile (
 	user_id INT NOT NULL PRIMARY KEY,
 	username VARCHAR(255) NOT NULL,
@@ -29,6 +39,16 @@ CREATE TABLE IF NOT EXISTS profile (
 	isOnline INT DEFAULT 0 NOT NULL,
 	online TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE temp_profile AS SELECT * FROM profile WITH NO DATA;
+
+COPY temp_profile(user_id,username,firstname,lastname,email,birthday,password,location,coordinates,gender,seeking,tags,bio,fame,isOnline,online)
+FROM '/db/profile2.csv' DELIMITER ',' QUOTE '"' CSV HEADER;
+
+INSERT INTO profile (user_id,username,firstname,lastname,email,birthday,password,location,coordinates,gender,seeking,tags,bio,fame,isOnline,online)
+SELECT user_id,username,firstname,lastname,email,birthday,password,location,coordinates,gender,seeking,tags,bio,fame,isOnline,online FROM temp_profile;
+
+DROP TABLE temp_profile;
 
 CREATE FUNCTION fame_check() RETURNS TRIGGER AS $$
 BEGIN
@@ -98,3 +118,5 @@ CREATE TABLE IF NOT EXISTS images (
 	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 	-- , FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+\i /db/fakeImages.sql;
