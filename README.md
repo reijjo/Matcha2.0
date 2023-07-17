@@ -1,5 +1,5 @@
-# Matcha2.0
-Matcha with TypeScript
+<img src='https://github.com/reijjo/Matcha2.0/assets/95418273/06bbba41-e347-4058-b01a-9566e11dbb18' />
+with TypeScript
 
 ## How to run
 * in the projects root folder ```docker-compose up```
