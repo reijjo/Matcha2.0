@@ -20,7 +20,32 @@ main {
   flex-direction: column;
 }
 
+.logo-container {
+  /* border: 1px solid white; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  min-height: 10vh;
+}
+
+.logo-container img {
+  max-width: 100%;
+  height: auto;
+}
+
 /* NAVBAR & FOOTER */
+
+.logo {
+  width: 150px;
+}
+
+@media (max-width: 500px) {
+  .logo {
+    content: url("images/logo.png");
+    width: 60px;
+  }
+}
 
 nav {
   width: 100%;
@@ -37,11 +62,23 @@ nav {
 
 .leftnav {
   padding-left: 2vw;
+  display: flex;
+  align-items: center;
+}
+
+.leftnav a {
+  display: flex;
+  align-items: center;
+}
+
+.leftnav img {
+  max-width: 100%;
+  height: auto;
 }
 
 .leftnav * {
   text-decoration: none;
-  border: 1px solid var(--black1);
+  /* border: 1px solid var(--black1); */
   padding: 1vh 1.5vw;
   border-radius: 15px;
 }
@@ -69,6 +106,7 @@ nav {
   border: 1px solid var(--black1);
   border-radius: 15px;
   padding: 1vh 1.5vw;
+  margin-right: 4vw;
   text-decoration: none;
   background-color: lightcoral;
   color: black;
@@ -79,6 +117,14 @@ nav {
 .registerlog:hover {
   background-color: darkred;
   color: white;
+}
+
+@media (max-width: 500px) {
+  .registerlog span {
+    content: url("images/icons-logout.png");
+    /* width: 60px; */
+    vertical-align: -4px;
+  }
 }
 
 .login {
@@ -115,6 +161,23 @@ nav {
 
 .loginlog img {
   /* background-color: azure; */
+  display: inline-block;
+  vertical-align: -4px;
+}
+
+.notiflog {
+  margin-left: 1vw;
+  border: 1px solid var(--black1);
+  border-radius: 15px;
+  padding: 1vh 1.5vw;
+  text-decoration: none;
+  background-color: var(--lipurple);
+  font-weight: bold;
+  color: black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.notiflog img {
   display: inline-block;
   vertical-align: -4px;
 }

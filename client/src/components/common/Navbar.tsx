@@ -5,6 +5,9 @@ import { useState } from "react";
 
 const expandIcon = require("../../images/icons8-expand-arrow-16.png");
 const closeIcon = require("../../images/icons8-close-16.png");
+const noNotification = require("../../images/icons8-notification-16.png");
+// const yesNotification = require("../../images/notification-16.png");
+const logotext = require("../../images/logotext.png");
 
 const Navbar = ({ user }: { user: User | null }) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
@@ -21,12 +24,17 @@ const Navbar = ({ user }: { user: User | null }) => {
   return (
     <nav>
       <div className="leftnav">
-        <Link to={user ? "/feed" : "/"}>home</Link>
+        <Link to={user ? "/feed" : "/"}>
+          <img src={logotext} alt="logotext" className="logo" />
+        </Link>
       </div>
       {user ? (
         <div className="rightnav">
           <Link to="/" className="registerlog" onClick={logoutUser}>
-            Logout
+            <span>Logout</span>
+          </Link>
+          <Link to="#" className="notiflog">
+            <img src={noNotification} alt="noNotifs" className="notif" />
           </Link>
           <Link to="#" className="loginlog" onClick={handleDropdown}>
             {user.username}{" "}
