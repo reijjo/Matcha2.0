@@ -15,7 +15,7 @@ import Feed from "./components/Feed";
 import Forgot from "./components/user/Forgot";
 import userService from "./services/userService";
 import loginService from "./services/loginService";
-import { User } from "./types";
+import { User } from "./utils/types";
 import { useEffect, useState } from "react";
 import RegisterTwo from "./components/user/RegisterTwo";
 import NewPw from "./components/user/NewPw";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Profile, User, Images } from "../types";
+import { Profile, User, Images } from "../utils/types";
 import profileService from "../services/profileService";
 import BigCard from "./BigCard";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -11,6 +11,7 @@ const Feed = ({ user }: { user: User | null }) => {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [myProfile, setMyProfile] = useState<Profile>();
 
   const limit = 1;
 
@@ -47,17 +48,14 @@ const Feed = ({ user }: { user: User | null }) => {
   console.log("FEED token", user);
 
   useEffect(() => {
-    // if (user && user.status && user.status > 2) {
-    //   profileService.getAllProfiles(user).then((response) => {
-    //     setProfiles(response.profile);
-    //     setImages(response.images);
-    //     console.log("resp", response);
-    //   });
-    // }
     if (user && user.status && user.status > 2) {
       fetchData(user);
       imageService.getAll().then((response) => {
         setImages(response);
+      });
+      profileService.getProfile(String(user.id)).then((response) => {
+        console.log("MYRESP", response);
+        setMyProfile(response);
       });
     }
   }, []);
@@ -90,6 +88,7 @@ const Feed = ({ user }: { user: User | null }) => {
                 key={profile.user_id}
                 profile={profile}
                 image={profile.image}
+                myCoordinates={myProfile?.coordinates}
               />
             ))}
           </div>

@@ -2,7 +2,7 @@ import express, { Response, Request } from "express";
 import { pool } from "../utils/dbConnection";
 // import { User } from "../utils/types";
 import { Looking } from "../utils/types";
-import { QueryResult } from "pg";
+// import { QueryResult } from "pg";
 
 const profileRouter = express.Router();
 
@@ -44,7 +44,7 @@ profileRouter.get("/", async (req: Request, res: Response) => {
       profileRes = await pool.query(profileSql, [user.id, offset, limit]);
     }
 
-    console.log(profileRes.rowCount);
+    // console.log(profileRes.rowCount);
 
     // const imageSql = `SELECT * FROM images WHERE avatar = $1`;
     // const imageRes = await pool.query(imageSql, [true]);
@@ -66,7 +66,7 @@ profileRouter.get("/profile/:id", async (req: Request, res: Response) => {
   const get = `SELECT * FROM profile WHERE user_id = $1`;
   const send = await pool.query(get, [id]);
 
-  console.log("SENDD", send.rows[0] as QueryResult);
+  // console.log("SENDD", send.rows[0] as QueryResult);
   res.send(send.rows[0]);
 });
 

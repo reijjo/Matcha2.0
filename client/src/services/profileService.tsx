@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User } from "../types";
+import { User } from "../utils/types";
 
 const baseUrl = "http://localhost:3001/api/profiles";
 

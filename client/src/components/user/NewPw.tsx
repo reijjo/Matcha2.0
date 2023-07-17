@@ -1,5 +1,5 @@
 import { SyntheticEvent, useEffect, useState } from "react";
-import { User, Notification } from "../../types";
+import { User, Notification } from "../../utils/types";
 import userService from "../../services/userService";
 import { useParams } from "react-router-dom";
 import Notify from "../common/Notify";

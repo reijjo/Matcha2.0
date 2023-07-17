@@ -1,14 +1,31 @@
 import { Link } from "react-router-dom";
-import { Images, Profile } from "../types";
+import { Coordinates, Images, Profile } from "../utils/types";
+import { calcCoordsDistance } from "../utils/utils";
 
 interface Props {
   profile: Profile;
   image?: Images;
+  myCoordinates: Coordinates | undefined;
 }
 
-const BigCard = ({ profile, image }: Props) => {
+const BigCard = ({ profile, image, myCoordinates }: Props) => {
   const birthDate = new Date(profile.birthday);
   const age = new Date().getFullYear() - birthDate.getFullYear();
+
+  const match = (id: number) => {
+    console.log("Like userId", id);
+  };
+
+  const pass = (id: number) => {
+    console.log("Pass userId", id);
+  };
+
+  console.log("Looking this profile", profile);
+  console.log("myCOoords", myCoordinates);
+
+  if (!myCoordinates) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="feedCard">
@@ -38,7 +55,8 @@ const BigCard = ({ profile, image }: Props) => {
       <div className="cardInfo">
         <div>Gender:</div> <div>{profile.gender}</div>
         <div>Location:</div> <div> {profile.location as string} </div>
-        <div>Distance:</div> <div> </div>
+        <div>Distance:</div>{" "}
+        <div>{calcCoordsDistance(myCoordinates, profile.coordinates)} km </div>
         <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
         <div>Fame:</div> <div> {profile.fame}</div>
         <div>Online:</div> <div> </div>
@@ -47,8 +65,12 @@ const BigCard = ({ profile, image }: Props) => {
         className="cardButtons"
         style={{ display: "flex", flexDirection: "column" }}
       >
-        <button className="matchButton">Match</button>
-        <button className="passButton">Pass</button>
+        <button className="matchButton" onClick={() => match(profile.user_id)}>
+          Match
+        </button>
+        <button className="passButton" onClick={() => pass(profile.user_id)}>
+          Pass
+        </button>
       </div>
     </div>
   );

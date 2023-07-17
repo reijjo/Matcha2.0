@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import Notify from "../common/Notify";
-import { Notification } from "../../types";
+import { Notification } from "../../utils/types";
 import userService from "../../services/userService";
 
 const Register = () => {

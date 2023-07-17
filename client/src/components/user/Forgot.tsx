@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react";
 import Notify from "../common/Notify";
-import { Notification } from "../../types";
+import { Notification } from "../../utils/types";
 import userService from "../../services/userService";
 
 const Forgot = () => {

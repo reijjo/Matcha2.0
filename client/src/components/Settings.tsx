@@ -7,7 +7,7 @@ import {
   Gender,
   Looking,
   Coordinates,
-} from "../types";
+} from "../utils/types";
 import userService from "../services/userService";
 import imageService from "../services/imageService";
 import Notify from "./common/Notify";

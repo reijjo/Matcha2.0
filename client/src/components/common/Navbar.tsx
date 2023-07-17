@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Link } from "react-router-dom";
-import { User } from "../../types";
+import { User } from "../../utils/types";
 import { useState } from "react";
 
 const expandIcon = require("../../images/icons8-expand-arrow-16.png");

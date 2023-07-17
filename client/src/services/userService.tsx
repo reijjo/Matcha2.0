@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Coordinates, User } from "../types";
+import { Coordinates, User } from "../utils/types";
 
 const baseUrl = "http://localhost:3001/api/users";
 

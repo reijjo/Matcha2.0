@@ -1,5 +1,5 @@
 import { SyntheticEvent, useState } from "react";
-import { Notification } from "../../types";
+import { Notification } from "../../utils/types";
 import Notify from "../common/Notify";
 import loginService from "../../services/loginService";
 import { Link } from "react-router-dom";
@@ -68,7 +68,7 @@ const Login = () => {
             value={username}
             autoComplete="off"
             onChange={handleUsername}
-            placeholder="username..."
+            placeholder="Username..."
           />
           <div>Password</div>
           <input
@@ -77,7 +77,7 @@ const Login = () => {
             value={passwd}
             autoComplete="off"
             onChange={handlePasswd}
-            placeholder="password..."
+            placeholder="Password..."
           />
           <button className="regformbutton" type="submit">
             Login

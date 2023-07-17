@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Images, Profile, User } from "../types";
+import { Images, Profile, User } from "../utils/types";
 import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
+import { calcCoordsDistance } from "../utils/utils";
 
 const UserCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();
@@ -10,8 +11,17 @@ const UserCard = ({ user }: { user: User | null }) => {
   const [avatar, setAvatar] = useState<Images>();
 
   const [bigImg, setBigImg] = useState<string | undefined>(avatar?.path);
+  const [myProfile, setMyProfile] = useState<Profile>();
 
   const { id } = useParams<string>();
+
+  const match = (id: number) => {
+    console.log("Like userId", id);
+  };
+
+  const pass = (id: number) => {
+    console.log("Pass userId", id);
+  };
 
   useEffect(() => {
     if (id) {
@@ -28,6 +38,11 @@ const UserCard = ({ user }: { user: User | null }) => {
         setBigImg(avatar?.path);
         console.log("avatar", response);
       });
+      if (user) {
+        profileService.getProfile(String(user.id)).then((response) => {
+          setMyProfile(response);
+        });
+      }
     }
   }, [id]);
 
@@ -37,6 +52,10 @@ const UserCard = ({ user }: { user: User | null }) => {
 
   const birthDate = new Date(profile.birthday);
   const age = new Date().getFullYear() - birthDate.getFullYear();
+
+  const distance = myProfile?.coordinates
+    ? calcCoordsDistance(myProfile.coordinates, profile.coordinates)
+    : undefined;
 
   const handleClick = (imagePath: string) => {
     setBigImg(imagePath);
@@ -106,7 +125,7 @@ const UserCard = ({ user }: { user: User | null }) => {
         <div className="cardInfo">
           <div>Gender:</div> <div>{profile.gender}</div>
           <div>Location:</div> <div> {profile.location as string} </div>
-          <div>Distance:</div> <div> </div>
+          <div>Distance:</div> <div>{distance} km</div>
           <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
           <div>Fame:</div> <div> {profile.fame}</div>
           <div>Online:</div> <div> </div>
@@ -121,8 +140,15 @@ const UserCard = ({ user }: { user: User | null }) => {
           className="cardButtons"
           style={{ display: "flex", flexDirection: "column" }}
         >
-          <button className="matchButton">Match</button>
-          <button className="passButton">Pass</button>
+          <button
+            className="matchButton"
+            onClick={() => match(profile.user_id)}
+          >
+            Match
+          </button>
+          <button className="passButton" onClick={() => pass(profile.user_id)}>
+            Pass
+          </button>
         </div>
       </div>
     </div>

@@ -104,7 +104,7 @@ const verifyToken = async (
 loginRouter.get("/", verifyToken, (req: CustomReq, res: Response) => {
   const user = req.user;
   if (user) {
-    console.log("user", user);
+    // console.log("user", user);
     res.send(user);
   } else {
     res.send({ message: "Invalid token!" });

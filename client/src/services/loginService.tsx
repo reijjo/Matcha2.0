@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { Login } from "../types";
+import { Login } from "../utils/types";
 
 const baseUrl = "http://localhost:3001/api/login";
 

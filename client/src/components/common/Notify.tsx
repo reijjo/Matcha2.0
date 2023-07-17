@@ -1,4 +1,4 @@
-import { Notification } from "../../types";
+import { Notification } from "../../utils/types";
 
 const Notify = (notification: Notification) => {
   if (!notification || !notification.message) {

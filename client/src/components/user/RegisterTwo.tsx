@@ -6,7 +6,7 @@ import {
   Coordinates,
   Notification,
   // Tags,
-} from "../../types";
+} from "../../utils/types";
 import userService from "../../services/userService";
 import Notify from "../common/Notify";
 import imageService from "../../services/imageService";
