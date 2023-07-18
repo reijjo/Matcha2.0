@@ -119,12 +119,30 @@ nav {
   color: white;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .registerlog span {
     content: url("images/icons/icons-logout.png");
     /* width: 60px; */
     vertical-align: -4px;
   }
+  .loginlog2 span {
+    /* content: url("images/icons//hamburger-16.png"); */
+    display: none;
+  }
+
+  .loginlog2img {
+    margin-right: 4px;
+  }
+}
+
+@media (max-width: 300px) {
+  .loginlog span {
+    display: none;
+  }
+}
+
+.loginlog2img {
+  margin-left: 4px;
 }
 
 .login {
@@ -160,6 +178,28 @@ nav {
 }
 
 .loginlog img {
+  /* background-color: azure; */
+  display: inline-block;
+  vertical-align: -4px;
+}
+
+.loginlog2 {
+  margin-left: 1vw;
+  border: 1px solid var(--black1);
+  border-radius: 15px;
+  padding: 1vh 1.5vw;
+  text-decoration: none;
+  background-color: var(--lipurple);
+  font-weight: bold;
+  color: black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loginlog2:hover {
+  background-color: var(--peach);
+}
+
+.loginlog2 img {
   /* background-color: azure; */
   display: inline-block;
   vertical-align: -4px;
@@ -532,12 +572,27 @@ footer .left {
   grid-template-columns: auto auto;
   max-width: 500px;
   gap: 15px;
+  margin-right: 5px;
+}
+
+.settingsGrid > div {
+  max-width: 45vw;
+}
+
+.imagelegend {
+  max-width: 40vw;
 }
 
 @media (max-width: 500px) {
   .settingsGrid {
     grid-template-columns: repeat(1, 1fr);
     /* grid-column: 1 / span 2; */
+  }
+  .settingsGrid > div {
+    min-width: 80vw;
+  }
+  .imagelegend {
+    min-width: 80vw;
   }
 }
 
@@ -575,4 +630,115 @@ legend {
   max-width: 800px; /* Adjust the maximum width as needed */
   margin: 0 auto; /* Centers the container horizontally */
   position: relative;
+}
+
+.likedCard {
+  z-index: 1;
+  /* background-color: var(--peach); */
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  width: 90vw;
+  max-width: max-content;
+  height: max-content;
+  border-radius: 10px;
+  font-size: larger;
+  background-color: var(--white1);
+}
+
+.likedCard > div {
+  padding: 1vh;
+  margin-right: 2vw;
+}
+
+.smallCardList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: 2vw;
+}
+
+.profileLink {
+  text-decoration: none;
+  margin: 3vw;
+  /* width: max-content; */
+  min-width: 120px;
+  max-width: max-content;
+  border: 1px solid black;
+  border-radius: 5px;
+  min-height: 200px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: var(--peach);
+
+  /* max-height: 400px; */
+}
+
+.filter-content {
+  display: block;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  /* min-width: 160px; */
+  margin-left: 16px;
+  width: max-content;
+  z-index: 5;
+  background-color: var(--white1);
+  border: 1px solid var(--dapurple);
+  border-radius: 4px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.filter-content a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: black;
+}
+
+.filter-content a:hover {
+  background-color: var(--peach);
+}
+
+.sortingCard {
+  z-index: 1;
+  /* background-color: var(--peach); */
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  width: 90vw;
+  min-width: 250px;
+  max-width: 600px;
+  height: max-content;
+  border-radius: 10px;
+  font-size: larger;
+  background-color: var(--white1);
+}
+
+.likedCard > div {
+  padding: 1vh;
+  margin-right: 2vw;
+}
+
+.sorting {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 1vw;
+}
+
+.cancel-icon {
+  cursor: pointer;
+}
+
+.sortGrid {
+  display: grid;
+  grid-template-columns: 20vw auto;
+  gap: 10px;
+  padding: 1vw;
 }

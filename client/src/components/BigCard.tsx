@@ -20,8 +20,8 @@ const BigCard = ({ profile, image, myCoordinates }: Props) => {
     console.log("Pass userId", id);
   };
 
-  console.log("Looking this profile", profile);
-  console.log("myCOoords", myCoordinates);
+  // console.log("Looking this profile", profile);
+  // console.log("myCOoords", myCoordinates);
 
   if (!myCoordinates) {
     return <div>Loading...</div>;

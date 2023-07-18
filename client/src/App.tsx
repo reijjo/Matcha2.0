@@ -21,11 +21,17 @@ import RegisterTwo from "./components/user/RegisterTwo";
 import NewPw from "./components/user/NewPw";
 import Settings from "./components/Settings";
 import UserCard from "./components/UserCard";
+import MyCard from "./components/MyCard";
+import Stalkers from "./components/Stalkers";
+import Looked from "./components/Looked";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
   const [loggedUser, setLoggedUser] = useState<User | null>(null);
+
+  const [sort, setSort] = useState(false);
+  const [filters, setFilters] = useState(false);
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
@@ -92,7 +98,13 @@ const App = () => {
   return (
     <Router>
       <main>
-        <Navbar user={loggedUser} />
+        <Navbar
+          user={loggedUser}
+          sort={sort}
+          setSort={setSort}
+          filter={filters}
+          setFilter={setFilters}
+        />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -100,15 +112,21 @@ const App = () => {
           <Route path="/:code/forgot" element={<NewPw />} />
           <Route path="/forgot" element={<Forgot />} />
           <Route path="/login" element={<Login />} />
-          {/* <PrivateRoute path="/feed" element={<Feed user={loggedUser} />} /> */}
-          {/* <Route path="/feed" element={<Feed token={token} />} /> */}
-          {/* <Route
-            path="/feed"
-            element={<PrivateRoute element={<Feed user={loggedUser} />} />}
-          /> */}
           <Route
             path="/feed"
-            element={<PrivateRoute element={<Feed user={loggedUser} />} />}
+            element={
+              <PrivateRoute
+                element={
+                  <Feed
+                    user={loggedUser}
+                    sort={sort}
+                    setSort={setSort}
+                    filter={filters}
+                    setFilter={setFilters}
+                  />
+                }
+              />
+            }
           />
           <Route
             path="/registerTwo"
@@ -124,7 +142,21 @@ const App = () => {
             path="/profile/:id"
             element={<PrivateRoute element={<UserCard user={loggedUser} />} />}
           />
+          <Route
+            path="/me"
+            element={<PrivateRoute element={<MyCard user={loggedUser} />} />}
+          />
+          <Route
+            path="/looked"
+            element={<PrivateRoute element={<Looked user={loggedUser} />} />}
+          />
+          <Route
+            path="/stalkers"
+            element={<PrivateRoute element={<Stalkers user={loggedUser} />} />}
+          />
+          <Route path="*" element={<Home />} />
         </Routes>
+
         <Footer />
       </main>
     </Router>

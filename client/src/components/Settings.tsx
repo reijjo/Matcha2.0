@@ -395,7 +395,9 @@ const Settings = ({ user }: { user: User | null }) => {
         setNotification(response.notification);
         setTimeout(() => {
           setNotification({ message: "", style: {}, success: false });
-          window.location.replace("/feed");
+          if (response.success) {
+            window.location.replace("/feed");
+          }
         }, 2000);
         console.log(response);
       });
@@ -825,6 +827,7 @@ const Settings = ({ user }: { user: User | null }) => {
                 />
                 {/* {imgNotify && <Notify {...notification} />} */}
                 <div
+                  className="imagelegend"
                   style={{
                     display: "flex",
                     justifyContent: "space-around",
@@ -870,7 +873,11 @@ const Settings = ({ user }: { user: User | null }) => {
                         <img
                           src={images.path}
                           alt="userimage"
-                          style={{ width: "10vw", height: "10vh" }}
+                          style={{
+                            width: "10vw",
+                            height: "10vh",
+                            maxWidth: "70px",
+                          }}
                         />
 
                         <div

@@ -21,7 +21,7 @@ usersRouter.get("/", async (_req: Request, res: Response) => {
     const sql = `SELECT * FROM users`;
     const result = await pool.query(sql);
 
-    console.log("RESULT", result.rows);
+    // console.log("RESULT", result.rows);
     res.json(result.rows);
   } catch (error: unknown) {
     console.error("GET Users", error);

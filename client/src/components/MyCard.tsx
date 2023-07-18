@@ -1,53 +1,40 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from "react";
 import { Images, Profile, User } from "../utils/types";
-import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
-import { calcCoordsDistance } from "../utils/utils";
+import { Link } from "react-router-dom";
 
-const UserCard = ({ user }: { user: User | null }) => {
+const MyCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();
   const [images, setImages] = useState<Images[]>([]);
   const [avatar, setAvatar] = useState<Images>();
 
   const [bigImg, setBigImg] = useState<string | undefined>(avatar?.path);
-  const [myProfile, setMyProfile] = useState<Profile>();
+  const [looked, setLooked] = useState<User[]>();
+  const [stalkers, setStalkers] = useState<User[]>();
 
-  const { id } = useParams<string>();
-
-  const match = (id: number) => {
-    console.log("Like userId", id);
-  };
-
-  const pass = (id: number) => {
-    console.log("Pass userId", id);
-  };
+  const id = user?.id;
 
   useEffect(() => {
     if (id) {
-      if (id === String(user?.id)) {
-        window.location.replace("/me");
-      } else {
-        profileService.getProfile(id).then((response) => {
-          setProfile(response);
-        });
-        imageService.getImage(id).then((response) => {
-          setImages(response);
-        });
-        imageService.getAvatar(id).then((response) => {
-          setAvatar(response);
-          setBigImg(avatar?.path);
-        });
-        if (user) {
-          profileService.getProfile(String(user.id)).then((response) => {
-            setMyProfile(response);
-          });
-          console.log("id, userId", id, String(user.id));
-          profileService.addStalked(id, String(user.id)).then((response) => {
-            console.log("response", response);
-          });
-        }
-      }
+      profileService.getProfile(String(id)).then((response) => {
+        setProfile(response);
+      });
+      imageService.getImage(String(id)).then((response) => {
+        setImages(response);
+        console.log("images", response);
+      });
+      imageService.getAvatar(String(id)).then((response) => {
+        setAvatar(response);
+        setBigImg(avatar?.path);
+        console.log("avatar", response);
+      });
+      profileService.getStalked(String(id)).then((response) => {
+        setLooked(response.looked);
+        setStalkers(response.stalkers);
+        console.log("hihuu", response);
+      });
     }
   }, [id]);
 
@@ -58,9 +45,7 @@ const UserCard = ({ user }: { user: User | null }) => {
   const birthDate = new Date(profile.birthday);
   const age = new Date().getFullYear() - birthDate.getFullYear();
 
-  const distance = myProfile?.coordinates
-    ? calcCoordsDistance(myProfile.coordinates, profile.coordinates)
-    : undefined;
+  // const lookedMap = looked?.map((user) => user.username);
 
   const handleClick = (imagePath: string) => {
     setBigImg(imagePath);
@@ -133,34 +118,43 @@ const UserCard = ({ user }: { user: User | null }) => {
         <div className="cardInfo">
           <div>Gender:</div> <div>{profile.gender}</div>
           <div>Location:</div> <div> {profile.location as string} </div>
-          <div>Distance:</div> <div>{distance} km</div>
+          {/* <div>Distance:</div> <div>{distance} km</div> */}
           <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
           <div>Fame:</div> <div> {profile.fame}</div>
-          <div>Online:</div> <div> </div>
         </div>
         <div className="cardInfo">
           <div>First Name:</div> <div>{profile.firstname}</div>
           <div>Last Name:</div> <div>{profile.lastname}</div>
-          <div>About me:</div> <div>{profile.bio}</div>
-        </div>
-
-        <div
-          className="cardButtons"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <button
-            className="matchButton"
-            onClick={() => match(profile.user_id)}
-          >
-            Match
-          </button>
-          <button className="passButton" onClick={() => pass(profile.user_id)}>
-            Pass
-          </button>
+          <div>About Me:</div> <div>{profile.bio}</div>
+          <div>Looked Profiles:</div>{" "}
+          <div>
+            {looked?.map((user) => (
+              <Link
+                key={user.id}
+                to={`/profile/${user.id}`}
+                style={{ textDecoration: "none", color: "var(--dapurple)" }}
+              >
+                {user.username},{" "}
+              </Link>
+            ))}
+          </div>
+          <div>Who Looked You:</div>{" "}
+          <div>
+            {" "}
+            {stalkers?.map((user) => (
+              <Link
+                key={user.id}
+                to={`/profile/${user.id}`}
+                style={{ textDecoration: "none", color: "var(--dapurple)" }}
+              >
+                {user.username},{" "}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default UserCard;
+export default MyCard;

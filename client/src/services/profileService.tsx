@@ -21,6 +21,23 @@ const getProfile = (id: string) => {
   return req.then((response) => response.data);
 };
 
-const profileService = { getAllProfiles, getProfile };
+const getStalked = (id: string) => {
+  const params = { id };
+  const req = axios.get(`${baseUrl}/me`, { params });
+  return req.then((response) => response.data);
+};
+
+const addStalked = (id: string, userId: string) => {
+  console.log("axsio", id, userId);
+  const req = axios.post(`${baseUrl}/profile/${id}`, { userId: userId });
+  return req.then((response) => response.data);
+};
+
+const profileService = {
+  getAllProfiles,
+  getProfile,
+  getStalked,
+  addStalked,
+};
 
 export default profileService;

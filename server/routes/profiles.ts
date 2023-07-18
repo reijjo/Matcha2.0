@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import express, { Response, Request } from "express";
 import { pool } from "../utils/dbConnection";
 // import { User } from "../utils/types";
@@ -29,7 +30,7 @@ profileRouter.get("/", async (req: Request, res: Response) => {
 
     if (seeking === Looking.Male || seeking === Looking.Female) {
       profileSql = `
-      SELECT * FROM profile WHERE user_id != $1 AND gender = $2 ORDER BY RANDOM() OFFSET $3 LIMIT $4
+      SELECT * FROM profile WHERE user_id != $1 AND gender = $2 OFFSET $3 LIMIT $4
     `;
       profileRes = await pool.query(profileSql, [
         user.id,
@@ -68,6 +69,51 @@ profileRouter.get("/profile/:id", async (req: Request, res: Response) => {
 
   // console.log("SENDD", send.rows[0] as QueryResult);
   res.send(send.rows[0]);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+profileRouter.post("/profile/:id", async (req: Request, _res: Response) => {
+  const { id } = req.params;
+  const userId = req.body.userId as string;
+
+  const dupCheckSql = `SELECT * FROM stalkers WHERE user_id = $1 AND stalked_id = $2`;
+  const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
+
+  if (dupCheckRes.rowCount === 0) {
+    const addSql = `INSERT INTO stalkers (user_id, stalked_id) VALUES ($1, $2)`;
+    await pool.query(addSql, [userId, id]);
+  }
+
+  console.log("profile, me", id, userId);
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+profileRouter.get("/me", async (req: Request, res: Response) => {
+  const id = req.query.id;
+
+  const lookedSql = `SELECT * FROM stalkers WHERE user_id = $1`;
+  const lookedRes = await pool.query(lookedSql, [id]);
+  const lookedMap = lookedRes.rows.map((row) => row.stalked_id);
+  const lookedUserSql = `SELECT * FROM users WHERE id = ANY($1::int[])`;
+  const lookedUserRes = await pool.query(lookedUserSql, [lookedMap]);
+  const lookedCoorsSql = `SELECT * FROM profile WHERE user_id = ANY($1::int[])`;
+  const lookedCoorsRes = await pool.query(lookedCoorsSql, [lookedMap]);
+
+  const stalkersSql = `SELECT * FROM stalkers WHERE stalked_id = $1`;
+  const stalkersRes = await pool.query(stalkersSql, [id]);
+  const stalkersMap = stalkersRes.rows.map((row) => row.user_id);
+  console.log("stalk", stalkersMap);
+  const stalkersUserSql = `SELECT * FROM users WHERE id = ANY($1::int[])`;
+  const stalkersUserRes = await pool.query(stalkersUserSql, [stalkersMap]);
+  const stalkersCoorsSql = `SELECT * FROM profile WHERE user_id = ANY($1::int[])`;
+  const stalkersCoorsRes = await pool.query(stalkersCoorsSql, [lookedMap]);
+
+  res.send({
+    looked: lookedUserRes.rows,
+    lookedCoors: lookedCoorsRes.rows,
+    stalkers: stalkersUserRes.rows,
+    stalkersCoors: stalkersCoorsRes.rows,
+  });
 });
 
 export { profileRouter };

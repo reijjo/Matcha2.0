@@ -190,7 +190,7 @@ imageRouter.get("/photos/:id", async (req: Request, res: Response) => {
   const get = `SELECT * FROM images WHERE user_id = $1 AND avatar = $2`;
   const send = await pool.query(get, [id, false]);
 
-  console.log("photos", send.rows);
+  // console.log("photos", send.rows);
 
   res.send(send.rows);
 });
