@@ -15,12 +15,24 @@ const UserCard = ({ user }: { user: User | null }) => {
 
   const { id } = useParams<string>();
 
-  const match = (id: number) => {
+  const like = async (id: number, myId: number) => {
+    console.log("MYID", myId);
     console.log("Like userId", id);
+    const ready = await profileService.addLiked(String(id), String(myId));
+    console.log("ready", ready);
+    if (ready) {
+      window.location.replace("/feed");
+    }
   };
 
-  const pass = (id: number) => {
-    console.log("Pass userId", id);
+  const pass = async (id: number, myId: number) => {
+    console.log("MYID", myId);
+    console.log("Like userId", id);
+    const ready = await profileService.addPassed(String(id), String(myId));
+    console.log("ready", ready);
+    if (ready) {
+      window.location.replace("/feed");
+    }
   };
 
   useEffect(() => {
@@ -150,11 +162,14 @@ const UserCard = ({ user }: { user: User | null }) => {
         >
           <button
             className="matchButton"
-            onClick={() => match(profile.user_id)}
+            onClick={() => like(profile.user_id, user.id as number)}
           >
             Like
           </button>
-          <button className="passButton" onClick={() => pass(profile.user_id)}>
+          <button
+            className="passButton"
+            onClick={() => pass(profile.user_id, user.id as number)}
+          >
             Pass
           </button>
         </div>

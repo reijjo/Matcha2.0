@@ -34,7 +34,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
   const [passedProfiles, setPassedProfiles] = useState<number[]>([]);
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
 
-  const limit = 10;
+  const limit = 30;
 
   const fetchData = async (user: User) => {
     try {
@@ -77,8 +77,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
       window.location.replace("/registerTwo");
     }
   }, []);
-  // console.log("FEED token", user);
-  // console.log("FEED", profiles);
+  console.log("FEED", profiles);
 
   useEffect(() => {
     if (user && user.status && user.status > 2) {
@@ -97,15 +96,15 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
         );
         setPassedProfiles(passedIds);
       });
-      profileService.getPassed(String(user.id)).then((response) => {
-        console.log("passed", response);
-        const passedIds = response.map(
-          (profile: { passed_id: number }) => profile.passed_id
+      profileService.getLiked(String(user.id)).then((response) => {
+        console.log("liked", response);
+        const likedIds = response.map(
+          (profile: { liked_id: number }) => profile.liked_id
         );
-        setLikedProfiles(passedIds);
+        setLikedProfiles(likedIds);
       });
     }
-  }, []);
+  }, [user]);
 
   const handleSort = () => {
     setSort(!sort);
@@ -382,6 +381,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
               // {profilesWithImages?.map((profile) => (
               <BigCard
                 key={profile.user_id}
+                // key={profile.key}
                 profile={profile}
                 image={profile.image}
                 myCoordinates={myProfile?.coordinates}

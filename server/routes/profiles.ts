@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -32,8 +34,9 @@ profileRouter.get("/", async (req: Request, res: Response) => {
 
     if (seeking === Looking.Male || seeking === Looking.Female) {
       profileSql = `
-      SELECT * FROM profile WHERE user_id != $1 AND gender = $2 OFFSET $3 LIMIT $4
-    `;
+        SELECT * FROM profile WHERE user_id != $1 AND gender = $2 OFFSET $3 LIMIT $4
+      `;
+      // profileSql = `SELECT *, user_id as key, RANDOM() as random_order FROM profile WHERE user_id != $1 AND gender = $2 ORDER BY random_order OFFSET $3 LIMIT $4`;
       profileRes = await pool.query(profileSql, [
         user.id,
         seeking,
@@ -42,19 +45,42 @@ profileRouter.get("/", async (req: Request, res: Response) => {
       ]);
     } else {
       profileSql = `
-      SELECT * FROM profile WHERE user_id != $1 OFFSET $2 LIMIT $3
-    `;
+        SELECT * FROM profile WHERE user_id != $1 OFFSET $2 LIMIT $3
+      `;
+      //   profileSql = `
+      // 	SELECT *, user_id as key, RANDOM() as random_order FROM profile
+      // 	WHERE user_id != $1
+      // 	ORDER BY random_order OFFSET $2 LIMIT $3
+      // `;
       profileRes = await pool.query(profileSql, [user.id, offset, limit]);
     }
 
-    // console.log(profileRes.rowCount);
+    // Add a unique key to each profile in the result
+    // const profilesWithKeys = profileRes.rows.map((profile) => ({
+    //   ...profile,
+    //   key: profile.user_id, // You can use any unique identifier here
+    // }));
 
-    // const imageSql = `SELECT * FROM images WHERE avatar = $1`;
-    // const imageRes = await pool.query(imageSql, [true]);
+    // const uniqueProfiles = profilesWithKeys.reduce(
+    //   (acc: any[], profile: any) => {
+    //     if (!acc.some((p) => p.key === profile.key)) {
+    //       acc.push(profile);
+    //     }
+    //     return acc;
+    //   },
+    //   []
+    // );
+
+    // res.send({
+    //   profile: uniqueProfiles,
+    // });
+
+    // res.send({
+    //   profile: profilesWithKeys,
+    // });
 
     res.send({
       profile: profileRes.rows,
-      // images: imageRes.rows
     });
   } catch (err) {
     console.error(err);
@@ -119,23 +145,28 @@ profileRouter.get("/me", async (req: Request, res: Response) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-profileRouter.post(
-  "/profile/:id/pass",
-  async (req: Request, _res: Response) => {
-    const { id } = req.params;
-    const userId = req.body.userId as string;
+profileRouter.post("/profile/:id/pass", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = req.body.userId as string;
 
+  try {
     const dupCheckSql = `SELECT * FROM passed WHERE user_id = $1 AND passed_id = $2`;
     const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
 
+    // console.log("DUPCHECKLIKE", dupCheckRes);
+
     if (dupCheckRes.rowCount === 0) {
       const addSql = `INSERT INTO passed (user_id, passed_id) VALUES ($1, $2)`;
-      await pool.query(addSql, [userId, id]);
+      const done = await pool.query(addSql, [userId, id]);
+      console.log("done", done);
+      res.send({ message: "All good!" });
     }
-
-    console.log("id, userid", id, userId);
+  } catch (error) {
+    console.error("error liking", error);
   }
-);
+
+  console.log("id, userid LIKE SIIS", id, userId);
+});
 
 profileRouter.get("/profile/:id/pass", async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -146,23 +177,28 @@ profileRouter.get("/profile/:id/pass", async (req: Request, res: Response) => {
   res.send(response.rows);
 });
 
-profileRouter.post(
-  "/profile/:id/like",
-  async (req: Request, _res: Response) => {
-    const { id } = req.params;
-    const userId = req.body.userId as string;
+profileRouter.post("/profile/:id/like", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = req.body.userId as string;
 
-    const dupCheckSql = `SELECT * FROM liked WHERE user_id = $1 AND passed_id = $2`;
+  try {
+    const dupCheckSql = `SELECT * FROM liked WHERE user_id = $1 AND liked_id = $2`;
     const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
 
-    if (dupCheckRes.rowCount === 0) {
-      const addSql = `INSERT INTO liked (user_id, passed_id) VALUES ($1, $2)`;
-      await pool.query(addSql, [userId, id]);
-    }
+    // console.log("DUPCHECKLIKE", dupCheckRes);
 
-    console.log("id, userid", id, userId);
+    if (dupCheckRes.rowCount === 0) {
+      const addSql = `INSERT INTO liked (user_id, liked_id) VALUES ($1, $2)`;
+      const done = await pool.query(addSql, [userId, id]);
+      console.log("done", done);
+      res.send({ message: "All good!" });
+    }
+  } catch (error) {
+    console.error("error liking", error);
   }
-);
+
+  console.log("id, userid LIKE SIIS", id, userId);
+});
 
 profileRouter.get("/profile/:id/like", async (req: Request, res: Response) => {
   const { id } = req.params;

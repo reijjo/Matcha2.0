@@ -34,7 +34,7 @@ const addStalked = (id: string, userId: string) => {
 };
 
 const addPassed = (id: string, userId: string) => {
-  console.log("axsio", id, userId);
+  console.log("axsio PASSED", id, userId);
   const req = axios.post(`${baseUrl}/profile/${id}/pass`, { userId: userId });
   return req.then((response) => response.data);
 };
@@ -45,7 +45,7 @@ const getPassed = (userId: string) => {
 };
 
 const addLiked = (id: string, userId: string) => {
-  console.log("axsio", id, userId);
+  console.log("axsio LIKED", id, userId);
   const req = axios.post(`${baseUrl}/profile/${id}/like`, { userId: userId });
   return req.then((response) => response.data);
 };
