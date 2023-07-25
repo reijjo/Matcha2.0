@@ -1,23 +1,40 @@
 import { Link } from "react-router-dom";
 import { Coordinates, Images, Profile } from "../utils/types";
 import { calcCoordsDistance } from "../utils/utils";
+import profileService from "../services/profileService";
 
 interface Props {
   profile: Profile;
   image?: Images;
   myCoordinates: Coordinates | undefined;
+  myId: number;
+  onPass: () => void;
+  onLike: () => void;
 }
 
-const BigCard = ({ profile, image, myCoordinates }: Props) => {
+const BigCard = ({
+  profile,
+  image,
+  myCoordinates,
+  myId,
+  onPass,
+  onLike,
+}: Props) => {
   const birthDate = new Date(profile.birthday);
   const age = new Date().getFullYear() - birthDate.getFullYear();
 
-  const match = (id: number) => {
+  const like = (id: number, myId: number) => {
+    profileService.addLiked(String(id), String(myId));
+    console.log("MYID", myId);
     console.log("Like userId", id);
+    onLike();
   };
 
-  const pass = (id: number) => {
+  const pass = (id: number, myId: number) => {
+    profileService.addPassed(String(id), String(myId));
+    console.log("MYID", myId);
     console.log("Pass userId", id);
+    onPass();
   };
 
   // console.log("Looking this profile", profile);
@@ -65,10 +82,16 @@ const BigCard = ({ profile, image, myCoordinates }: Props) => {
         className="cardButtons"
         style={{ display: "flex", flexDirection: "column" }}
       >
-        <button className="matchButton" onClick={() => match(profile.user_id)}>
-          Match
+        <button
+          className="matchButton"
+          onClick={() => like(profile.user_id, myId)}
+        >
+          Like
         </button>
-        <button className="passButton" onClick={() => pass(profile.user_id)}>
+        <button
+          className="passButton"
+          onClick={() => pass(profile.user_id, myId)}
+        >
           Pass
         </button>
       </div>

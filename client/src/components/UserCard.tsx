@@ -152,7 +152,7 @@ const UserCard = ({ user }: { user: User | null }) => {
             className="matchButton"
             onClick={() => match(profile.user_id)}
           >
-            Match
+            Like
           </button>
           <button className="passButton" onClick={() => pass(profile.user_id)}>
             Pass

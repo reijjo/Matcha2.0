@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import express, { Response, Request } from "express";
 import { pool } from "../utils/dbConnection";
@@ -40,7 +42,7 @@ profileRouter.get("/", async (req: Request, res: Response) => {
       ]);
     } else {
       profileSql = `
-      SELECT * FROM profile WHERE user_id != $1  OFFSET $2 LIMIT $3
+      SELECT * FROM profile WHERE user_id != $1 OFFSET $2 LIMIT $3
     `;
       profileRes = await pool.query(profileSql, [user.id, offset, limit]);
     }
@@ -114,6 +116,61 @@ profileRouter.get("/me", async (req: Request, res: Response) => {
     stalkers: stalkersUserRes.rows,
     stalkersCoors: stalkersCoorsRes.rows,
   });
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+profileRouter.post(
+  "/profile/:id/pass",
+  async (req: Request, _res: Response) => {
+    const { id } = req.params;
+    const userId = req.body.userId as string;
+
+    const dupCheckSql = `SELECT * FROM passed WHERE user_id = $1 AND passed_id = $2`;
+    const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
+
+    if (dupCheckRes.rowCount === 0) {
+      const addSql = `INSERT INTO passed (user_id, passed_id) VALUES ($1, $2)`;
+      await pool.query(addSql, [userId, id]);
+    }
+
+    console.log("id, userid", id, userId);
+  }
+);
+
+profileRouter.get("/profile/:id/pass", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const passedUsersSql = `SELECT * FROM passed WHERE user_id = $1`;
+  const response = await pool.query(passedUsersSql, [id]);
+
+  res.send(response.rows);
+});
+
+profileRouter.post(
+  "/profile/:id/like",
+  async (req: Request, _res: Response) => {
+    const { id } = req.params;
+    const userId = req.body.userId as string;
+
+    const dupCheckSql = `SELECT * FROM liked WHERE user_id = $1 AND passed_id = $2`;
+    const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
+
+    if (dupCheckRes.rowCount === 0) {
+      const addSql = `INSERT INTO liked (user_id, passed_id) VALUES ($1, $2)`;
+      await pool.query(addSql, [userId, id]);
+    }
+
+    console.log("id, userid", id, userId);
+  }
+);
+
+profileRouter.get("/profile/:id/like", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const passedUsersSql = `SELECT * FROM liked WHERE user_id = $1`;
+  const response = await pool.query(passedUsersSql, [id]);
+
+  res.send(response.rows);
 });
 
 export { profileRouter };

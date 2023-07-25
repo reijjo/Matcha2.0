@@ -31,6 +31,9 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
   const [sortByFame, setSortByFame] = useState<"min" | "max" | null>(null);
   const [sortByTags, setSortByTags] = useState<"common" | null>(null);
 
+  const [passedProfiles, setPassedProfiles] = useState<number[]>([]);
+  const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
+
   const limit = 10;
 
   const fetchData = async (user: User) => {
@@ -58,12 +61,23 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
     }
   };
 
+  const handlePass = (profileId: number) => {
+    setPassedProfiles((prevPassedProfiles) => [
+      ...prevPassedProfiles,
+      profileId,
+    ]);
+  };
+
+  const handleLike = (profileId: number) => {
+    setLikedProfiles((prevLikedProfiles) => [...prevLikedProfiles, profileId]);
+  };
+
   useEffect(() => {
     if (user && user.status && user.status < 3) {
       window.location.replace("/registerTwo");
     }
   }, []);
-  console.log("FEED token", user);
+  // console.log("FEED token", user);
   // console.log("FEED", profiles);
 
   useEffect(() => {
@@ -73,8 +87,22 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
         setImages(response);
       });
       profileService.getProfile(String(user.id)).then((response) => {
-        console.log("MYRESP", response);
+        // console.log("MYRESP", response);
         setMyProfile(response);
+      });
+      profileService.getPassed(String(user.id)).then((response) => {
+        console.log("passed", response);
+        const passedIds = response.map(
+          (profile: { passed_id: number }) => profile.passed_id
+        );
+        setPassedProfiles(passedIds);
+      });
+      profileService.getPassed(String(user.id)).then((response) => {
+        console.log("passed", response);
+        const passedIds = response.map(
+          (profile: { passed_id: number }) => profile.passed_id
+        );
+        setLikedProfiles(passedIds);
       });
     }
   }, []);
@@ -164,10 +192,20 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
         return commonTags.length > 0;
       });
     }
+    sorted = sorted.filter(
+      (profile) =>
+        !passedProfiles.includes(profile.user_id) &&
+        !likedProfiles.includes(profile.user_id)
+    );
+
     return sorted;
   };
 
   const sortedProfiles = sortProfiles();
+
+  if (!myProfile) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -347,6 +385,9 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
                 profile={profile}
                 image={profile.image}
                 myCoordinates={myProfile?.coordinates}
+                myId={myProfile?.user_id}
+                onPass={() => handlePass(profile.user_id)}
+                onLike={() => handleLike(profile.user_id)}
               />
             ))}
           </div>

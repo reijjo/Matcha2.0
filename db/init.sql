@@ -76,6 +76,13 @@ CREATE TABLE IF NOT EXISTS passed (
 	passed_id INT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS liked (
+	user_id INT NOT NULL,
+	passed_id INT NOT NULL
+);
+
+
+
 CREATE TABLE IF NOT EXISTS matchblock (
 	id SERIAL PRIMARY KEY NOT NULL,
 	user_id INT NOT NULL,
