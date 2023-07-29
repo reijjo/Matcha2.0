@@ -2,6 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { User } from "../../utils/types";
 import { useRef, useState, useEffect } from "react";
+import loginService from "../../services/loginService";
 
 const expandIcon = require("../../images/icons/icons8-expand-arrow-16.png");
 const closeIcon = require("../../images/icons/icons8-close-16.png");
@@ -56,9 +57,13 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const logoutUser = () => {
-    localStorage.removeItem("matchaToken");
-    window.location.replace("/");
+  const logoutUser = async () => {
+    if (user) {
+      const response = await loginService.logout(user);
+      console.log("REPOSPOS", response);
+      localStorage.removeItem("matchaToken");
+      window.location.replace("/");
+    }
   };
 
   const showFilterButton = location.pathname === "/feed";

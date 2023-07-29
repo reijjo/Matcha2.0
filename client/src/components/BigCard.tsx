@@ -76,7 +76,14 @@ const BigCard = ({
         <div>{calcCoordsDistance(myCoordinates, profile.coordinates)} km </div>
         <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
         <div>Fame:</div> <div> {profile.fame}</div>
-        <div>Online:</div> <div>{formatTimeStamp(profile.online)}</div>
+        <div>Online:</div>{" "}
+        <div>
+          {profile.isonline !== undefined && profile.isonline === true ? (
+            <span className="blink_me"></span>
+          ) : (
+            formatTimeStamp(profile.online)
+          )}
+        </div>
       </div>
       <div
         className="cardButtons"

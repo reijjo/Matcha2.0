@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response, NextFunction } from "express";
 import { Login, User } from "../utils/types";
 import { pool } from "../utils/dbConnection";
@@ -43,8 +44,8 @@ loginRouter.post("/", async (req: Request, res: Response) => {
         const userToken = {
           username: user.username,
         };
-        // const onlineSql = `UPDATE profile SET isOnline = $1 WHERE username = $2`;
-        // await pool.query(onlineSql, [1, username]);
+        const onlineSql = `UPDATE profile SET isonline = $1 WHERE username = $2`;
+        await pool.query(onlineSql, [true, username]);
 
         const token = sign(userToken, "huhuu", { expiresIn: 60 * 60 });
         return res.send({
@@ -111,6 +112,17 @@ loginRouter.get("/", verifyToken, (req: CustomReq, res: Response) => {
   } else {
     res.send({ message: "Invalid token!" });
   }
+});
+
+loginRouter.put("/logout", async (req: Request, res: Response) => {
+  const userId = req.body.userId as number;
+  // const now = new Date();
+
+  const logoutSql = `UPDATE profile SET isonline = $1, online = NOW() WHERE user_id = $2`;
+  await pool.query(logoutSql, [false, userId]);
+  res.sendStatus(200);
+
+  console.log("logout user", userId);
 });
 
 export { loginRouter };

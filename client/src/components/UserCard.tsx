@@ -78,6 +78,8 @@ const UserCard = ({ user }: { user: User | null }) => {
     setBigImg(imagePath);
   };
 
+  console.log("THIS PROFILE", profile.isonline);
+
   return (
     <div id="feed">
       <div className="overlaydark" />
@@ -148,7 +150,14 @@ const UserCard = ({ user }: { user: User | null }) => {
           <div>Distance:</div> <div>{distance} km</div>
           <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
           <div>Fame:</div> <div> {profile.fame}</div>
-          <div>Online:</div> <div>{formatTimeStamp(profile.online)} </div>
+          <div>Online:</div>{" "}
+          <div>
+            {profile.isonline !== undefined && profile.isonline === true ? (
+              <span className="blink_me"></span>
+            ) : (
+              formatTimeStamp(profile.online)
+            )}
+          </div>
         </div>
         <div className="cardInfo">
           <div>First Name:</div> <div>{profile.firstname}</div>

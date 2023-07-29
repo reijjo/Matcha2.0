@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { Login } from "../utils/types";
+import { Login, User } from "../utils/types";
 
 const baseUrl = "http://localhost:3001/api/login";
 
@@ -34,6 +34,12 @@ const getUserInfo = async (token: string) => {
   }
 };
 
-const loginService = { logIn, getUserInfo };
+const logout = async (user: User) => {
+  console.log("axios user", user.id);
+  const req = axios.put(`${baseUrl}/logout`, { userId: user.id });
+  return req.then((response) => response);
+};
+
+const loginService = { logIn, getUserInfo, logout };
 
 export default loginService;

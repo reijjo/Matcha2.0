@@ -61,7 +61,7 @@ export interface Profile {
   bio: string;
   tags: Array<string>;
   fame: number;
-  isOnline: boolean;
+  isonline: boolean;
   online: string;
 }
 
