@@ -70,7 +70,10 @@ const Stalkers = ({ user }: { user: User | null }) => {
                   src={user.image?.path}
                   alt="asd"
                   className="cardImage"
-                  style={{ height: "30vh", objectFit: "cover" }}
+                  style={{
+                    height: "30vh",
+                    objectFit: "cover",
+                  }}
                 />
               </div>
               <div style={{ padding: "0.5vh 1vw" }}>

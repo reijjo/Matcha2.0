@@ -43,6 +43,8 @@ loginRouter.post("/", async (req: Request, res: Response) => {
         const userToken = {
           username: user.username,
         };
+        // const onlineSql = `UPDATE profile SET isOnline = $1 WHERE username = $2`;
+        // await pool.query(onlineSql, [1, username]);
 
         const token = sign(userToken, "huhuu", { expiresIn: 60 * 60 });
         return res.send({

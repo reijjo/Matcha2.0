@@ -3,7 +3,7 @@ import { Images, Profile, User } from "../utils/types";
 import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
-import { calcCoordsDistance } from "../utils/utils";
+import { calcCoordsDistance, formatTimeStamp } from "../utils/utils";
 
 const UserCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();
@@ -148,7 +148,7 @@ const UserCard = ({ user }: { user: User | null }) => {
           <div>Distance:</div> <div>{distance} km</div>
           <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
           <div>Fame:</div> <div> {profile.fame}</div>
-          <div>Online:</div> <div> </div>
+          <div>Online:</div> <div>{formatTimeStamp(profile.online)} </div>
         </div>
         <div className="cardInfo">
           <div>First Name:</div> <div>{profile.firstname}</div>

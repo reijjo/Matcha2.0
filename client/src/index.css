@@ -663,9 +663,9 @@ legend {
 .profileLink {
   text-decoration: none;
   margin: 3vw;
-  /* width: max-content; */
+  width: 200px;
   min-width: 120px;
-  max-width: max-content;
+  /* max-width: max-content; */
   border: 1px solid black;
   border-radius: 5px;
   min-height: 200px;
@@ -675,6 +675,10 @@ legend {
   background-color: var(--peach);
 
   /* max-height: 400px; */
+}
+
+.profileLink img {
+  width: 100%;
 }
 
 .filter-content {

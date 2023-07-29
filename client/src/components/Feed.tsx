@@ -220,6 +220,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
         >
           <div id="feed">
             <div className="overlaydark" />
+            {/* <div style={{ color: "white" }}>Scroll down for more</div> */}
             {/* SORTING */}
             {sort && (
               <div className="sortingCard">

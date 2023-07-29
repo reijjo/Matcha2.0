@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Coordinates, Images, Profile } from "../utils/types";
-import { calcCoordsDistance } from "../utils/utils";
+import { calcCoordsDistance, formatTimeStamp } from "../utils/utils";
 import profileService from "../services/profileService";
 
 interface Props {
@@ -76,7 +76,7 @@ const BigCard = ({
         <div>{calcCoordsDistance(myCoordinates, profile.coordinates)} km </div>
         <div>Tags:</div> <div> {profile.tags.join(", ")}</div>
         <div>Fame:</div> <div> {profile.fame}</div>
-        <div>Online:</div> <div> </div>
+        <div>Online:</div> <div>{formatTimeStamp(profile.online)}</div>
       </div>
       <div
         className="cardButtons"
