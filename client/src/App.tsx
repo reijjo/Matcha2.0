@@ -24,6 +24,8 @@ import UserCard from "./components/UserCard";
 import MyCard from "./components/MyCard";
 import Stalkers from "./components/Stalkers";
 import Looked from "./components/Looked";
+import Liked from "./components/Liked";
+import WhoLiked from "./components/WhoLiked";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -153,6 +155,14 @@ const App = () => {
           <Route
             path="/stalkers"
             element={<PrivateRoute element={<Stalkers user={loggedUser} />} />}
+          />
+          <Route
+            path="/liked"
+            element={<PrivateRoute element={<Liked user={loggedUser} />} />}
+          />
+          <Route
+            path="/wholiked"
+            element={<PrivateRoute element={<WhoLiked user={loggedUser} />} />}
           />
           <Route path="*" element={<Home />} />
         </Routes>

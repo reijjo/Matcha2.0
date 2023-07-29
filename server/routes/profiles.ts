@@ -206,7 +206,7 @@ profileRouter.get("/profile/:id/like", async (req: Request, res: Response) => {
   const passedUsersSql = `SELECT * FROM liked WHERE user_id = $1`;
   const response = await pool.query(passedUsersSql, [id]);
 
-  res.send(response.rows);
+  res.send({ regular: response.rows });
 });
 
 export { profileRouter };

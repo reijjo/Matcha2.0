@@ -98,7 +98,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
       });
       profileService.getLiked(String(user.id)).then((response) => {
         console.log("liked", response);
-        const likedIds = response.map(
+        const likedIds = response.regular.map(
           (profile: { liked_id: number }) => profile.liked_id
         );
         setLikedProfiles(likedIds);
