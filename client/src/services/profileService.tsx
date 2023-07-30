@@ -28,7 +28,6 @@ const getStalked = (id: string) => {
 };
 
 const addStalked = (id: string, userId: string) => {
-  console.log("axsio", id, userId);
   const req = axios.post(`${baseUrl}/profile/${id}`, { userId: userId });
   return req.then((response) => response.data);
 };
@@ -47,6 +46,8 @@ const getPassed = (userId: string) => {
 const addLiked = (id: string, userId: string) => {
   console.log("axsio LIKED", id, userId);
   const req = axios.post(`${baseUrl}/profile/${id}/like`, { userId: userId });
+  console.log("AXIOS ID", id);
+  console.log("AXIOS USERID", userId);
   return req.then((response) => response.data);
 };
 
@@ -56,8 +57,15 @@ const getLiked = (userId: string) => {
 };
 
 const getMatches = (userId: string) => {
-  console.log('AXIOS"', userId);
   const req = axios.get(`${baseUrl}/matches`, { params: { userId: userId } });
+  return req.then((response) => response.data);
+};
+
+const addNotifications = (id: string, userId: string, message: string) => {
+  const req = axios.post(`${baseUrl}/profile/${id}/notifications`, {
+    userId: userId,
+    message: message,
+  });
   return req.then((response) => response.data);
 };
 
@@ -71,6 +79,7 @@ const profileService = {
   addLiked,
   getLiked,
   getMatches,
+  addNotifications,
 };
 
 export default profileService;

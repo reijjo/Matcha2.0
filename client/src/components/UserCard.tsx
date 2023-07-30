@@ -18,26 +18,6 @@ const UserCard = ({ user }: { user: User | null }) => {
 
   const { id } = useParams<string>();
 
-  const like = async (id: number, myId: number) => {
-    console.log("MYID", myId);
-    console.log("Like userId", id);
-    const ready = await profileService.addLiked(String(id), String(myId));
-    console.log("ready", ready);
-    if (ready) {
-      window.location.replace("/feed");
-    }
-  };
-
-  const pass = async (id: number, myId: number) => {
-    console.log("MYID", myId);
-    console.log("Like userId", id);
-    const ready = await profileService.addPassed(String(id), String(myId));
-    console.log("ready", ready);
-    if (ready) {
-      window.location.replace("/feed");
-    }
-  };
-
   useEffect(() => {
     if (id) {
       if (id === String(user?.id)) {
@@ -53,7 +33,7 @@ const UserCard = ({ user }: { user: User | null }) => {
           setAvatar(response);
           setBigImg(avatar?.path);
         });
-        if (user) {
+        if (user && profile) {
           profileService.getProfile(String(user.id)).then((response) => {
             setMyProfile(response);
           });
@@ -61,8 +41,16 @@ const UserCard = ({ user }: { user: User | null }) => {
           profileService.addStalked(id, String(user.id)).then((response) => {
             console.log("response", response);
           });
+          if (profile.isonline === false && myProfile?.username !== undefined) {
+            const message = `${myProfile?.username} looked your profile!`;
+            profileService
+              .addNotifications(id, String(user.id), message)
+              .then((response) => {
+                console.log("NOTIFICATION response", response);
+              });
+          }
           profileService.getPassed(String(user.id)).then((response) => {
-            console.log("passed", response);
+            // console.log("passed", response);
             const passedIds = response.map(
               (profile: { passed_id: number }) => profile.passed_id
             );
@@ -77,7 +65,7 @@ const UserCard = ({ user }: { user: User | null }) => {
         }
       }
     }
-  }, [id]);
+  }, [id, profile]);
 
   if (!profile || !images || !avatar || !user) {
     return <div>Loading profile...</div>;
@@ -97,7 +85,28 @@ const UserCard = ({ user }: { user: User | null }) => {
   const isLiked = likedProfiles.includes(profile.user_id);
   const isPassed = passedProfiles.includes(profile.user_id);
 
-  console.log("THIS PROFILE", profile.isonline);
+  const like = (id: number, myId: number) => {
+    profileService.addLiked(String(id), String(myId)).then(() => {
+      console.log("ADD LIKE DONE");
+    });
+    console.log("MYID", myId);
+    console.log("Like userId", id);
+    // const ready = await profileService.addLiked(String(id), String(myId));
+    // console.log("ready", ready);
+    // if (ready) {
+    //   window.location.replace("/feed");
+    // }
+  };
+
+  const pass = async (id: number, myId: number) => {
+    console.log("MYID", myId);
+    console.log("Like userId", id);
+    const ready = await profileService.addPassed(String(id), String(myId));
+    console.log("ready", ready);
+    if (ready) {
+      window.location.replace("/feed");
+    }
+  };
 
   return (
     <div id="feed">

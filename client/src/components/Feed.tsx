@@ -77,7 +77,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
       window.location.replace("/registerTwo");
     }
   }, []);
-  console.log("FEED", profiles);
+  // console.log("FEED", profiles);
 
   useEffect(() => {
     if (user && user.status && user.status > 2) {
@@ -387,6 +387,7 @@ const Feed = ({ user, sort, setSort, filter, setFilter }: FeedProps) => {
                 image={profile.image}
                 myCoordinates={myProfile?.coordinates}
                 myId={myProfile?.user_id}
+                myUsername={myProfile.username}
                 onPass={() => handlePass(profile.user_id)}
                 onLike={() => handleLike(profile.user_id)}
               />

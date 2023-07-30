@@ -75,3 +75,11 @@ export interface Login {
   username: string;
   password: string;
 }
+
+export interface notifications {
+  id: number;
+  sender_id: number;
+  to_id: number;
+  message: string;
+  read: number;
+}

@@ -8,6 +8,7 @@ interface Props {
   image?: Images;
   myCoordinates: Coordinates | undefined;
   myId: number;
+  myUsername: string;
   onPass: () => void;
   onLike: () => void;
 }
@@ -17,6 +18,7 @@ const BigCard = ({
   image,
   myCoordinates,
   myId,
+  myUsername,
   onPass,
   onLike,
 }: Props) => {
@@ -24,7 +26,16 @@ const BigCard = ({
   const age = new Date().getFullYear() - birthDate.getFullYear();
 
   const like = (id: number, myId: number) => {
-    profileService.addLiked(String(id), String(myId));
+    profileService.addLiked(String(id), String(myId)).then(() => {
+      if (profile.isonline === false && myUsername !== undefined) {
+        const message = `${myUsername} liked you!`;
+        profileService
+          .addNotifications(String(id), String(myId), message)
+          .then((response) => {
+            console.log("NOTIFICAIOTN RESPON", response);
+          });
+      }
+    });
     console.log("MYID", myId);
     console.log("Like userId", id);
     onLike();

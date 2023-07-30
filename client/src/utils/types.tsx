@@ -77,3 +77,11 @@ export interface Images {
   path: string;
   user_id: number;
 }
+
+export interface notifications {
+  id: number;
+  sender_id: number;
+  to_id: number;
+  message: string;
+  read: number;
+}

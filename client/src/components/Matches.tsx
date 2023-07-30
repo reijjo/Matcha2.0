@@ -52,11 +52,6 @@ const Matches = ({ user }: { user: User | null }) => {
     return <div>Loading...</div>;
   }
 
-  const hoverStyles = {
-    backgroundColor: "#624cab",
-    color: "#ffcda2",
-  };
-
   const startChat = () => {
     window.location.replace("/");
   };

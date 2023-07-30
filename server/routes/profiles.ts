@@ -183,6 +183,8 @@ profileRouter.post("/profile/:id/like", async (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = req.body.userId as string;
 
+  console.log("ID USERIDE BACJEC", id, userId);
+
   try {
     const dupCheckSql = `SELECT * FROM liked WHERE user_id = $1 AND liked_id = $2`;
     const dupCheckRes = await pool.query(dupCheckSql, [userId, id]);
@@ -196,7 +198,7 @@ profileRouter.post("/profile/:id/like", async (req: Request, res: Response) => {
       const checkMatchSql = `SELECT * FROM liked WHERE user_id = $1 AND liked_id = $2`;
       const checkMatchRes = await pool.query(checkMatchSql, [id, userId]);
 
-      console.log("done", done);
+      console.log("done", done.rowCount);
       if (done.rowCount === 1 && checkMatchRes.rowCount === 0) {
         res.send({ likedMessage: `${userId} liked you.` });
       } else if (done.rowCount === 1 && checkMatchRes.rowCount === 1) {
@@ -271,5 +273,41 @@ profileRouter.get("/matches", async (req: Request, res: Response) => {
 
   console.log("maches MY ID", userId);
 });
+
+profileRouter.post(
+  "/profile/:id/notifications",
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const userId = Number(req.body.userId);
+    const message = req.body.message;
+    console.log("nOTIFI id", id);
+    console.log("nOTIFI usERID", userId);
+    console.log("nOTIFI uMESSAGE", message);
+
+    if (userId !== undefined) {
+      const getUsernameSql = `SELECT username FROM profile WHERE user_id = $1`;
+      const getUsernameRes = await pool.query(getUsernameSql, [userId]);
+      const username = getUsernameRes.rows[0].username;
+
+      const to_id = id;
+
+      const checkDupSql = `SELECT * FROM notifications WHERE sender_id = $1 AND to_id = $2 AND message = $3`;
+      const checkDupRes = await pool.query(checkDupSql, [
+        userId,
+        to_id,
+        message,
+      ]);
+
+      if (checkDupRes.rowCount === 0) {
+        const addNotifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+        await pool.query(addNotifSql, [userId, to_id, message]);
+
+        res.sendStatus(200);
+      }
+
+      console.log("ADD NOFI", username);
+    }
+  }
+);
 
 export { profileRouter };
