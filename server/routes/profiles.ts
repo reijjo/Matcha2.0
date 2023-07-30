@@ -100,7 +100,7 @@ profileRouter.get("/profile/:id", async (req: Request, res: Response) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-profileRouter.post("/profile/:id", async (req: Request, _res: Response) => {
+profileRouter.post("/profile/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = req.body.userId as string;
 
@@ -109,7 +109,9 @@ profileRouter.post("/profile/:id", async (req: Request, _res: Response) => {
 
   if (dupCheckRes.rowCount === 0) {
     const addSql = `INSERT INTO stalkers (user_id, stalked_id) VALUES ($1, $2)`;
-    await pool.query(addSql, [userId, id]);
+    const addedStalker = await pool.query(addSql, [userId, id]);
+
+    res.send({ addedStalker: addedStalker.rowCount });
   }
 
   console.log("profile, me", id, userId);
@@ -190,8 +192,34 @@ profileRouter.post("/profile/:id/like", async (req: Request, res: Response) => {
     if (dupCheckRes.rowCount === 0) {
       const addSql = `INSERT INTO liked (user_id, liked_id) VALUES ($1, $2)`;
       const done = await pool.query(addSql, [userId, id]);
+
+      const checkMatchSql = `SELECT * FROM liked WHERE user_id = $1 AND liked_id = $2`;
+      const checkMatchRes = await pool.query(checkMatchSql, [id, userId]);
+
       console.log("done", done);
-      res.send({ message: "All good!" });
+      if (done.rowCount === 1 && checkMatchRes.rowCount === 0) {
+        res.send({ likedMessage: `${userId} liked you.` });
+      } else if (done.rowCount === 1 && checkMatchRes.rowCount === 1) {
+        const addToMatches1sql =
+          "INSERT INTO matches (user_id, match_id) VALUES ($1, $2)";
+        const addToMatches2sql =
+          "INSERT INTO matches (user_id, match_id) VALUES ($2, $1)";
+        await pool.query(addToMatches1sql, [userId, id]);
+        await pool.query(addToMatches2sql, [userId, id]);
+
+        const userSql = `SELECT username FROM users WHERE id = $1`;
+        const userRes = await pool.query(userSql, [userId]);
+        const matchSql = `SELECT username FROM users WHERE id = $1`;
+        const matchRes = await pool.query(matchSql, [id]);
+
+        const userUsername = userRes.rows[0].username;
+        const matchUsername = matchRes.rows[0].username;
+
+        res.send({
+          match1: `It's a match with ${matchUsername}!`,
+          match2: `It's a match with ${userUsername}`,
+        });
+      }
     }
   } catch (error) {
     console.error("error liking", error);
@@ -205,8 +233,43 @@ profileRouter.get("/profile/:id/like", async (req: Request, res: Response) => {
 
   const passedUsersSql = `SELECT * FROM liked WHERE user_id = $1`;
   const response = await pool.query(passedUsersSql, [id]);
+  const likedMap = response.rows.map((row) => row.liked_id);
+  const likedUserSql = `SELECT * FROM users WHERE id = ANY($1::int[])`;
+  const likedUserRes = await pool.query(likedUserSql, [likedMap]);
+  const likedCoorsSql = `SELECT * FROM profile WHERE user_id = ANY($1::int[])`;
+  const likedCoorsRes = await pool.query(likedCoorsSql, [likedMap]);
 
-  res.send({ regular: response.rows });
+  const whoLikedSql = `SELECT * FROM liked WHERE liked_id = $1`;
+  const whoLikedRes = await pool.query(whoLikedSql, [id]);
+  const whoLikedMap = whoLikedRes.rows.map((row) => row.user_id);
+  const whoLikedUserSql = `SELECT * FROM users WHERE id = ANY($1::int[])`;
+  const whoLikedUserRes = await pool.query(whoLikedUserSql, [whoLikedMap]);
+  const whoLikedCoorsSql = `SELECT * FROM profile WHERE user_id = ANY($1::int[])`;
+  const whoLikedCoorsRes = await pool.query(whoLikedCoorsSql, [whoLikedMap]);
+
+  res.send({
+    regular: response.rows,
+    liked: likedUserRes.rows,
+    likedCoors: likedCoorsRes.rows,
+    whoLiked: whoLikedUserRes.rows,
+    whoLikedCoors: whoLikedCoorsRes.rows,
+  });
+});
+
+profileRouter.get("/matches", async (req: Request, res: Response) => {
+  const userId = req.query.userId;
+
+  const passedUsersSql = `SELECT * FROM matches WHERE user_id = $1`;
+  const response = await pool.query(passedUsersSql, [userId]);
+  const likedMap = response.rows.map((row) => row.match_id);
+  const likedUserSql = `SELECT * FROM users WHERE id = ANY($1::int[])`;
+  const likedUserRes = await pool.query(likedUserSql, [likedMap]);
+  const likedCoorsSql = `SELECT * FROM profile WHERE user_id = ANY($1::int[])`;
+  const likedCoorsRes = await pool.query(likedCoorsSql, [likedMap]);
+
+  res.send({ matches: likedUserRes.rows, matchesCoors: likedCoorsRes.rows });
+
+  console.log("maches MY ID", userId);
 });
 
 export { profileRouter };

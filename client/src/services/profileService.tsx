@@ -55,6 +55,12 @@ const getLiked = (userId: string) => {
   return req.then((response) => response.data);
 };
 
+const getMatches = (userId: string) => {
+  console.log('AXIOS"', userId);
+  const req = axios.get(`${baseUrl}/matches`, { params: { userId: userId } });
+  return req.then((response) => response.data);
+};
+
 const profileService = {
   getAllProfiles,
   getProfile,
@@ -64,6 +70,7 @@ const profileService = {
   getPassed,
   addLiked,
   getLiked,
+  getMatches,
 };
 
 export default profileService;

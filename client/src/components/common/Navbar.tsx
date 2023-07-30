@@ -142,7 +142,7 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
                 <span style={{ display: "none" }}></span>
               ) : (
                 <>
-                  <Link to="#" onClick={() => setIsDropOpen(false)}>
+                  <Link to="/matches" onClick={() => setIsDropOpen(false)}>
                     Matches
                   </Link>
                   <Link to="/feed" onClick={() => setIsDropOpen(false)}>
@@ -160,7 +160,7 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
                   <Link to="/stalkers" onClick={() => setIsDropOpen(false)}>
                     Your Stalkers
                   </Link>
-                  <Link to="#" onClick={() => setIsDropOpen(false)}>
+                  <Link to="/wholiked" onClick={() => setIsDropOpen(false)}>
                     Who Liked You
                   </Link>
                   <Link to="/looked" onClick={() => setIsDropOpen(false)}>

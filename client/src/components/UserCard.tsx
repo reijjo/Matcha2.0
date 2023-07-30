@@ -13,6 +13,9 @@ const UserCard = ({ user }: { user: User | null }) => {
   const [bigImg, setBigImg] = useState<string | undefined>(avatar?.path);
   const [myProfile, setMyProfile] = useState<Profile>();
 
+  const [passedProfiles, setPassedProfiles] = useState<number[]>([]);
+  const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
+
   const { id } = useParams<string>();
 
   const like = async (id: number, myId: number) => {
@@ -58,6 +61,19 @@ const UserCard = ({ user }: { user: User | null }) => {
           profileService.addStalked(id, String(user.id)).then((response) => {
             console.log("response", response);
           });
+          profileService.getPassed(String(user.id)).then((response) => {
+            console.log("passed", response);
+            const passedIds = response.map(
+              (profile: { passed_id: number }) => profile.passed_id
+            );
+            setPassedProfiles(passedIds);
+          });
+          profileService.getLiked(String(user.id)).then((response) => {
+            const likedIds = response.regular.map(
+              (profile: { liked_id: number }) => profile.liked_id
+            );
+            setLikedProfiles(likedIds);
+          });
         }
       }
     }
@@ -77,6 +93,9 @@ const UserCard = ({ user }: { user: User | null }) => {
   const handleClick = (imagePath: string) => {
     setBigImg(imagePath);
   };
+
+  const isLiked = likedProfiles.includes(profile.user_id);
+  const isPassed = passedProfiles.includes(profile.user_id);
 
   console.log("THIS PROFILE", profile.isonline);
 
@@ -164,24 +183,25 @@ const UserCard = ({ user }: { user: User | null }) => {
           <div>Last Name:</div> <div>{profile.lastname}</div>
           <div>About me:</div> <div>{profile.bio}</div>
         </div>
-
-        <div
-          className="cardButtons"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <button
-            className="matchButton"
-            onClick={() => like(profile.user_id, user.id as number)}
+        {!isLiked && !isPassed && (
+          <div
+            className="cardButtons"
+            style={{ display: "flex", flexDirection: "column" }}
           >
-            Like
-          </button>
-          <button
-            className="passButton"
-            onClick={() => pass(profile.user_id, user.id as number)}
-          >
-            Pass
-          </button>
-        </div>
+            <button
+              className="matchButton"
+              onClick={() => like(profile.user_id, user.id as number)}
+            >
+              Like
+            </button>
+            <button
+              className="passButton"
+              onClick={() => pass(profile.user_id, user.id as number)}
+            >
+              Pass
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,16 +6,16 @@ import { Link } from "react-router-dom";
 import { calcCoordsDistance } from "../utils/utils";
 
 const Liked = ({ user }: { user: User | null }) => {
-  const [looked, setLooked] = useState<User[]>();
+  const [liked, setLiked] = useState<User[]>();
   const [images, setImages] = useState<Images[]>();
   const [myProfile, setMyProfile] = useState<Profile | undefined>();
   const [profile2, setProfile2] = useState<Profile[]>();
 
   useEffect(() => {
     if (user) {
-      profileService.getStalked(String(user.id)).then((response) => {
-        setLooked(response.looked);
-        setProfile2(response.lookedCoors);
+      profileService.getLiked(String(user.id)).then((response) => {
+        setLiked(response.liked);
+        setProfile2(response.likedCoors);
       });
       imageService.getAll().then((response) => {
         setImages(response);
@@ -26,7 +26,7 @@ const Liked = ({ user }: { user: User | null }) => {
     }
   }, []);
 
-  const profilesWithImages = looked?.map((profile) => {
+  const profilesWithImages = liked?.map((profile) => {
     console.log("profile", profile);
     const image = images?.find(
       (img) => img.user_id === profile.id && img.avatar
@@ -41,10 +41,10 @@ const Liked = ({ user }: { user: User | null }) => {
     };
   });
 
-  console.log("looked", looked);
+  console.log("looked", liked);
   console.log("lookedCoors", profile2);
-  console.log("images", images);
-  console.log("myprofile", myProfile);
+  // console.log("images", images);
+  // console.log("myprofile", myProfile);
 
   if (!profilesWithImages || !myProfile) {
     return <div>Loading...</div>;

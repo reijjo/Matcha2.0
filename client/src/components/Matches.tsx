@@ -5,17 +5,19 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { calcCoordsDistance } from "../utils/utils";
 
-const WhoLiked = ({ user }: { user: User | null }) => {
-  const [whoLiked, setWhoLiked] = useState<User[]>();
+const Matches = ({ user }: { user: User | null }) => {
+  const [matches, setMatches] = useState<User[]>();
   const [images, setImages] = useState<Images[]>();
   const [myProfile, setMyProfile] = useState<Profile | undefined>();
   const [profile2, setProfile2] = useState<Profile[]>();
 
+  const [isHover, setIsHover] = useState(false);
+
   useEffect(() => {
     if (user) {
-      profileService.getLiked(String(user.id)).then((response) => {
-        setWhoLiked(response.whoLiked);
-        setProfile2(response.whoLikedCoors);
+      profileService.getMatches(String(user.id)).then((response) => {
+        setMatches(response.matches);
+        setProfile2(response.matchesCoors);
       });
       imageService.getAll().then((response) => {
         setImages(response);
@@ -26,7 +28,7 @@ const WhoLiked = ({ user }: { user: User | null }) => {
     }
   }, []);
 
-  const profilesWithImages = whoLiked?.map((profile) => {
+  const profilesWithImages = matches?.map((profile) => {
     console.log("profile", profile);
     const image = images?.find(
       (img) => img.user_id === profile.id && img.avatar
@@ -41,21 +43,30 @@ const WhoLiked = ({ user }: { user: User | null }) => {
     };
   });
 
-  console.log("lwholiked", whoLiked);
-  console.log("lookedCoors", profile2);
-  console.log("images", images);
-  console.log("myprofile", myProfile);
+  // console.log("lwholiked", whoLiked);
+  // console.log("lookedCoors", profile2);
+  // console.log("images", images);
+  // console.log("myprofile", myProfile);
 
   if (!profilesWithImages || !myProfile) {
     return <div>Loading...</div>;
   }
+
+  const hoverStyles = {
+    backgroundColor: "#624cab",
+    color: "#ffcda2",
+  };
+
+  const startChat = () => {
+    window.location.replace("/");
+  };
 
   return (
     <div id="feed">
       <div className="overlaydark" />
       <div className="likedCard">
         <div className="cardHeader">
-          <b style={{ fontSize: "larger" }}>Who liked you:</b>
+          <b style={{ fontSize: "larger" }}>Matches:</b>
         </div>
         <div className="smallCardList">
           {profilesWithImages.map((user) => (
@@ -72,6 +83,20 @@ const WhoLiked = ({ user }: { user: User | null }) => {
                   className="cardImage"
                   style={{ height: "30vh", objectFit: "cover" }}
                 />
+              </div>
+              <div>
+                <button
+                  className="loginlog"
+                  onClick={startChat}
+                  onMouseEnter={() => setIsHover(true)}
+                  onMouseLeave={() => setIsHover(false)}
+                  style={{
+                    backgroundColor: isHover ? "#634cab" : "",
+                    color: isHover ? "#ffcda2" : "",
+                  }}
+                >
+                  Chat?
+                </button>
               </div>
               <div style={{ padding: "0.5vh 1vw" }}>
                 {user.coordinates
@@ -90,4 +115,4 @@ const WhoLiked = ({ user }: { user: User | null }) => {
   );
 };
 
-export default WhoLiked;
+export default Matches;

@@ -26,6 +26,7 @@ import Stalkers from "./components/Stalkers";
 import Looked from "./components/Looked";
 import Liked from "./components/Liked";
 import WhoLiked from "./components/WhoLiked";
+import Matches from "./components/Matches";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -41,7 +42,7 @@ const App = () => {
     });
   }, []);
 
-  if (users) console.log("USERS", users);
+  // if (users) console.log("USERS", users);
 
   useEffect(() => {
     const getToken: string = localStorage.getItem("matchaToken") || "";
@@ -163,6 +164,10 @@ const App = () => {
           <Route
             path="/wholiked"
             element={<PrivateRoute element={<WhoLiked user={loggedUser} />} />}
+          />
+          <Route
+            path="/matches"
+            element={<PrivateRoute element={<Matches user={loggedUser} />} />}
           />
           <Route path="*" element={<Home />} />
         </Routes>
