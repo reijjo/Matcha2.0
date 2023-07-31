@@ -6,3 +6,9 @@ with TypeScript
 * frontend => ```localhost:3000```
 * backend => ```localhost:3001```
 * pgAdmin => ```localhost:8080```
+
+### Todo:
+* pictures overflowing on settings
+* UserCard buttons doesnt work.
+* Chat
+* Notifications with sockets
