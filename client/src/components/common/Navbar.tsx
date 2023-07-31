@@ -72,7 +72,16 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
     <nav>
       <div className="leftnav">
         <Link to={user ? "/feed" : "/"}>
-          <img src={logotext} alt="logotext" className="logo" />
+          <img
+            src={logotext}
+            alt="logotext"
+            className="logo"
+            onClick={() => {
+              user
+                ? window.location.replace("/feed")
+                : window.location.replace("/");
+            }}
+          />
         </Link>
       </div>
       {user ? (
@@ -145,7 +154,17 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
                   <Link to="/matches" onClick={() => setIsDropOpen(false)}>
                     Matches
                   </Link>
-                  <Link to="/feed" onClick={() => setIsDropOpen(false)}>
+                  <Link
+                    to="/feed"
+                    onClick={() => {
+                      {
+                        user
+                          ? window.location.replace("feed")
+                          : window.location.replace("/");
+                      }
+                      setIsDropOpen(false);
+                    }}
+                  >
                     Feed
                   </Link>
 

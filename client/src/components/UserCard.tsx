@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
 import { calcCoordsDistance, formatTimeStamp } from "../utils/utils";
+import axios from "axios";
 
 const UserCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();
@@ -17,6 +18,8 @@ const UserCard = ({ user }: { user: User | null }) => {
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
 
   const { id } = useParams<string>();
+
+  console.log("USER", user);
 
   useEffect(() => {
     if (id) {
@@ -85,7 +88,25 @@ const UserCard = ({ user }: { user: User | null }) => {
   const isLiked = likedProfiles.includes(profile.user_id);
   const isPassed = passedProfiles.includes(profile.user_id);
 
-  const like = (id: number, myId: number) => {
+  const like = async (id: number, myId: number) => {
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // };
+
+    // const data = { userId: String(myId) };
+
+    // try {
+    //   const response = await axios.post(
+    //     `http://localhost:3001/api/profiles/profile/${id}/like`,
+    //     data,
+    //     config
+    //   );
+    //   console.log("NONYT??", response.data);
+    // } catch (error) {
+    //   console.error("Error while liking:", error);
+    // }
     profileService.addLiked(String(id), String(myId)).then(() => {
       console.log("ADD LIKE DONE");
     });
