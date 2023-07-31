@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
 import { calcCoordsDistance, formatTimeStamp } from "../utils/utils";
-import axios from "axios";
 
 const UserCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();

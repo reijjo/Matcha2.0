@@ -27,7 +27,6 @@ import Looked from "./components/Looked";
 import Liked from "./components/Liked";
 import WhoLiked from "./components/WhoLiked";
 import Matches from "./components/Matches";
-import BigCard from "./components/BigCard";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);

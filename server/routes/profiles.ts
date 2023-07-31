@@ -217,9 +217,23 @@ profileRouter.post("/profile/:id/like", async (req: Request, res: Response) => {
         const userUsername = userRes.rows[0].username;
         const matchUsername = matchRes.rows[0].username;
 
+        const matchNotifUserSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+        await pool.query(matchNotifUserSql, [
+          id,
+          userId,
+          `It's a match with ${matchUsername}!`,
+        ]);
+
+        const matchNotifMatchSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+        await pool.query(matchNotifMatchSql, [
+          userId,
+          id,
+          `It's a match with ${userUsername}`,
+        ]);
+
         res.send({
           match1: `It's a match with ${matchUsername}!`,
-          match2: `It's a match with ${userUsername}`,
+          match2: `It's a match with ${userUsername}!`,
         });
       }
     }
