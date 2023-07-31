@@ -69,6 +69,18 @@ const addNotifications = (id: string, userId: string, message: string) => {
   return req.then((response) => response.data);
 };
 
+const getNotifications = (id: string) => {
+  console.log("id axios notif", id);
+  const req = axios.get(`${baseUrl}/profile/${id}/notifications`);
+  return req.then((response) => response.data);
+};
+
+const readNotifications = (id: string) => {
+  console.log("notif axios id", id);
+  const req = axios.put(`${baseUrl}/profile/${id}/notifications`);
+  return req.then((response) => response.data);
+};
+
 const profileService = {
   getAllProfiles,
   getProfile,
@@ -80,6 +92,8 @@ const profileService = {
   getLiked,
   getMatches,
   addNotifications,
+  getNotifications,
+  readNotifications,
 };
 
 export default profileService;

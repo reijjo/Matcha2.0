@@ -248,6 +248,20 @@ nav {
   background-color: var(--peach);
 }
 
+.notfif-drop {
+  display: block;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 5;
+}
+
+.notfif-drop a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: black;
+}
 footer {
   background-color: var(--green);
   width: 100%;

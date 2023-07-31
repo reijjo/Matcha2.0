@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Link, useLocation } from "react-router-dom";
-import { User } from "../../utils/types";
+import { Notifications, User } from "../../utils/types";
 import { useRef, useState, useEffect } from "react";
 import loginService from "../../services/loginService";
+import profileService from "../../services/profileService";
 
 const expandIcon = require("../../images/icons/icons8-expand-arrow-16.png");
 const closeIcon = require("../../images/icons/icons8-close-16.png");
 const noNotification = require("../../images/icons/icons8-notification-16.png");
-// const yesNotification = require("../../images/icons/notification-16.png");
+const yesNotification = require("../../images/icons/notification-16.png");
 const filt = require("../../images/icons/hamburger-16.png");
 const logotext = require("../../images/logotext.png");
 
@@ -23,6 +24,8 @@ type NavBarProps = {
 const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [notif, setNotif] = useState<Notifications[]>([]);
 
   const filterButtonRef = useRef<HTMLAnchorElement>(null);
   const location = useLocation();
@@ -36,6 +39,14 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
     setSort(false);
     setFilter(!filter);
   };
+
+  useEffect(() => {
+    if (user && user.id) {
+      profileService.getNotifications(String(user.id)).then((response) => {
+        setNotif(response);
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     if (filterButtonRef.current) {
@@ -57,6 +68,18 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  const handleNotif = () => {
+    setIsNotifOpen((what) => !what);
+  };
+
+  const readNotif = (id: number) => {
+    profileService.readNotifications(String(id)).then((response) => {
+      console.log("notif read", response);
+      setNotif((prevNotif) => prevNotif.filter((n) => n.id !== id));
+    });
+    console.log("ok read this", id);
+  };
+
   const logoutUser = async () => {
     if (user) {
       const response = await loginService.logout(user);
@@ -67,6 +90,12 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
   };
 
   const showFilterButton = location.pathname === "/feed";
+
+  console.log(
+    "notifications",
+    notif.map((msg) => msg)
+  );
+  console.log("notif open?", isNotifOpen);
 
   return (
     <nav>
@@ -134,9 +163,22 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
               )}
             </div>
           )}
-          <Link to="#" className="notiflog">
-            <img src={noNotification} alt="noNotifs" className="notif" />
+          <Link to="#" className="notiflog" onClick={handleNotif}>
+            <img
+              src={notif.length > 0 ? yesNotification : noNotification}
+              alt="noNotifs"
+              className="notif"
+            />
           </Link>
+          {isNotifOpen && notif.length > 0 && (
+            <div className="dropdown-content">
+              {notif.map((msg) => (
+                <a key={msg.id} href="#" onClick={() => readNotif(msg.id)}>
+                  {msg.message}
+                </a>
+              ))}
+            </div>
+          )}
           <Link to="#" className="loginlog" onClick={handleDropdown}>
             <span>{user.username} </span>
             <img

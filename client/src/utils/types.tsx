@@ -78,7 +78,7 @@ export interface Images {
   user_id: number;
 }
 
-export interface notifications {
+export interface Notifications {
   id: number;
   sender_id: number;
   to_id: number;

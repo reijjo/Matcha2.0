@@ -324,4 +324,29 @@ profileRouter.post(
   }
 );
 
+profileRouter.get(
+  "/profile/:id/notifications",
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const getNotif = `SELECT * FROM notifications WHERE to_id = $1 AND read = $2`;
+    const resNotif = await pool.query(getNotif, [id, 0]);
+
+    res.send(resNotif.rows);
+  }
+);
+
+profileRouter.put(
+  "/profile/:id/notifications",
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const updNotifSql = `UPDATE notifications SET read = $1 WHERE id = $2`;
+    const updNotifRes = await pool.query(updNotifSql, [1, id]);
+
+    console.log("notif id", id);
+    res.json(updNotifRes.rowCount);
+  }
+);
+
 export { profileRouter };
