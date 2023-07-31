@@ -112,11 +112,6 @@ const UserCard = ({ user }: { user: User | null }) => {
     });
     console.log("MYID", myId);
     console.log("Like userId", id);
-    // const ready = await profileService.addLiked(String(id), String(myId));
-    // console.log("ready", ready);
-    // if (ready) {
-    //   window.location.replace("/feed");
-    // }
   };
 
   const pass = async (id: number, myId: number) => {
