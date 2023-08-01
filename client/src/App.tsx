@@ -27,14 +27,23 @@ import Looked from "./components/Looked";
 import Liked from "./components/Liked";
 import WhoLiked from "./components/WhoLiked";
 import Matches from "./components/Matches";
+import { io, Socket } from "socket.io-client";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
   const [loggedUser, setLoggedUser] = useState<User | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   const [sort, setSort] = useState(false);
   const [filters, setFilters] = useState(false);
+
+  useEffect(() => {
+    const socket1 = io("http://localhost:3001");
+    setSocket(socket1);
+  }, []);
+
+  console.log("socket", socket);
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
@@ -97,6 +106,17 @@ const App = () => {
       <Navigate to="/login" />
     );
   };
+
+  if (!socket) {
+    return <div>Loading...</div>;
+  }
+
+  if (loggedUser) {
+    socket.connect();
+    socket.on("connect", () => {
+      socket.emit("user_connected", loggedUser.id);
+    });
+  }
 
   return (
     <Router>

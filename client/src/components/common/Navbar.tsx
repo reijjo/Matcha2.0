@@ -42,11 +42,22 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
 
   useEffect(() => {
     if (user && user.id) {
-      profileService.getNotifications(String(user.id)).then((response) => {
+      const getNotif = async () => {
+        const response = await profileService.getNotifications(String(user.id));
         setNotif(response);
-      });
+      };
+      // profileService.getNotifications(String(user.id)).then((response) => {
+      //   console.log("respo", response);
+      //   setNotif(response);
+      // });
+      try {
+        getNotif();
+      } catch (error) {
+        console.error("Error on notif fetching", error);
+      }
     }
-  }, [user]);
+  }, []);
+  // }, [user]);
 
   useEffect(() => {
     if (filterButtonRef.current) {

@@ -294,32 +294,36 @@ profileRouter.post(
     const { id } = req.params;
     const userId = Number(req.body.userId);
     const message = req.body.message;
-    console.log("nOTIFI id", id);
-    console.log("nOTIFI usERID", userId);
-    console.log("nOTIFI uMESSAGE", message);
+    // console.log("nOTIFI id", id);
+    // console.log("nOTIFI usERID", userId);
+    // console.log("nOTIFI uMESSAGE", message);
 
-    if (userId !== undefined) {
-      const getUsernameSql = `SELECT username FROM profile WHERE user_id = $1`;
-      const getUsernameRes = await pool.query(getUsernameSql, [userId]);
-      const username = getUsernameRes.rows[0].username;
+    try {
+      if (userId !== undefined) {
+        const getUsernameSql = `SELECT username FROM profile WHERE user_id = $1`;
+        const getUsernameRes = await pool.query(getUsernameSql, [userId]);
+        const username = getUsernameRes.rows[0].username;
 
-      const to_id = id;
+        const to_id = id;
 
-      const checkDupSql = `SELECT * FROM notifications WHERE sender_id = $1 AND to_id = $2 AND message = $3`;
-      const checkDupRes = await pool.query(checkDupSql, [
-        userId,
-        to_id,
-        message,
-      ]);
+        const checkDupSql = `SELECT * FROM notifications WHERE sender_id = $1 AND to_id = $2 AND message = $3`;
+        const checkDupRes = await pool.query(checkDupSql, [
+          userId,
+          to_id,
+          message,
+        ]);
 
-      if (checkDupRes.rowCount === 0) {
-        const addNotifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
-        await pool.query(addNotifSql, [userId, to_id, message]);
+        if (checkDupRes.rowCount === 0) {
+          const addNotifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+          await pool.query(addNotifSql, [userId, to_id, message]);
 
-        res.sendStatus(200);
+          res.sendStatus(200);
+        }
+
+        console.log("ADD NOFI", username);
       }
-
-      console.log("ADD NOFI", username);
+    } catch (error) {
+      console.error("Error adding notifi", error);
     }
   }
 );
@@ -329,10 +333,15 @@ profileRouter.get(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const getNotif = `SELECT * FROM notifications WHERE to_id = $1 AND read = $2`;
-    const resNotif = await pool.query(getNotif, [id, 0]);
+    try {
+      const getNotif = `SELECT * FROM notifications WHERE to_id = $1 AND read = $2`;
+      const resNotif = await pool.query(getNotif, [id, 0]);
 
-    res.send(resNotif.rows);
+      console.log("resnot", resNotif);
+      res.send(resNotif.rows);
+    } catch (error) {
+      console.log("Error getting notifications", error);
+    }
   }
 );
 

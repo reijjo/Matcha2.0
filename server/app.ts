@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { createServer } from "http";
 import { connectDB } from "./utils/dbConnection";
 import { verifyToken } from "./routes/loggedIn";
 import { usersRouter } from "./routes/users";
@@ -10,11 +11,12 @@ import path from "path";
 import { profileRouter } from "./routes/profiles";
 
 const app = express();
+const server = createServer(app);
 
 app.use(express.json());
 app.use(
   cors({
-    origin: true,
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -34,4 +36,4 @@ app.use("/api/profiles", profileRouter);
 
 connectDB();
 
-export { app };
+export { app, server };

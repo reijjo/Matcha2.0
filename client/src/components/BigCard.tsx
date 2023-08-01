@@ -34,6 +34,8 @@ const BigCard = ({
           .then((response) => {
             console.log("NOTIFICAIOTN RESPON", response);
           });
+      } else if (profile.isonline === true && myUsername !== undefined) {
+        console.log("tanne socket messagaee");
       }
     });
     console.log("MYID", myId);
