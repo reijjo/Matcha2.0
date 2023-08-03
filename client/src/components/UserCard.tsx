@@ -16,15 +16,23 @@ const UserCard = ({ user }: { user: User | null }) => {
   const [passedProfiles, setPassedProfiles] = useState<number[]>([]);
   const [likedProfiles, setLikedProfiles] = useState<number[]>([]);
 
+  const [notifSent, setNotifSent] = useState(false);
+  const [gotProfile, setGotProfile] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
+
   const { id } = useParams<string>();
 
   // console.log("USER", user);
+  console.log("buttonClickec", buttonClicked);
 
   useEffect(() => {
     const fetchProfileData = async (id: string) => {
       try {
-        const response = await profileService.getProfile(id);
-        setProfile(response);
+        if (!gotProfile) {
+          const response = await profileService.getProfile(id);
+          setProfile(response);
+          setGotProfile(true);
+        }
       } catch (error) {
         console.error("Error fetching Profile Data", error);
       }
@@ -50,10 +58,27 @@ const UserCard = ({ user }: { user: User | null }) => {
             String(user.id)
           );
           setMyProfile(myProfileResponse);
-
-          if (profile.isonline === false && myProfile?.username !== undefined) {
+          console.log(id);
+          if (
+            !notifSent &&
+            profile.isonline === false &&
+            myProfile?.username !== undefined
+          ) {
             const message = `${myProfile?.username} looked your profile!`;
-            await profileService.addNotifications(id, String(user.id), message);
+            const response = await profileService.addNotifications(
+              id,
+              String(user.id),
+              message
+            );
+            if (response === "OK") {
+              setNotifSent(true);
+              console.log('OK"', response);
+            } else {
+              setNotifSent(true);
+
+              console.log("WHAT THE HELL", response);
+            }
+            console.log("responseTHIS ONE", response);
           }
 
           const passedResponse = await profileService.getPassed(
@@ -72,6 +97,7 @@ const UserCard = ({ user }: { user: User | null }) => {
         } catch (error) {
           console.error("Error fetching Other Data", error);
         }
+        await profileService.addStalked(id, String(user.id));
       }
     };
 
@@ -81,13 +107,16 @@ const UserCard = ({ user }: { user: User | null }) => {
       } else {
         fetchProfileData(id);
         fetchImageData(id);
+        setGotProfile(false);
         fetchOtherData(id);
       }
     }
   }, [id, profile]);
 
   if (!profile || !images || !avatar || !user) {
+    // setTimeout(() => {
     return <div>Loading profile...</div>;
+    // }, 500);
   }
 
   const birthDate = new Date(profile.birthday);
@@ -111,15 +140,19 @@ const UserCard = ({ user }: { user: User | null }) => {
     // await profileService.addLiked(String(id), String(myId)).then(() => {
     //   console.log("ADD LIKE DONE");
     // });
+    const iLike = await profileService.addLiked(String(id), String(myId));
+    if (iLike) {
+      setButtonClicked(true);
+    }
   };
 
   const pass = async (id: number, myId: number) => {
     console.log("passbutton stuff userId", id);
     console.log("passbutton stuff MYID", myId);
+
     const ready = await profileService.addPassed(String(id), String(myId));
-    console.log("ready", ready);
     if (ready) {
-      window.location.replace("/feed");
+      setButtonClicked(true);
     }
   };
 
@@ -207,14 +240,21 @@ const UserCard = ({ user }: { user: User | null }) => {
           <div>Last Name:</div> <div>{profile.lastname}</div>
           <div>About me:</div> <div>{profile.bio}</div>
         </div>
-        {!isLiked && !isPassed && (
+        {!isLiked && !isPassed && !buttonClicked && (
           <div
             className="cardButtons"
             style={{ display: "flex", flexDirection: "column" }}
           >
             <button
               className="matchButton"
-              onClick={() => like(profile.user_id, user.id as number)}
+              onClick={
+                () => like(profile.user_id, user.id as number)
+                // console.log(
+                //   "like Profile Id and My Id",
+                //   profile.user_id,
+                //   user.id
+                // )
+              }
             >
               Like
             </button>

@@ -176,6 +176,8 @@ profileRouter.get("/profile/:id/pass", async (req: Request, res: Response) => {
   const passedUsersSql = `SELECT * FROM passed WHERE user_id = $1`;
   const response = await pool.query(passedUsersSql, [id]);
 
+  console.log("uus", response.rows);
+
   res.send(response.rows);
 });
 
@@ -299,32 +301,37 @@ profileRouter.post(
     // console.log("nOTIFI uMESSAGE", message);
 
     try {
-      if (userId !== undefined) {
-        const getUsernameSql = `SELECT username FROM profile WHERE user_id = $1`;
-        const getUsernameRes = await pool.query(getUsernameSql, [userId]);
-        const username = getUsernameRes.rows[0].username;
+      // if (userId !== undefined) {
+      const getUsernameSql = `SELECT username FROM profile WHERE user_id = $1`;
+      const getUsernameRes = await pool.query(getUsernameSql, [userId]);
+      const username = getUsernameRes.rows[0].username;
 
-        const to_id = id;
+      const to_id = id;
 
-        const checkDupSql = `SELECT * FROM notifications WHERE sender_id = $1 AND to_id = $2 AND message = $3`;
-        const checkDupRes = await pool.query(checkDupSql, [
-          userId,
-          to_id,
-          message,
-        ]);
+      const checkDupSql = `SELECT * FROM notifications WHERE sender_id = $1 AND to_id = $2 AND message = $3`;
+      const checkDupRes = await pool.query(checkDupSql, [
+        userId,
+        to_id,
+        message,
+      ]);
 
-        if (checkDupRes.rowCount === 0) {
-          const addNotifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
-          await pool.query(addNotifSql, [userId, to_id, message]);
-
-          res.sendStatus(200);
-        }
+      if (checkDupRes.rowCount === 0) {
+        const addNotifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+        await pool.query(addNotifSql, [userId, to_id, message]);
+        console.log("NOtification sent");
+        return res.sendStatus(200);
+        // return;
+        // }
 
         console.log("ADD NOFI", username);
+      } else {
+        console.log("NOTIFICATIO ___ALREADY____ SENT");
+        return res.sendStatus(200);
       }
     } catch (error) {
       console.error("Error adding notifi", error);
     }
+    return res.sendStatus(200).json({ message: "WHAT THE HELL IS GOIGN ON??" });
   }
 );
 
