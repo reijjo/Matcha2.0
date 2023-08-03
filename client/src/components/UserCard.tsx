@@ -4,8 +4,15 @@ import { useParams } from "react-router-dom";
 import profileService from "../services/profileService";
 import imageService from "../services/imageService";
 import { calcCoordsDistance, formatTimeStamp } from "../utils/utils";
+import { Socket } from "socket.io-client";
 
-const UserCard = ({ user }: { user: User | null }) => {
+interface Props {
+  user: User | null;
+  socket: Socket;
+}
+
+const UserCard = ({ user, socket }: Props) => {
+  // const UserCard = ({ user }: { user: User | null }) => {
   const [profile, setProfile] = useState<Profile>();
   const [images, setImages] = useState<Images[]>([]);
   const [avatar, setAvatar] = useState<Images>();
@@ -23,7 +30,9 @@ const UserCard = ({ user }: { user: User | null }) => {
   const { id } = useParams<string>();
 
   // console.log("USER", user);
-  console.log("buttonClickec", buttonClicked);
+  if (notifSent === true) {
+    console.log("notifsent", notifSent);
+  }
 
   useEffect(() => {
     const fetchProfileData = async (id: string) => {
@@ -80,6 +89,21 @@ const UserCard = ({ user }: { user: User | null }) => {
             }
             console.log("responseTHIS ONE", response);
           }
+          // else if (
+          //   !notifSent &&
+          //   profile.isonline === true &&
+          //   myProfile?.username !== undefined
+          // ) {
+          //   const message = `${myProfile?.username} looked your profile!`;
+          //   const response = await profileService.addNotifications(
+          //     id,
+          //     String(user.id),
+          //     message
+          //   );
+          //   socket.emit("notification", { roomId: String(id), message });
+          //   console.log("TO WHAT ROOM", String(id));
+          //   console.log("useronline now socket message", response);
+          // }
 
           const passedResponse = await profileService.getPassed(
             String(user.id)
@@ -113,7 +137,7 @@ const UserCard = ({ user }: { user: User | null }) => {
     }
   }, [id, profile]);
 
-  if (!profile || !images || !avatar || !user) {
+  if (!profile || !images || !avatar || !user || !socket) {
     // setTimeout(() => {
     return <div>Loading profile...</div>;
     // }, 500);
@@ -154,6 +178,11 @@ const UserCard = ({ user }: { user: User | null }) => {
     if (ready) {
       setButtonClicked(true);
     }
+  };
+
+  const testSockets = (id: number) => {
+    socket.emit("notification", "hihoo");
+    console.log("SOCCKKKEETS", id);
   };
 
   return (
@@ -264,6 +293,12 @@ const UserCard = ({ user }: { user: User | null }) => {
             >
               Pass
             </button>
+            <button
+              className="passButton"
+              onClick={() => testSockets(profile.user_id)}
+            >
+              test socket
+            </button>
           </div>
         )}
       </div>
@@ -272,43 +307,3 @@ const UserCard = ({ user }: { user: User | null }) => {
 };
 
 export default UserCard;
-
-// profileService.getProfile(id).then((response) => {
-//   setProfile(response);
-// });
-// imageService.getImage(id).then((response) => {
-//   setImages(response);
-// });
-// imageService.getAvatar(id).then((response) => {
-//   setAvatar(response);
-//   setBigImg(avatar?.path);
-// });
-// if (user && profile) {
-// profileService.getProfile(String(user.id)).then((response) => {
-//   setMyProfile(response);
-// });
-// profileService.addStalked(id, String(user.id)).then((response) => {
-//   console.log("response", response);
-// });
-// if (profile.isonline === false && myProfile?.username !== undefined) {
-//   const message = `${myProfile?.username} looked your profile!`;
-//   profileService
-//     .addNotifications(id, String(user.id), message)
-//     .then((response) => {
-//       console.log("NOTIFICATION response", response);
-//     });
-// }
-// profileService.getPassed(String(user.id)).then((response) => {
-//   // console.log("passed", response);
-//   const passedIds = response.map(
-//     (profile: { passed_id: number }) => profile.passed_id
-//   );
-//   setPassedProfiles(passedIds);
-// });
-// profileService.getLiked(String(user.id)).then((response) => {
-//   const likedIds = response.regular.map(
-//     (profile: { liked_id: number }) => profile.liked_id
-//   );
-//   setLikedProfiles(likedIds);
-// });
-// }

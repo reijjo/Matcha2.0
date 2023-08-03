@@ -17,14 +17,18 @@ const socketIO = new Server(server, {
 
 socketIO.on("connection", (socket: Socket) => {
   console.log("SOCKET IS ON!", socket.id);
+  socket.emit("hello", "world");
+  socket.emit("notification", "TASSA OLIS NOTIFICATION!!");
 
   socket.on("user_connected", async (userId) => {
     await socket.join(String(userId));
     console.log("User joined room with own ID", userId, "connected");
+    console.log("SOcketIO rooms", socketIO.sockets.adapter.rooms);
   });
 
-  socketIO.on("notification", (notification: string) => {
+  socket.on("notification", (notification) => {
     console.log("New Notification", notification);
+    socket.emit("notification", notification);
   });
 
   socketIO.on("message", (message: string) => {

@@ -102,11 +102,13 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
 
   const showFilterButton = location.pathname === "/feed";
 
-  console.log(
-    "notifications",
-    notif.map((msg) => msg)
-  );
-  console.log("notif open?", isNotifOpen);
+  if (notif.length > 0) {
+    console.log(
+      "notifications",
+      notif.map((msg) => msg)
+    );
+  }
+  // console.log("notif open?", isNotifOpen);
 
   return (
     <nav>

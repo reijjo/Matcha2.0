@@ -176,8 +176,6 @@ profileRouter.get("/profile/:id/pass", async (req: Request, res: Response) => {
   const passedUsersSql = `SELECT * FROM passed WHERE user_id = $1`;
   const response = await pool.query(passedUsersSql, [id]);
 
-  console.log("uus", response.rows);
-
   res.send(response.rows);
 });
 

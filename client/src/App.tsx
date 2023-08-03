@@ -43,7 +43,7 @@ const App = () => {
     setSocket(socket1);
   }, []);
 
-  console.log("socket", socket);
+  // console.log("socket", socket);
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
@@ -116,6 +116,15 @@ const App = () => {
     socket.on("connect", () => {
       socket.emit("user_connected", loggedUser.id);
     });
+
+    socket.on("notification", (notification: string) => {
+      // socket.on("notification", (arg) => {
+      console.log("Recieved notification", notification);
+    });
+
+    socket.on("hello", (arg) => {
+      console.log("socket hello", arg);
+    });
   }
 
   return (
@@ -163,7 +172,11 @@ const App = () => {
           />
           <Route
             path="/profile/:id"
-            element={<PrivateRoute element={<UserCard user={loggedUser} />} />}
+            element={
+              <PrivateRoute
+                element={<UserCard user={loggedUser} socket={socket} />}
+              />
+            }
           />
           <Route
             path="/me"
