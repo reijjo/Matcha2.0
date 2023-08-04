@@ -53,7 +53,7 @@ const Navbar = ({
     if (user && user.id) {
       const getNotif = async () => {
         const response = await profileService.getNotifications(String(user.id));
-        setNotif(response);
+        setNotif(response.notRead);
       };
       // profileService.getNotifications(String(user.id)).then((response) => {
       //   console.log("respo", response);
@@ -119,6 +119,17 @@ const Navbar = ({
     );
   }
   // console.log("notif open?", isNotifOpen);
+
+  socket.on("notification", async (room, notification) => {
+    console.log("RIGHT ON THE SOCKET NAVBAR", room, notification);
+    if (notification && user) {
+      const checkDuplicates = await profileService.getNotifications(room);
+      console.log("CHck dup", checkDuplicates.all);
+      // const mapNotif = checkDuplicates.map((msg: string[]) => msg);
+      // console.log("mapnotif", mapNotif());
+    }
+    console.log("GOT NOTIFICATION NAVBAR", notification);
+  });
 
   return (
     <nav>

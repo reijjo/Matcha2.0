@@ -52,14 +52,9 @@ const App = () => {
         socket1.emit("user_connected", loggedUser.id);
       });
 
-      socket1.on("notification", (notification: string) => {
-        console.log("Recieved notification", notification);
-        // if (!gotNotif) {
-        setSocketNotif(socketNotif.concat(notification));
-        //   setGotNotif(true);
-        // }
-        // setGotNotif(false);
-        // socket.on("notification", (arg) => {
+      socket1.on("notification", (room: string, notification: string) => {
+        // setSocketNotif(notification)
+        console.log("Recieved notification APPTSX", room, notification);
       });
     }
 

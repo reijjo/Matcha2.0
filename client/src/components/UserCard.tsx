@@ -88,22 +88,23 @@ const UserCard = ({ user, socket }: Props) => {
               console.log("WHAT THE HELL", response);
             }
             console.log("responseTHIS ONE", response);
+          } else if (
+            !notifSent &&
+            profile.isonline === true &&
+            myProfile?.username !== undefined
+          ) {
+            const message = `${myProfile?.username} looked your profile!`;
+            const response = await profileService.addNotifications(
+              id,
+              String(user.id),
+              message
+            );
+            if (response === "OK") {
+              setNotifSent(true);
+              console.log('OK"', response);
+              socket.emit("notification", String(profile.user_id), message);
+            }
           }
-          // else if (
-          //   !notifSent &&
-          //   profile.isonline === true &&
-          //   myProfile?.username !== undefined
-          // ) {
-          //   const message = `${myProfile?.username} looked your profile!`;
-          //   const response = await profileService.addNotifications(
-          //     id,
-          //     String(user.id),
-          //     message
-          //   );
-          //   socket.emit("notification", { roomId: String(id), message });
-          //   console.log("TO WHAT ROOM", String(id));
-          //   console.log("useronline now socket message", response);
-          // }
 
           const passedResponse = await profileService.getPassed(
             String(user.id)

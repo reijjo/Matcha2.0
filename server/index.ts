@@ -29,7 +29,7 @@ socketIO.on("connection", (socket: Socket) => {
       "SOcket io ROOMS on notification",
       socketIO.sockets.adapter.rooms
     );
-    socketIO.to(String(room)).emit("notification", notification);
+    socketIO.to(String(room)).emit("notification", room, notification);
     console.log("New Notification", room, notification);
   });
 

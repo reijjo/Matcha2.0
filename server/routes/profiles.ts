@@ -339,11 +339,13 @@ profileRouter.get(
     const { id } = req.params;
 
     try {
-      const getNotif = `SELECT * FROM notifications WHERE to_id = $1 AND read = $2`;
-      const resNotif = await pool.query(getNotif, [id, 0]);
+      const getNotifNotRead = `SELECT * FROM notifications WHERE to_id = $1 AND read = $2`;
+      const getNotifAll = `SELECT * FROM notifications WHERE to_id = $1`;
+      const resNotif = await pool.query(getNotifNotRead, [id, 0]);
+      const resNotifAll = await pool.query(getNotifAll, [id]);
 
-      console.log("resnot", resNotif);
-      res.send(resNotif.rows);
+      // console.log("resnot", resNotif);
+      res.send({ notRead: resNotif.rows, all: resNotifAll.rows });
     } catch (error) {
       console.log("Error getting notifications", error);
     }
