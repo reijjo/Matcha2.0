@@ -37,13 +37,42 @@ const App = () => {
 
   const [sort, setSort] = useState(false);
   const [filters, setFilters] = useState(false);
+  const [gotNotif, setGotNotif] = useState(false);
+  const [socketNotif, setSocketNotif] = useState<string[]>([]);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
     const socket1 = io("http://localhost:3001");
     setSocket(socket1);
+
+    if (loggedUser && !socketConnected) {
+      socket1.connect();
+      socket1.on("connect", () => {
+        setSocketConnected(true);
+        socket1.emit("user_connected", loggedUser.id);
+      });
+
+      socket1.on("notification", (notification: string) => {
+        console.log("Recieved notification", notification);
+        // if (!gotNotif) {
+        setSocketNotif(socketNotif.concat(notification));
+        //   setGotNotif(true);
+        // }
+        // setGotNotif(false);
+        // socket.on("notification", (arg) => {
+      });
+    }
+
+    // return () => {
+    //   if (socket1.connected) {
+    //     socket1.disconnect();
+    //     setSocketConnected(false);
+    //   }
+    // };
   }, []);
 
-  // console.log("socket", socket);
+  console.log("GOT NOTIIIF", socketNotif);
+  console.log("SOCKET ROOMS??", socket);
 
   useEffect(() => {
     userService.getAllUsers().then((data: User[]) => {
@@ -111,22 +140,6 @@ const App = () => {
     return <div>Loading...</div>;
   }
 
-  if (loggedUser) {
-    socket.connect();
-    socket.on("connect", () => {
-      socket.emit("user_connected", loggedUser.id);
-    });
-
-    socket.on("notification", (notification: string) => {
-      // socket.on("notification", (arg) => {
-      console.log("Recieved notification", notification);
-    });
-
-    socket.on("hello", (arg) => {
-      console.log("socket hello", arg);
-    });
-  }
-
   return (
     <Router>
       <main>
@@ -136,6 +149,7 @@ const App = () => {
           setSort={setSort}
           filter={filters}
           setFilter={setFilters}
+          socket={socket}
         />
         <Routes>
           <Route path="/" element={<Home />} />

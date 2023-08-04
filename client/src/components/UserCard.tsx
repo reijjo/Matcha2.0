@@ -180,8 +180,8 @@ const UserCard = ({ user, socket }: Props) => {
     }
   };
 
-  const testSockets = (id: number) => {
-    socket.emit("notification", "hihoo");
+  const testSockets = (room: number, notification: string) => {
+    socket.emit("notification", String(room), notification);
     console.log("SOCCKKKEETS", id);
   };
 
@@ -295,7 +295,8 @@ const UserCard = ({ user, socket }: Props) => {
             </button>
             <button
               className="passButton"
-              onClick={() => testSockets(profile.user_id)}
+              type="button"
+              onClick={() => testSockets(profile.user_id, "MENEEKO ROOM??")}
             >
               test socket
             </button>

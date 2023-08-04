@@ -17,8 +17,6 @@ const socketIO = new Server(server, {
 
 socketIO.on("connection", (socket: Socket) => {
   console.log("SOCKET IS ON!", socket.id);
-  socket.emit("hello", "world");
-  socket.emit("notification", "TASSA OLIS NOTIFICATION!!");
 
   socket.on("user_connected", async (userId) => {
     await socket.join(String(userId));
@@ -26,9 +24,13 @@ socketIO.on("connection", (socket: Socket) => {
     console.log("SOcketIO rooms", socketIO.sockets.adapter.rooms);
   });
 
-  socket.on("notification", (notification) => {
-    console.log("New Notification", notification);
-    socket.emit("notification", notification);
+  socket.on("notification", (room, notification) => {
+    console.log(
+      "SOcket io ROOMS on notification",
+      socketIO.sockets.adapter.rooms
+    );
+    socketIO.to(String(room)).emit("notification", notification);
+    console.log("New Notification", room, notification);
   });
 
   socketIO.on("message", (message: string) => {

@@ -4,6 +4,7 @@ import { Notifications, User } from "../../utils/types";
 import { useRef, useState, useEffect } from "react";
 import loginService from "../../services/loginService";
 import profileService from "../../services/profileService";
+import { Socket } from "socket.io-client";
 
 const expandIcon = require("../../images/icons/icons8-expand-arrow-16.png");
 const closeIcon = require("../../images/icons/icons8-close-16.png");
@@ -18,10 +19,18 @@ type NavBarProps = {
   setSort: React.Dispatch<React.SetStateAction<boolean>>;
   filter: boolean;
   setFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  socket: Socket;
 };
 
 // const Navbar = ({ user }: { user: User | null }) => {
-const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
+const Navbar = ({
+  user,
+  sort,
+  setSort,
+  filter,
+  setFilter,
+  socket,
+}: NavBarProps) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -96,6 +105,7 @@ const Navbar = ({ user, sort, setSort, filter, setFilter }: NavBarProps) => {
       const response = await loginService.logout(user);
       console.log("REPOSPOS", response);
       localStorage.removeItem("matchaToken");
+      socket.disconnect();
       window.location.replace("/");
     }
   };
