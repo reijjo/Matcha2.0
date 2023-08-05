@@ -82,8 +82,14 @@ const UserCard = ({ user, socket }: Props) => {
             if (response === "OK") {
               setNotifSent(true);
               console.log('OK"', response);
+              // setTimeout(() => {
+              //   setNotifSent(false);
+              // }, 500);
             } else {
               setNotifSent(true);
+              // setTimeout(() => {
+              //   setNotifSent(false);
+              // }, 500);
 
               console.log("WHAT THE HELL", response);
             }
@@ -103,6 +109,9 @@ const UserCard = ({ user, socket }: Props) => {
               setNotifSent(true);
               console.log('OK"', response);
               socket.emit("notification", String(profile.user_id), message);
+              // setTimeout(() => {
+              //   setNotifSent(false);
+              // }, 500);
             }
           }
 

@@ -112,19 +112,20 @@ const Navbar = ({
 
   const showFilterButton = location.pathname === "/feed";
 
-  if (notif.length > 0) {
-    console.log(
-      "notifications",
-      notif.map((msg) => msg)
-    );
-  }
+  // if (notif.length > 0) {
+  //   console.log(
+  //     "notifications",
+  //     notif.map((msg) => msg)
+  //   );
+  // }
   // console.log("notif open?", isNotifOpen);
 
   socket.on("notification", async (room, notification) => {
-    console.log("RIGHT ON THE SOCKET NAVBAR", room, notification);
+    // console.log("RIGHT ON THE SOCKET NAVBAR", room, notification);
     if (notification && user) {
       const checkDuplicates = await profileService.getNotifications(room);
       console.log("CHck dup", checkDuplicates.all);
+      setNotif(notification.concat(checkDuplicates.all.message));
       // const mapNotif = checkDuplicates.map((msg: string[]) => msg);
       // console.log("mapnotif", mapNotif());
     }

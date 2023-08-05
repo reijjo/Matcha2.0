@@ -48,8 +48,8 @@ const App = () => {
     if (loggedUser && !socketConnected) {
       socket1.connect();
       socket1.on("connect", () => {
-        setSocketConnected(true);
         socket1.emit("user_connected", loggedUser.id);
+        setSocketConnected(true);
       });
 
       socket1.on("notification", (room: string, notification: string) => {
@@ -64,7 +64,7 @@ const App = () => {
     //     setSocketConnected(false);
     //   }
     // };
-  }, []);
+  }, [loggedUser]);
 
   console.log("GOT NOTIIIF", socketNotif);
   console.log("SOCKET ROOMS??", socket);
@@ -74,6 +74,8 @@ const App = () => {
       if (data) setUsers(data);
     });
   }, []);
+
+  console.log("SOCKET CONNECTED", socketConnected);
 
   // if (users) console.log("USERS", users);
 
