@@ -53,7 +53,7 @@ const Matches = ({ user }: { user: User | null }) => {
   }
 
   const startChat = () => {
-    window.location.replace("/");
+    window.location.replace("/chat");
   };
 
   return (
@@ -90,7 +90,12 @@ const Matches = ({ user }: { user: User | null }) => {
                     color: isHover ? "#ffcda2" : "",
                   }}
                 >
+                  {/* <Link
+                    to="/chat"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  > */}
                   Chat?
+                  {/* </Link> */}
                 </button>
               </div>
               <div style={{ padding: "0.5vh 1vw" }}>

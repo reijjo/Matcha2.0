@@ -28,6 +28,7 @@ import Liked from "./components/Liked";
 import WhoLiked from "./components/WhoLiked";
 import Matches from "./components/Matches";
 import { io, Socket } from "socket.io-client";
+import Chat from "./components/Chat";
 
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -212,6 +213,10 @@ const App = () => {
           <Route
             path="/matches"
             element={<PrivateRoute element={<Matches user={loggedUser} />} />}
+          />
+          <Route
+            path="/chat"
+            element={<PrivateRoute element={<Chat user={loggedUser} />} />}
           />
           <Route path="*" element={<Home />} />
         </Routes>

@@ -230,9 +230,6 @@ const Navbar = ({
                 <span style={{ display: "none" }}></span>
               ) : (
                 <>
-                  <Link to="/matches" onClick={() => setIsDropOpen(false)}>
-                    Matches
-                  </Link>
                   <Link
                     to="/feed"
                     onClick={() => {
@@ -245,6 +242,15 @@ const Navbar = ({
                     }}
                   >
                     Feed
+                  </Link>
+                  <hr />
+
+                  <Link to="/chat" onClick={() => setIsDropOpen(false)}>
+                    Chat
+                  </Link>
+
+                  <Link to="/matches" onClick={() => setIsDropOpen(false)}>
+                    Matches
                   </Link>
 
                   <hr />
