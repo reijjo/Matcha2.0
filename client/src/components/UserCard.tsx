@@ -30,9 +30,9 @@ const UserCard = ({ user, socket }: Props) => {
   const { id } = useParams<string>();
 
   // console.log("USER", user);
-  if (notifSent === true) {
-    console.log("notifsent", notifSent);
-  }
+  // if (notifSent === true) {
+  console.log("notifsent", notifSent);
+  // }
 
   useEffect(() => {
     const fetchProfileData = async (id: string) => {
@@ -68,50 +68,51 @@ const UserCard = ({ user, socket }: Props) => {
           );
           setMyProfile(myProfileResponse);
           console.log(id);
+          console.log("My Profile Username:", myProfile?.username);
+          console.log("Profile Is Online:", profile.isonline);
           if (
             !notifSent &&
-            profile.isonline === false &&
-            myProfile?.username !== undefined
+            myProfile?.username !== undefined &&
+            profile.isonline !== undefined
           ) {
-            const message = `${myProfile?.username} looked your profile!`;
-            const response = await profileService.addNotifications(
-              id,
-              String(user.id),
-              message
-            );
-            if (response === "OK") {
-              setNotifSent(true);
-              console.log('OK"', response);
-              // setTimeout(() => {
-              //   setNotifSent(false);
-              // }, 500);
-            } else {
-              setNotifSent(true);
-              // setTimeout(() => {
-              //   setNotifSent(false);
-              // }, 500);
-
-              console.log("WHAT THE HELL", response);
-            }
-            console.log("responseTHIS ONE", response);
-          } else if (
-            !notifSent &&
-            profile.isonline === true &&
-            myProfile?.username !== undefined
-          ) {
-            const message = `${myProfile?.username} looked your profile!`;
-            const response = await profileService.addNotifications(
-              id,
-              String(user.id),
-              message
-            );
-            if (response === "OK") {
-              setNotifSent(true);
-              console.log('OK"', response);
-              socket.emit("notification", String(profile.user_id), message);
-              // setTimeout(() => {
-              //   setNotifSent(false);
-              // }, 500);
+            if (
+              // !notifSent &&
+              profile.isonline === false
+              // &&
+              // myProfile?.username !== undefined
+            ) {
+              console.log("Sending notification for offline profile");
+              const message = `${myProfile?.username} looked your profile!`;
+              const response = await profileService.addNotifications(
+                id,
+                String(user.id),
+                message
+              );
+              if (response === "OK") {
+                setNotifSent(true);
+                console.log('OK"', response);
+              } else {
+                setNotifSent(true);
+                console.log("WHAT THE HELL", response);
+              }
+              console.log("responseTHIS ONE", response);
+            } else if (
+              // !notifSent &&
+              profile.isonline === true
+              // &&
+              // myProfile?.username !== undefined
+            ) {
+              const message = `${myProfile?.username} looked your profile!`;
+              const response = await profileService.addNotifications(
+                id,
+                String(user.id),
+                message
+              );
+              if (response === "OK") {
+                setNotifSent(true);
+                console.log('OK"', response);
+                socket.emit("notification", String(profile.user_id), message);
+              }
             }
           }
 
@@ -145,7 +146,7 @@ const UserCard = ({ user, socket }: Props) => {
         fetchOtherData(id);
       }
     }
-  }, [id, profile]);
+  }, [id, profile, profile?.isonline, myProfile?.username]);
 
   if (!profile || !images || !avatar || !user || !socket) {
     // setTimeout(() => {
@@ -218,7 +219,6 @@ const UserCard = ({ user, socket }: Props) => {
           <div
             style={{
               display: "flex",
-
               justifyContent: "space-around",
               // display: "grid",
               gridColumn: "1 / span 2",

@@ -65,7 +65,7 @@ const Navbar = ({
         console.error("Error on notif fetching", error);
       }
     }
-  }, []);
+  }, [user?.id]);
   // }, [user]);
 
   useEffect(() => {
@@ -131,6 +131,8 @@ const Navbar = ({
     }
     console.log("GOT NOTIFICATION NAVBAR", notification);
   });
+
+  console.log("NAVBAR NOTIF", notif);
 
   return (
     <nav>
