@@ -9,6 +9,7 @@ import { loggedRouter } from "./routes/loggedIn";
 import { imageRouter } from "./routes/images";
 import path from "path";
 import { profileRouter } from "./routes/profiles";
+import { chatRouter } from "./routes/chat";
 
 const app = express();
 const server = createServer(app);
@@ -33,6 +34,7 @@ app.use("/api/logged", verifyToken, loggedRouter);
 app.use("/api/images", imageRouter);
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.use("/api/profiles", profileRouter);
+app.use("/api/chat", chatRouter);
 
 connectDB();
 

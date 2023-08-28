@@ -83,3 +83,10 @@ export interface notifications {
   message: string;
   read: number;
 }
+
+export interface Message {
+  id: number;
+  sender_id: number;
+  to_id: number;
+  message: string;
+}

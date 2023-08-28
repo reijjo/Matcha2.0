@@ -777,12 +777,13 @@ legend {
 }
 
 #chat {
-  background-color: var(--lipurple);
+  background-color: var(--lipeach);
   z-index: 1;
   margin: 2vw;
   width: 90vw;
   height: 80vh;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .chatContainer {
@@ -811,7 +812,7 @@ legend {
 }
 
 .chatMatch {
-  border: 1px solid black;
+  border-bottom: 1px solid black;
   width: 90%;
   min-height: 10vh;
   max-height: 10vh;
@@ -823,6 +824,7 @@ legend {
   grid-template-areas:
     "chatImg chatName"
     "chatMsg chatMsg";
+  cursor: pointer;
 }
 
 .matchImg {
@@ -841,6 +843,10 @@ legend {
   height: 100%;
   width: 100%;
   overflow: hidden;
+}
+
+.matchImg img:hover {
+  scale: 1.5;
 }
 
 .matchName {
@@ -909,4 +915,12 @@ legend {
 
 .textSend button img {
   height: 14px;
+}
+
+.startChatting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: larger;
 }
