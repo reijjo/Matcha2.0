@@ -18,8 +18,8 @@ chatRouter.get("/:id", async (req: Request, res: Response) => {
   console.log("BACK me", me);
   console.log("BACK other", id);
 
-  const chatSql = `SELECT * FROM messages WHERE sender_id = $1 AND to_id = $2`;
-  const chatRes = await pool.query(chatSql, [me, id]);
+  const chatSql = `SELECT * FROM messages WHERE sender_id = $1 OR to_id = $1`;
+  const chatRes = await pool.query(chatSql, [me]);
 
   const mynameSql = `SELECT * FROM users WHERE id = $1`;
   const mynameRes = await pool.query(mynameSql, [me]);
@@ -34,6 +34,19 @@ chatRouter.get("/:id", async (req: Request, res: Response) => {
     myName: mynameRes.rows[0],
     otherName: othernameRes.rows[0],
   });
+});
+
+chatRouter.post("/:id", async (req: Request, _res: Response) => {
+  const { id } = req.params;
+  const me = req.query.me;
+  const { message } = req.body;
+
+  const toDb = `INSERT INTO messages (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+  const doIt = await pool.query(toDb, [me, id, message]);
+
+  console.log("DOIT", doIt);
+
+  console.log("ID", id, "ME", me, "MSG", message);
 });
 
 export { chatRouter };

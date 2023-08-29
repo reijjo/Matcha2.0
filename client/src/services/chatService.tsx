@@ -14,9 +14,16 @@ const getChat = (me: number, other: number) => {
   return req.then((response) => response.data);
 };
 
+const addChat = (me: number, other: number, message: string) => {
+  console.log("AXIOS", me, other, message);
+  const req = axios.post(`${baseUrl}/${other}?me=${me}`, { message });
+  return req.then((response) => response.data);
+};
+
 const chatService = {
   getAllMessages,
   getChat,
+  addChat,
 };
 
 export default chatService;

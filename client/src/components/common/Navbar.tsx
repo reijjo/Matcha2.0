@@ -53,12 +53,8 @@ const Navbar = ({
     if (user && user.id) {
       const getNotif = async () => {
         const response = await profileService.getNotifications(String(user.id));
-        setNotif(response.notRead);
+        setNotif(response.notRead || []);
       };
-      // profileService.getNotifications(String(user.id)).then((response) => {
-      //   console.log("respo", response);
-      //   setNotif(response);
-      // });
       try {
         getNotif();
       } catch (error) {
@@ -111,14 +107,6 @@ const Navbar = ({
   };
 
   const showFilterButton = location.pathname === "/feed";
-
-  // if (notif.length > 0) {
-  //   console.log(
-  //     "notifications",
-  //     notif.map((msg) => msg)
-  //   );
-  // }
-  // console.log("notif open?", isNotifOpen);
 
   socket.on("notification", async (room, notification) => {
     // console.log("RIGHT ON THE SOCKET NAVBAR", room, notification);
@@ -207,7 +195,7 @@ const Navbar = ({
               className="notif"
             />
           </Link>
-          {isNotifOpen && notif.length > 0 && (
+          {isNotifOpen && Array.isArray(notif) && notif.length > 0 && (
             <div className="dropdown-content">
               {notif.map((msg) => (
                 <a key={msg.id} href="#" onClick={() => readNotif(msg.id)}>
