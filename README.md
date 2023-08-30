@@ -48,3 +48,4 @@ with TypeScript
 * last message on chat
 * mobile for chat
 * filter for feed
+* .envfile stuff
