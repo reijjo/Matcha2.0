@@ -11,3 +11,5 @@ with TypeScript
 * pictures overflowing on settings
 * at least some security
 * sockets
+* last message on chat
+* mobile for chat
