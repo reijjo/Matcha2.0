@@ -2,9 +2,9 @@
 with TypeScript
 
 # About:
-* Matcha is a dating app like Tinder but better.
-* There is 500 fake profiles you to browse.
-  * Profiles are done with Mockaroo.com that makes profiles in a .csv file and then added to database.
+* Matcha is a dating app like Tinder but better. 
+* You have 500 fake profiles to browse.
+  * These profiles were generated using Mockaroo.com, which creates profiles in a .csv file
 
 ## What I used
 * TypeScript
@@ -25,7 +25,8 @@ with TypeScript
 * Upload images
 * On your profile page, you can see the profiles you visited and the users who visited your profile
 
-  GIFFIA TAHAN
+![matchReg](https://github.com/reijjo/Matcha2.0/assets/95418273/76de807e-c015-424c-b4a7-55e8259eaaf0)
+
 
 ## Match making
 * Match or pass
@@ -33,7 +34,9 @@ with TypeScript
 * Live notifications when someone looks your profile / likes you / sends you a message
 * Live chat
 
-  GIFFIA TAHAN
+GIF HERE
+
+
 
 ## How to run
 * in the projects root folder ```docker-compose up```
