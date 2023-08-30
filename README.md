@@ -9,6 +9,5 @@ with TypeScript
 
 ### Todo:
 * pictures overflowing on settings
-* UserCard buttons doesnt work.
-* Chat
-* Notifications with sockets
+* at least some security
+* sockets
