@@ -13,3 +13,4 @@ with TypeScript
 * sockets
 * last message on chat
 * mobile for chat
+* filter for feed
