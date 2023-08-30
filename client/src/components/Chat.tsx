@@ -4,11 +4,17 @@ import imageService from "../services/imageService";
 import profileService from "../services/profileService";
 import { User, Images, Message } from "../utils/types";
 import { useEffect, useState, useRef } from "react";
+import { Socket } from "socket.io-client";
 
 const sendIcon = require("../images/icons/icons-send.png");
-const photo = require("../images/testi.jpeg");
+// const photo = require("../images/testi.jpeg");
 
-const Chat = ({ user }: { user: User | null }) => {
+interface Props {
+  user: User | null;
+  socket: Socket;
+}
+
+const Chat = ({ user, socket }: Props) => {
   const [msg, setMsg] = useState("");
   const [matches, setMatches] = useState<User[]>([]);
   const [images, setImages] = useState<Images[]>();
@@ -59,6 +65,19 @@ const Chat = ({ user }: { user: User | null }) => {
     }
   }, [getChat]);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on("message", (room, message) => {
+        if (chat === room) {
+          setGetChat((prevChat) => ({
+            ...prevChat,
+            chat: [...prevChat.chat, message],
+          }));
+        }
+      });
+    }
+  }, [chat, socket]);
+
   const withImages = matches.map((mtch) => {
     const avatar = images?.find((ava) => {
       return mtch.id === ava.user_id && ava.avatar === true;
@@ -75,13 +94,27 @@ const Chat = ({ user }: { user: User | null }) => {
   };
 
   const sendMsg = async (me: number, other: number, message: string) => {
-    // event.preventDefault();
-    // const addToChat = await
-    chatService.addChat(me, other, message);
-    // console.log("ADD TO CHAT???", addToChat);
-    console.log("jeee", msg);
-    console.log("CHAT PARTNER", chat);
-    setMsg("");
+    console.log("WHO", getChat.otherName);
+    try {
+      await chatService.addChat(me, other, message);
+      // console.log("what", what);
+      const onlineCheck = await chatService.checkOnline(other);
+      console.log("ONLINECHECK", onlineCheck);
+
+      const notificationMsg = `${getChat.myName.username} send a message!`;
+
+      if (onlineCheck === false) {
+        await chatService.addNotif(me, other, notificationMsg);
+      } else {
+        socket.emit("message", other, message);
+      }
+      // console.log("ADD TO CHAT???", addToChat);
+      // console.log("jeee", msg);
+      // console.log("CHAT PARTNER", chat);
+      setMsg("");
+    } catch (error) {
+      console.error("Something shady", error);
+    }
   };
 
   const startChat = async (me: number, other: number) => {
@@ -92,14 +125,14 @@ const Chat = ({ user }: { user: User | null }) => {
   };
 
   // console.log("CHAT USER", user);
-  console.log(
-    "MY MATCHES",
-    matches.map((who) => who)
-  );
+  // console.log(
+  //   "MY MATCHES",
+  //   matches.map((who) => who)
+  // );
   // console.log("IMAMGES", images);
-  console.log("MEssages", getMessages);
+  // console.log("MEssages", getMessages);
   // console.log("WHO AM I CHATTING WITH", chat);
-  console.log("getCHAT", getChat);
+  // console.log("getCHAT", getChat);
 
   if (!withImages) {
     return (

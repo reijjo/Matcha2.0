@@ -18,8 +18,9 @@ chatRouter.get("/:id", async (req: Request, res: Response) => {
   console.log("BACK me", me);
   console.log("BACK other", id);
 
-  const chatSql = `SELECT * FROM messages WHERE sender_id = $1 OR to_id = $1`;
-  const chatRes = await pool.query(chatSql, [me]);
+  const chatSql = ` SELECT * FROM messages
+	WHERE (sender_id = $1 AND to_id = $2) OR (sender_id = $2 AND to_id = $1)`;
+  const chatRes = await pool.query(chatSql, [me, id]);
 
   const mynameSql = `SELECT * FROM users WHERE id = $1`;
   const mynameRes = await pool.query(mynameSql, [me]);
@@ -36,7 +37,8 @@ chatRouter.get("/:id", async (req: Request, res: Response) => {
   });
 });
 
-chatRouter.post("/:id", async (req: Request, _res: Response) => {
+// SEND MESSAGE
+chatRouter.post("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
   const me = req.query.me;
   const { message } = req.body;
@@ -44,9 +46,31 @@ chatRouter.post("/:id", async (req: Request, _res: Response) => {
   const toDb = `INSERT INTO messages (sender_id, to_id, message) VALUES ($1, $2, $3)`;
   const doIt = await pool.query(toDb, [me, id, message]);
 
-  console.log("DOIT", doIt);
+  res.send(doIt.rows[0]);
+});
 
-  console.log("ID", id, "ME", me, "MSG", message);
+// CHECK_ONLINE
+chatRouter.get("/:id/online", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const checkSql = `SELECT isonline FROM profile WHERE user_id = $1`;
+  const checkRes = await pool.query(checkSql, [id]);
+
+  res.send(checkRes.rows[0].isonline);
+});
+
+// NOTIFICATIONS
+chatRouter.post("/:id/notif", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const me = req.query.me;
+  const { message } = req.body;
+
+  const notifSql = `INSERT INTO notifications (sender_id, to_id, message) VALUES ($1, $2, $3)`;
+  const notifRes = await pool.query(notifSql, [me, id, message]);
+
+  res.send(notifRes.rows[0]);
+
+  // console.log("TO", id, "SENDER", me, "MESSAG'", message);
 });
 
 export { chatRouter };

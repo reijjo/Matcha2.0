@@ -33,8 +33,9 @@ socketIO.on("connection", (socket: Socket) => {
     console.log("New Notification", room, notification);
   });
 
-  socketIO.on("message", (message: string) => {
+  socketIO.on("message", (room, message: string) => {
     console.log("New Message", message);
+    socketIO.to(String(room)).emit("message", room, message);
   });
 });
 

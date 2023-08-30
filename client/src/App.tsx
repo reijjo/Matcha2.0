@@ -57,6 +57,10 @@ const App = () => {
         // setSocketNotif(notification)
         console.log("Recieved notification APPTSX", room, notification);
       });
+
+      socket1.on("message", (room: string, message: string) => {
+        console.log("GOT MESSAGE", message, "TO ROOM", room);
+      });
     }
 
     // return () => {
@@ -216,7 +220,11 @@ const App = () => {
           />
           <Route
             path="/chat"
-            element={<PrivateRoute element={<Chat user={loggedUser} />} />}
+            element={
+              <PrivateRoute
+                element={<Chat user={loggedUser} socket={socket} />}
+              />
+            }
           />
           <Route path="*" element={<Home />} />
         </Routes>
