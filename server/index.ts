@@ -1,6 +1,7 @@
 import { app, server } from "./app";
 import { config } from "./utils/config";
 import { Server, Socket } from "socket.io";
+import { Message } from "./utils/types";
 
 app.get("/ping", (_req, res) => {
   console.log("someone pinged here");
@@ -33,7 +34,7 @@ socketIO.on("connection", (socket: Socket) => {
     console.log("New Notification", room, notification);
   });
 
-  socketIO.on("message", (room, message: string) => {
+  socket.on("message", (room, message: Message) => {
     console.log("New Message", message);
     socketIO.to(String(room)).emit("message", room, message);
   });

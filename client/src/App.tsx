@@ -15,7 +15,7 @@ import Feed from "./components/Feed";
 import Forgot from "./components/user/Forgot";
 import userService from "./services/userService";
 import loginService from "./services/loginService";
-import { User } from "./utils/types";
+import { Message, User } from "./utils/types";
 import { useEffect, useState } from "react";
 import RegisterTwo from "./components/user/RegisterTwo";
 import NewPw from "./components/user/NewPw";
@@ -38,7 +38,7 @@ const App = () => {
 
   const [sort, setSort] = useState(false);
   const [filters, setFilters] = useState(false);
-  const [gotNotif, setGotNotif] = useState(false);
+  // const [gotNotif, setGotNotif] = useState(false);
   const [socketNotif, setSocketNotif] = useState<string[]>([]);
   const [socketConnected, setSocketConnected] = useState(false);
 
@@ -58,17 +58,17 @@ const App = () => {
         console.log("Recieved notification APPTSX", room, notification);
       });
 
-      socket1.on("message", (room: string, message: string) => {
+      socket1.on("message", (room: string, message: Message) => {
         console.log("GOT MESSAGE", message, "TO ROOM", room);
       });
     }
 
-    // return () => {
-    //   if (socket1.connected) {
-    //     socket1.disconnect();
-    //     setSocketConnected(false);
-    //   }
-    // };
+    return () => {
+      if (socket1.connected) {
+        socket1.disconnect();
+        setSocketConnected(false);
+      }
+    };
   }, [loggedUser]);
 
   console.log("GOT NOTIIIF", socketNotif);

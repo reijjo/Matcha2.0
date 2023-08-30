@@ -29,10 +29,12 @@ const Chat = ({ user, socket }: Props) => {
     myName: {} as User,
     otherName: {} as User,
   });
+  const [socketMsg, setSocketMsg] = useState<Message[]>([]);
 
   const chatMainRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // console.log("Initial getChat state:", getChat);
     const getMatches = async () => {
       try {
         const myMatches = await profileService.getMatches(String(user?.id));
@@ -57,7 +59,7 @@ const Chat = ({ user, socket }: Props) => {
       getImages();
       getMessages();
     }
-  }, [user?.id]);
+  }, [user?.id, getChat]);
 
   useEffect(() => {
     if (chatMainRef.current) {
@@ -65,14 +67,20 @@ const Chat = ({ user, socket }: Props) => {
     }
   }, [getChat]);
 
+  // console.log("SOCKET CHAT", socket.connected);
+
   useEffect(() => {
-    if (socket) {
-      socket.on("message", (room, message) => {
+    if (socket.connected === true) {
+      console.log("SOCKETTI PAALLA!");
+      console.log("CHAT", chat);
+      socket.on("message", (room: number, message: Message) => {
         if (chat === room) {
-          setGetChat((prevChat) => ({
-            ...prevChat,
-            chat: [...prevChat.chat, message],
-          }));
+          console.log("ROOM", room, "MITA ASIAAA", message);
+          setSocketMsg((prevMsg) => [...prevMsg, message]);
+          // setGetChat((prevChat) => ({
+          //   ...prevChat,
+          //   chat: [...prevChat.chat, message],
+          // }));
         }
       });
     }
@@ -106,12 +114,15 @@ const Chat = ({ user, socket }: Props) => {
       if (onlineCheck === false) {
         await chatService.addNotif(me, other, notificationMsg);
       } else {
+        await chatService.addNotif(me, other, notificationMsg);
+
         socket.emit("message", other, message);
       }
       // console.log("ADD TO CHAT???", addToChat);
       // console.log("jeee", msg);
       // console.log("CHAT PARTNER", chat);
       setMsg("");
+      // setSocketMsgSent(false);
     } catch (error) {
       console.error("Something shady", error);
     }
@@ -155,18 +166,6 @@ const Chat = ({ user, socket }: Props) => {
         <div className="chatContainer">
           {/* CHAT NAMES */}
           <div className="chatNames">
-            {/* <div
-              className="chatMatch"
-              onClick={() => setChat(user?.id || undefined)}
-            >
-              <div className="matchImg">
-                <img src={photo} alt="userImg" />
-              </div>
-              <div className="matchName">Repefdsfsffs</div>
-              <div className="matchMsg">
-                <span>jeaaaKJSDjk KDJAkjdsaldj jladjkld</span>
-              </div>
-            </div> */}
             {withImages.map((mtch) => (
               <div
                 key={mtch.id}
@@ -187,17 +186,35 @@ const Chat = ({ user, socket }: Props) => {
           {/* MAIN CHAT */}
           <div className="chatMain" ref={chatMainRef}>
             {!chat ? (
-              <div className="startChatting">Who you want to chat with...?</div>
+              <div className="startChatting">
+                Who do you want to chat with...?
+              </div>
             ) : (
               <div className="chatMessagesContainer">
-                {getChat.chat.some(
-                  (message) =>
-                    (message.to_id === chat &&
-                      message.sender_id === user?.id) ||
-                    (message.to_id === user?.id && message.sender_id === chat)
-                ) ? (
+                {getChat.chat.length > 0 || socketMsg.length > 0 ? (
                   <div className="chatMessages">
                     {getChat.chat.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`message ${
+                          message.sender_id === user?.id
+                            ? "my-message"
+                            : "other-message"
+                        }`}
+                      >
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <div className="messageSender">
+                            {message.sender_id === user?.id
+                              ? "Me:"
+                              : `${getChat.otherName.username}:`}
+                          </div>
+                          <div className="messageContent">
+                            {message.message}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {socketMsg.map((message) => (
                       <div
                         key={message.id}
                         className={`message ${
