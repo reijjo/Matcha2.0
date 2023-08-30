@@ -1,6 +1,11 @@
 <img src='https://github.com/reijjo/Matcha2.0/assets/95418273/06bbba41-e347-4058-b01a-9566e11dbb18' />
 with TypeScript
 
+# About:
+* Matcha is a dating app like Tinder but better.
+* There is 500 fake profiles you to browse.
+  * Profiles are done with Mockaroo.com that makes profiles in a .csv file and then added to database.
+
 ## What I used
 * TypeScript
 * React
