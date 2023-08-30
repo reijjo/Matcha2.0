@@ -34,7 +34,8 @@ with TypeScript
 * Live notifications when someone looks your profile / likes you / sends you a message
 * Live chat
 
-GIF HERE
+
+![matchMaking](https://github.com/reijjo/Matcha2.0/assets/95418273/82f4e921-f762-40a9-9a41-bc142ad9abe6)
 
 
 
